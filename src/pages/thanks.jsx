@@ -29,7 +29,7 @@ const Thanks = () => {
                         }}
                     /> */}
                     <IonImg
-                        src='src/img/thnaks.jpg'
+                        src='/img/thnaks.jpg'
                         style={{ maxWidth: "260px", width: "100%", margin:'auto' }}
                     />
                     <h4>Thank you for </h4>

@@ -18,6 +18,7 @@ import {
   IonSelectOption,
   IonLabel,
   IonInput,
+  IonToast
 
 } from '@ionic/react';
 import '../pages/Tab1.css';
@@ -75,7 +76,8 @@ const RadioPage = () => {
     referenceName: "",
   });
   const history = useHistory();
-
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
 
 
@@ -123,20 +125,21 @@ const RadioPage = () => {
   };
 
 
+
   const handleRemoveItem = async (id) => {
     try {
       let payload = {
         itemId: id,
       };
       const response = await jwtAuthAxios.post("client/cart/remove", payload);
-      toast.success("Item removed successfully!");
       dispatch(addToCart());
       fetchCartData();
+      setToastMessage('Item removed successfully');
+      setShowToast(true);
     } catch (error) {
       console.error(error?.response?.data?.error);
     }
   };
-
 
 
   const handleSaveChanges = (e, index) => {
@@ -165,7 +168,8 @@ const RadioPage = () => {
         finding: selectedFindings,
       })
     );
-    toast.success("Update Successfully!");
+    setToastMessage('Update successfully');
+    setShowToast(true);
     setOpenModalId(false);
   };
 
@@ -297,7 +301,8 @@ const RadioPage = () => {
         items: cartDetails,
       };
       const response = await jwtAuthAxios.post("client/quote-request", payload);
-      toast.success("Quote Request submitted successfully!");
+      setToastMessage('Quote Request submitted successfully');
+      setShowToast(true);
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -363,7 +368,7 @@ const RadioPage = () => {
           >
             <div>
               <IonImg
-                src='src/img/datanotfound.png'
+                src='/img/datanotfound.png'
                 style={{ maxWidth: "360px", width: "100%" }}
               />
               <h3 style={{ textAlign: 'center' }}>Your cart is empty</h3>
@@ -584,7 +589,7 @@ const RadioPage = () => {
                                     <div style={{ width: '80%' }}>
                                       <span className="option-label">
                                         <IonImg className='slider-img '
-                                          src={`src/img/color-${metal.toLowerCase()}.svg`}
+                                          src={`/img/color-${metal.toLowerCase()}.svg`}
                                           style={{ width: '26px', height: '26px', objectFit: 'cover', borderRadius: '9px' }}
                                         />
                                       </span>
@@ -620,7 +625,7 @@ const RadioPage = () => {
                                             padding: '5px 6px',
                                             backgroundColor: selectedQuality === ele ? 'rgb(255 230 202)' : 'rgb(255 246 236)',
                                             cursor: 'pointer',
-                                            borderRadius: '12px',
+                                            borderRadius: '24px',
                                             border: '1px solid #a7a7a7',
                                             transition: 'background-color 0.3s ease',
                                             width: '100%',
@@ -715,6 +720,12 @@ const RadioPage = () => {
 
               </div>
             ))}
+          <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={2000}
+        />
             <div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <IonButton color='secondary' onClick={toggleDropdown}>

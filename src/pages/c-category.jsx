@@ -20,6 +20,7 @@ import {
     IonAccordionGroup,
     IonRadio,
     IonRadioGroup,
+    IonToast
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -37,7 +38,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { IonIcon } from "@ionic/react";
 import { heartOutline, heart } from "ionicons/icons";
 import { addToCart, showCarts } from "../store/actions";
-import { toast } from "react-toastify";
+
 
 function CategoryPage() {
     const { id } = useParams();
@@ -52,6 +53,8 @@ function CategoryPage() {
     const [liked, setLiked] = useState(false);
     const [cart, setCart] = useState([]);
     const [quotations, setQuotations] = useState([]);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const fetchCategoryData = async () => {
         if (isFetching.current) return;
@@ -98,18 +101,15 @@ function CategoryPage() {
                 sidectwt: item.sidectwt,
                 centerctwt: item.centerctwt
             };
-
             const response = await jwtAuthAxios.post('/client/cart/add', payload);
             setCart([...cart, response.data]);
             dispatch(addToCart({ item: item._id, quantity: 1 }));
-            toast.success('Item added to cart');
-            fetchCartData();
+            setToastMessage('Item added to cart');
+            setShowToast(true);
         } catch (error) {
-
-            console.error('Error adding item to cart:', error);
-            if (error.response) {
-                console.error('Error Response:', error.response.data);
-            }
+            console.error(error || "Invalid ");
+            setToastMessage('Error adding item to cart')
+            setShowToast(true);
         } finally {
             setLoading(false);
             isFetching.current = false;
@@ -193,38 +193,38 @@ function CategoryPage() {
                             >
                                 <SwiperSlide >
                                     <IonImg className='slider-img pulsating-circle'
-                                        src="src/img/big-banner1.png"
+                                        src="/img/big-banner1.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
                                 <SwiperSlide >
                                     <IonImg
-                                        src="src/img/big-banner2.png"
+                                        src="/img/big-banner2.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
                                 <SwiperSlide >
                                     <IonImg
-                                        src="src/img/big-banner3.png"
+                                        src="/img/big-banner3.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
                                 <SwiperSlide >
                                     <IonImg
-                                        src="src/img/big-banner4.png"
+                                        src="/img/big-banner4.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
 
                                 <SwiperSlide >
                                     <IonImg
-                                        src="src/img/big-banner2.png"
+                                        src="/img/big-banner2.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
                                 <SwiperSlide >
                                     <IonImg
-                                        src="src/img/big-banner3.png"
+                                        src="/img/big-banner3.png"
                                         style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                     ></IonImg>
                                 </SwiperSlide>
@@ -307,6 +307,12 @@ function CategoryPage() {
 
                 </IonGrid>
             </IonContent>
+            <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message={toastMessage}
+                duration={2000}
+            />
         </IonPage >
     );
 }

@@ -15,3 +15,30 @@ const PrivateRoute = () => {
 };
 
 export default PrivateRoute;
+
+// import React, { useContext } from "react";
+// import { Route, Redirect } from "react-router-dom";
+// import { AuthContext } from "./auth"; // Adjust path as necessary
+
+// const PrivateRoute = ({ component: Component, render, ...rest }) => {
+//   const { isAuthenticated } = useContext(AuthContext);
+
+//   return (
+//     <Route
+//       {...rest}
+//       render={props =>
+//         isAuthenticated ? (
+//           render ? (
+//             render(props) // Use render prop if provided
+//           ) : (
+//             <Component {...props} /> // Use component prop if provided
+//           )
+//         ) : (
+//           <Redirect to="/login" />
+//         )
+//       }
+//     />
+//   );
+// };
+
+// export default PrivateRoute;

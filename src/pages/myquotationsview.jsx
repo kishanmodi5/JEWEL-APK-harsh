@@ -88,7 +88,7 @@ function Product() {
                                             <IonItem slot="header" color="secondary">
                                                 <p>SKU : {item.item.sku}</p>
                                             </IonItem>
-                                            <div className="ion-padding" slot="content">
+                                            <div className="ion-padding" slot="content" style={{height:'700px'}}>
                                                 <div className='d-flex'>
                                                     <div className='left-hed'>
                                                         <h6>

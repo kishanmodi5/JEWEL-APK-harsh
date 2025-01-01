@@ -24,6 +24,7 @@ import {
     IonChip,
     IonicSlides,
     IonButtons,
+    IonToast,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -74,10 +75,19 @@ function Product() {
     const [selectedFindings, setSelectedFindings] = useState('');
     const [cart, setCart] = useState([]);
     const [typeMessage, setTypeMessage] = useState("");
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [categoryattr, setCategoryattr] = useState([]);
+    const [activeIndex, setActiveIndex] = useState(0);
 
-    // Handle modal open and close
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const openModal = (index) => {
+        setActiveIndex(index); // Set active index based on clicked image
+        setShowModal(true);    // Open modal
+    };
+    
+    const closeModal = () => setShowModal(false);
 
     const incrementCounter = () => {
         if (count > 0) {
@@ -104,6 +114,7 @@ function Product() {
             setSelectSize(response?.data?.size?.sizes[0]?.size);
             setSizeDetails(response?.data?.size?.sizes);
             setFindings(response?.data?.size?.findings);
+            setCategoryattr(response?.data?.categoryattr?.attr);
             setError(null);
         } catch (error) {
             setError('Failed to load category details. Please try again later.');
@@ -132,12 +143,15 @@ function Product() {
                 sidectwt: sidectwt
 
             };
-            toast.success("Item added to cart");
+            setToastMessage('Item added to cart');
+            setShowToast(true);
             await jwtAuthAxios.post("client/cart/add", payload);
             dispatch(addToCart({ itemId: id, quantity: count }));
 
         } catch (error) {
             console.error(error?.response?.data?.error);
+            setToastMessage('Error adding item to cart')
+            setShowToast(true);
         }
         finally {
             setLoading(false);
@@ -177,7 +191,7 @@ function Product() {
     const [selectedMetal, setSelectedMetal] = useState(metalcolor);
     const [selectedQuality, setSelectedQuality] = useState(diamondGroup[0]);
     const [selectedType, setSelectedType] = useState("14K");
-
+    const [otherImg, setOtherImg] = useState(null);
 
     useEffect(() => {
         fetchProductData();
@@ -270,7 +284,7 @@ function Product() {
 
             <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
                 <div style={{ marginTop: '20px' }}>
-                    <h5 class="text-center mb-5 element">Ring Category</h5>
+                    <h5 class="text-center mb-5 element">Ring Products</h5>
                 </div>
 
                 <div className='main-catagory' style={{ marginBottom: '70px' }}>
@@ -280,13 +294,13 @@ function Product() {
                                 <IonRow>
                                     <IonCol size-sm='8' size='12'>
                                         <div className="product-img">
-                                            <div className='imgbtn' onClick={openModal}>
+                                            {/* <div className='imgbtn' >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
                                                     <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
                                                     <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
                                                     <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5" />
                                                 </svg>
-                                            </div>
+                                            </div> */}
                                             <Swiper
                                                 spaceBetween={10}
                                                 navigation={true}
@@ -295,18 +309,38 @@ function Product() {
                                                 className="mySwiper2 mySwipermain"
                                             >
                                                 {/* Main Swiper Slides */}
-                                                <SwiperSlide >
-                                                    <img className="slider-img pulsating-circle" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
+                                                {otherUploadImg ? (
+                                                    otherUploadImg?.split(",")?.map((img, index) => (
+                                                        <SwiperSlide>
+                                                            
+                                                            <div onClick={() => openModal(index)}  >
+                                                                                  <div className='imgbtn' >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
+                                                    <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
+                                                    <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5" />
+                                                </svg>
+                                            </div>
+                                                            <img src={IMG_PATH + img} key={index} className="slider-img pulsating-circle" />
+                                                           </div>
+                                                        </SwiperSlide>
+                                                    ))
+                                                ) : (
+                                                    <SwiperSlide>
+                                                      
+                                                        <img src={IMG_PATH + thumbnailImage} className="slider-img pulsating-circle" />
+                                                        
+                                                    </SwiperSlide>
+                                                )}
+                                                {/* <SwiperSlide >
+                                                    <img className="slider-img pulsating-circle"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide>
                                                 <SwiperSlide >
-                                                    <img className="slider-img pulsating-circle" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
+                                                    <img className="slider-img pulsating-circle"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide>
                                                 <SwiperSlide >
-                                                    <img className="slider-img pulsating-circle" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
-                                                </SwiperSlide>
-                                                <SwiperSlide >
-                                                    <img className="slider-img pulsating-circle" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
-                                                </SwiperSlide>
+                                                    <img className="slider-img pulsating-circle"  src={IMG_PATH + otherUploadImg} alt="Img" />
+                                                </SwiperSlide> */}
 
                                             </Swiper>
                                         </div>
@@ -323,18 +357,28 @@ function Product() {
                                                 modules={[FreeMode, Navigation, Thumbs]}
                                                 className="mySwiper twominimgmain">
                                                 {/* Thumbnail Swiper Slides */}
-                                                <SwiperSlide >
-                                                    <img class="twominimg" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
+                                                {/* <SwiperSlide >
+                                                    <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide>
+
                                                 <SwiperSlide >
-                                                    <img class="twominimg" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
+                                                    <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide>
+
                                                 <SwiperSlide >
-                                                    <img class="twominimg" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
-                                                </SwiperSlide>
-                                                <SwiperSlide >
-                                                    <img class="twominimg" src="https://jewel.dnav360.com/images/Image/RING/thumb/GLR3003@R.jpg" alt="Img" />
-                                                </SwiperSlide>
+                                                    <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
+                                                </SwiperSlide> */}
+                                                {otherUploadImg ? (
+                                                    otherUploadImg?.split(",")?.map((img, index) => (
+                                                        <SwiperSlide>
+                                                            <img src={IMG_PATH + img} key={index} class="twominimg" />
+                                                        </SwiperSlide>
+                                                    ))
+                                                ) : (
+                                                    <SwiperSlide>
+                                                        <img src={IMG_PATH + thumbnailImage} class="twominimg" />
+                                                    </SwiperSlide>
+                                                )}
                                             </Swiper>
                                         </div>
                                     </IonCol>
@@ -446,7 +490,7 @@ function Product() {
                                                                 <div style={{ width: '85%', textAlign: 'center' }}>
                                                                     <img
                                                                         className="slider-img"
-                                                                        src={`src/img/color-${metal.toLowerCase()}.svg`} // Assuming images are named color-rose.svg, etc.
+                                                                        src={`/img/color-${metal.toLowerCase()}.svg`} // Assuming images are named color-rose.svg, etc.
                                                                         alt={metal}
                                                                         style={{
                                                                             width: '26px',
@@ -726,6 +770,34 @@ function Product() {
                                                         ""
                                                     )}
 
+{
+                            attr && categoryattr?.map((val, index) => {
+                              return Number(attr[index]?.value) && <div href="#/action-2">
+                                <div
+                                  key={index}
+                                  className="product-details-title d-flex align-items-center justify-content-between"
+                                  style={{
+                                    paddingBottom: "5px",
+                                  }}
+                                >
+                                  <span className="d-block">
+                                    {val?.name}
+                                  </span>
+                                  <span
+                                    className="d-block"
+                                    style={{
+                                      fontSize: "15px",
+                                      fontFamily: "monospace",
+                                    }}
+                                  >
+                                    {Number(attr[index]?.value).toFixed(2)}
+                                    {/* {?.toFixed(2)} */}
+                                  </span>
+                                </div>
+                              </div>
+                            })
+                          }
+
                                                 </div>
                                             </div>
                                             <div className='disclaimer-main'>
@@ -734,7 +806,7 @@ function Product() {
 
                                                 <h6>- A diamond tolerance of 5% will be allowed.</h6>
 
-                                                <h6>- The Legend of Zelda</h6>
+                                                <h6>- The size may differ from what is suggested, affecting the diamond quantity and gold weight.</h6>
                                             </div>
                                         </div>
                                     </IonCol>
@@ -748,36 +820,49 @@ function Product() {
                 </div >
             </IonContent >
             {/* Modal to open Swiper slider */}
-            < IonModal isOpen={isModalOpen} onClose={closeModal} >
-                <div className='mainmodal'  >
-                    <IonButtons slot="end">
-                        <IonButton shape='round' width='auto' color='secondary' type='button' onClick={closeModal}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            {showModal && (
+                <div className="modalimage1">
+                    <div className="modalimage2">
+                        <div type='button' onClick={closeModal} style={{ justifyContent: 'end', padding: '0', display: 'flex', }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-x-lg" viewBox="0 0 16 16">
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                             </svg>
-                        </IonButton>
-                    </IonButtons>
-                    <Swiper
-                        style={{ marginBottom: '0px', marginTop: '7px', width: '100%' }}
-                        spaceBetween={50}
-                        slidesPerView={1}
-                        onSlideChange={() => console.log('slide change')}
-                        onSwiper={(swiper) => console.log(swiper)}
-                        autoplay={true}
-                    >
-                        <SwiperSlide>
-                            <IonImg
-                                src={IMG_PATH + otherUploadImg} alt="ig145"
-                                style={{
-                                    width: '100%',
-                                    height: 'auto',
-                                    objectFit: 'cover',
-                                    borderRadius: '9px',
-                                    overflow: 'hidden',
-                                }}
-                            />
-                        </SwiperSlide>
-                        {/* <SwiperSlide>
+                        </div>
+
+
+                        <Swiper
+                            style={{ marginBottom: '0px', marginTop: '7px', width: '100%' }}
+                            spaceBetween={50}
+                            slidesPerView={1}
+                            onSlideChange={() => console.log('slide change')}
+                            onSwiper={(swiper) => console.log(swiper)}
+                            autoplay={true}
+                            initialSlide={activeIndex}
+                        >
+                           {otherUploadImg ? (
+                otherUploadImg.split(",").map((img, index) => (
+                    <SwiperSlide key={index}> {/* Add key prop here */}
+                        <img 
+                            src={IMG_PATH + img} 
+                            className="slider-img pulsating-circle" 
+                            onClick={() => openModal(index)} // Pass index correctly
+                            alt={`Product Image ${index}`} 
+                        />
+                    </SwiperSlide>
+                ))
+            ) : (
+                <SwiperSlide key={0}> {/* Add key prop here */}
+                    <img 
+                        src={IMG_PATH + thumbnailImage} 
+                        className="slider-img pulsating-circle" 
+                        onClick={() => openModal(0)} // Open modal for thumbnail image
+                        alt="Thumbnail Image" 
+                    />
+                </SwiperSlide>
+            )}
+
+                
+                            {/* <SwiperSlide>
                             <IonImg
                                 src="src/img/produc-maoin.jpg"
                                 style={{
@@ -813,9 +898,16 @@ function Product() {
                                 }}
                             />
                         </SwiperSlide> */}
-                    </Swiper>
+                        </Swiper>
+                    </div>
                 </div>
-            </IonModal >
+            )}
+            <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message={toastMessage}
+                duration={2000}
+            />
         </ >
     );
 }

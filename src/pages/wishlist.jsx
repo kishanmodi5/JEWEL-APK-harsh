@@ -10,6 +10,7 @@ import {
   IonThumbnail,
   IonButton,
   IonCardTitle,
+  IonToast
 } from '@ionic/react';
 import '../pages/Tab1.css';
 import '../main';
@@ -25,6 +26,8 @@ import { toast } from "react-toastify";
 const WishlistPage = () => {
   const [counter, setCounter] = useState(0);
   const { wishData, setWishData } = useContext(DataContext);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const incrementCounter = () => setCounter(counter + 1);
   const decrementCounter = () => {
@@ -37,7 +40,8 @@ const WishlistPage = () => {
     try {
       const item = wishData?.filter((item) => item._id !== id);
       setWishData(item);
-      toast.success("Item removed successfully!");
+      setToastMessage('Item Remove');
+      setShowToast(true);
     }
     catch (error) {
       toast.error(error?.response?.data?.error);
@@ -99,6 +103,12 @@ const WishlistPage = () => {
             </div>
           )}
         </div >
+        <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message={toastMessage}
+                duration={2000}
+            />  
       </IonContent >
     </>
   );

@@ -57,25 +57,25 @@ const HomePage = () => {
               >
                 <SwiperSlide>
                   <IonImg className='slider-img'
-                    src="src/img/slider-banner-1.jpg"
+                    src="/img/slider-banner-1.jpg"
                     style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
                 <SwiperSlide>
                   <IonImg
-                    src="src/img/slider-banner-2.jpg"
+                    src="/img/slider-banner-2.jpg"
                     style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
                 <SwiperSlide>
                   <IonImg
-                    src="src/img/slider-banner-3.jpg"
+                    src="/img/slider-banner-3.jpg"
                     style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
                 <SwiperSlide>
                   <IonImg
-                    src="src/img/slider-banner-4.jpg"
+                    src="/img/slider-banner-4.jpg"
                     style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
@@ -94,7 +94,7 @@ const HomePage = () => {
                       <IonImg className='categoryimg' src={IMG_PATH + item?.filepath} />
                       <IonImg
                         className='categoryimg1'
-                        src="src/img/catagory-bg.png"
+                        src="/img/catagory-bg.png"
                       ></IonImg>
                     </div>
                     <IonTitle>{item.name}</IonTitle>

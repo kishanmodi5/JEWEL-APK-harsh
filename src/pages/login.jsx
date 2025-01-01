@@ -16,6 +16,7 @@ import {
     IonGrid,
     IonRow,
     IonCol,
+    IonToast
 } from '@ionic/react';
 import { IonInput } from '@ionic/react';
 import { IonInputPasswordToggle } from '@ionic/react';
@@ -36,6 +37,8 @@ const Login = ({ handleClosep }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -56,9 +59,10 @@ const Login = ({ handleClosep }) => {
                     localStorage.setItem("user", JSON.stringify(response?.data?.data));
                     jwtAuthAxios.defaults.headers.common["Authorization"] =
                         "Bearer " + response?.data?.token;
-                    toast.success(response?.data?.message);
-                    history.push("/");
-                    window.location.href = '/';
+                    setToastMessage(response?.data?.message);
+                    setShowToast(true);
+                    history.push("/home");
+                    window.location.href = '/home';
                     handleClosep();
 
                 }
@@ -71,10 +75,15 @@ const Login = ({ handleClosep }) => {
                         password: input.password,
                     });
                     setIsLogin(true);
+                    setToastMessage('Register Successful');
+                    setShowToast(true);
                 }
             }
         } catch (error) {
             console.error(error?.response?.data || "Invalid ");
+            setToastMessage(error.response.data)
+            // setToastMessage('User not found.');
+            setShowToast(true);
 
         } finally {
             setLoading(false);
@@ -99,12 +108,12 @@ const Login = ({ handleClosep }) => {
                 <div className='main-bg' style={{ width: '100%', height: '100%' }}>
                     <img
                         className='freem253'
-                        src="src/img/logoa12.png"
+                        src="/img/logoa12.png"
                     ></img>
                     <div style={{ width: '100%', height: '30px', background: '#4c3226', position: 'absolute', left: ' 0', top: '0' }}></div>
                     <img
                         className='freemlogin1'
-                        src="src/img/freemlogin.svg"
+                        src="/img/freemlogin.svg"
                     ></img>
                     {/* <IonImg
                         className='freem3'
@@ -113,19 +122,19 @@ const Login = ({ handleClosep }) => {
                     <div className='user-img'>
                         <IonImg
                             className='freemlogin2'
-                            src="src/img/userlogo.svg"
+                            src="/img/userlogo.svg"
                         ></IonImg>
                         <div class="cell smaldesignleft">
                             <div class="circle fade-in-left">
                                 <img
-                                    src="src/img/leftdesign.svg"
+                                    src="/img/leftdesign.svg"
                                 ></img>
                             </div>
                         </div>
                         <div class="cell smaldesignright">
                             <div class="circle fade-in-left">
                                 <img
-                                    src="src/img/rightdesign.svg"
+                                    src="/img/rightdesign.svg"
                                 ></img>
                             </div>
                         </div>
@@ -145,7 +154,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.name}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                     fill="clear"
                                                 >
@@ -162,7 +171,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.password}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                 >
                                                     <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
@@ -172,7 +181,7 @@ const Login = ({ handleClosep }) => {
                                                 color='secondary'
                                                 type='submit'
                                                 expand="full"
-                                                style={{ marginTop: '20px', width: '100%', textTransform: 'capitalize' }}
+                                                style={{ marginTop: '20px', width: '100%', textTransform: 'uppercase' }}
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}
@@ -188,7 +197,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.name}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                     fill="clear"
                                                 >
@@ -204,7 +213,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.email || ''}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                     fill="clear"
                                                 >
@@ -220,7 +229,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.mobileNo || ''}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                     fill="clear"
                                                 >
@@ -235,7 +244,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.company || ''}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                 >
                                                     <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="business"></ion-icon>
                                                 </IonInput>
@@ -248,7 +257,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.refrence || ''}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                 >
                                                     <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person-add"></ion-icon>
                                                 </IonInput>
@@ -263,7 +272,7 @@ const Login = ({ handleClosep }) => {
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.password}
-                                                    onIonChange={handleChange}
+                                                    onBlur={handleChange}
                                                     required
                                                 >
                                                     <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
@@ -296,6 +305,12 @@ const Login = ({ handleClosep }) => {
                     </IonGrid>
                 </div>
             </IonPage>
+            <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message={toastMessage}
+                duration={2000}
+            />
         </>
     );
 }

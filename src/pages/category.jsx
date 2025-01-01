@@ -19,7 +19,8 @@ import {
     IonAccordion,
     IonAccordionGroup,
     IonInput,
-    IonCheckbox
+    IonCheckbox,
+    IonRange
 } from '@ionic/react';
 import { useParams } from "react-router-dom";
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
@@ -33,6 +34,8 @@ import '../pages/Tab1.css';
 import { IMG_PATH } from "../config";
 import jwtAuthAxios from "../service/jwtAuth";
 import { Navigation, Autoplay } from 'swiper/modules';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from '../store/actions';
 
 
 function Category() {
@@ -47,64 +50,162 @@ function Category() {
     const [totalCount, setTotalCount] = useState(1);
     const [hoveredImage, setHoveredImage] = useState('');
     const [pageSize, setPageSize] = useState(21);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [CategoryFilter, setCategoryFilter] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState([])
     const [subcollection, setSubcollection] = useState([])
     const [itemname, setItemname] = useState('')
-
     const isFetching = useRef(false)
+    const dispatch = useDispatch();
+    const { filters } = useSelector((state) => state.filter);
+    const [pendingFetch, setPendingFetch] = useState(false);
+    const [attr, setAttr] = useState([]);
+    const [filterDetails, setFilterDetails] = useState(filters?.filter || {
+        minctwts: 0, maxctwts: 0, minGramWt: 0, maxGramWt: 0, minpointer: 0,
+        maxpointer: 0,
+        attr: [],
+    });
 
-    const fetchCategoryData = async () => {
+    const [maxattr, setMaxttr] = useState({});
+
+
+    const fetchCategoryData = async (filterflag) => {
         if (isFetching.current) return;
         isFetching.current = true;
         setLoading(true);
+
+
+
         try {
             const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}`, {
-                filters: selectedCategories,
-                filters: selectedCollection
+                CategoryFilter,
+                CollectionFilter: selectedCollection,
+                filter: filterDetails,
+
             });
-            console.log("Fetching with filters:", selectedCategories);
+            // console.log("Fetching with filters:", selectedCategories);
+            setMaxttr(response?.data?.maxAttr);
+            if (filterDetails.attr.length <= 0) {
+                setAttr(response?.data.attribute[0].attr);
+            }
+            if (filterflag) {
+                setFilterDetails({
+                    minctwts: 0,
+                    maxctwts: 0,
+                    minGramWt: 0,
+                    maxGramWt: 0,
+                    minpointer: 0,
+                    maxpointer: 0,
+                    attr: [],
+                });
+            } else {
+                setFilterDetails(response?.data?.filter);
+            }
             setCategoryDetails(response?.data?.data);
-            setSubcategories(response?.data.CategoryFilter);
+            // setSubcategories(response?.data.CategoryFilter);
             setSubcollection(response.data.CollectionFilter)
             setTotalCount(response?.data?.pagination?.totalCount);
             setItemname(response.data.data[0].itemtype.name)
-            // console.log('k', response.data.data[0].itemtype.name)
             setError(null);
+
         } catch (error) {
-            setError('Failed to load category details. Please try again later.');
+            console.error(error?.response?.data?.error)
         } finally {
             setLoading(false);
             isFetching.current = false;
         }
     };
 
+    const demosub = async () => {
+        const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}`, {
+            CategoryFilter,
+            CollectionFilter: selectedCollection,
+            filter: filterDetails,
+
+        });
+        setSubcategories(response?.data.CategoryFilter);
+    }
+
+    useEffect(() => {
+        demosub()
+    }, [])
+
     const handleCategoryChange = (categoryId) => {
-        //console.log("category:", categoryId);
-        setSelectedCategories(prev =>
-            prev.includes(categoryId)
-                ? prev.filter(id => id !== categoryId)
-                : [...prev, categoryId]
-        );
+        // Toggle the selected category
+        const updatedCategories = CategoryFilter.includes(categoryId)
+            ? CategoryFilter.filter(id => id !== categoryId)
+            : [...CategoryFilter, categoryId];
+
+        setCategoryFilter(updatedCategories);
+        dispatch(setFilter(updatedCategories));
     };
 
     const handleCollectionChange = (collectionId) => {
-        //console.log("category:", categoryId);
-        setSelectedCollection(prev =>
-            prev.includes(collectionId)
-                ? prev.filter(id => id !== collectionId)
-                : [...prev, collectionId]
-        );
+        const updatedCollection = selectedCollection.includes(collectionId)
+            ? selectedCollection.filter(id => id !== collectionId)
+            : [...selectedCollection, collectionId];
+
+        setSelectedCollection(updatedCollection);
+        dispatch(setFilter(updatedCollection));
     };
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
 
+        const numericValue = value === '' ? '' : parseFloat(value);
+
+        if (value !== '' && isNaN(numericValue)) {
+            console.error(`Invalid input for ${name}: ${value}`);
+            return;
+        }
+
+        setFilterDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: numericValue,
+        }));
+
+        setPendingFetch(true);
+    };
+
+    const handleFilterAttrChange = (attr, attributeName, newValue) => {
+        if (newValue === "") {
+            console.log('" " value found');
+            setAttr([]);
+            setFilterDetails((prevDetails) => ({
+                ...prevDetails,
+                attr: [],
+            }));
+            setPendingFetch(true);
+            return;
+        }
+
+        const updatedAttr = attr.map((attribute) => {
+            if (attribute.name === attributeName) {
+                return { ...attribute, value: newValue };
+            }
+            return attribute;
+        });
+
+        setAttr(updatedAttr);
+        setFilterDetails((prevDetails) => ({ ...prevDetails, attr: updatedAttr }));
+        setPendingFetch(true);
+    };
 
     useEffect(() => {
         if (id) {
             fetchCategoryData();
+
         }
-    }, [id, page, selectedCategories, selectedCollection]);
+    }, [id, page, CategoryFilter, selectedCollection,]);
+
+
+    useEffect(() => {
+        if (pendingFetch) {
+            fetchCategoryData();
+            setPendingFetch(false);
+
+        }
+    }, [filterDetails, pendingFetch]);
 
     const handleMouseEnter = (sku, description, image, itemId) => {
         setHoveredItemId(itemId);
@@ -134,6 +235,27 @@ function Category() {
     const toggleOffcanvas = () => {
         setIsOpen(!isOpen);
     };
+
+    useEffect(() => {
+        console.log('filter', filterDetails)
+    }, [filterDetails])
+
+    const handleReset = () => {
+        setFilterDetails({
+            minctwts: 0,
+            maxctwts: 0,
+            minGramWt: 0,
+            maxGramWt: 0,
+            minpointer: 0,
+            maxpointer: 0,
+            attr: [],
+        });
+        setCategoryFilter([]);
+        setSelectedCollection([]);
+    };
+
+
+
     return (
         <>
             <Header />
@@ -171,38 +293,38 @@ function Category() {
                                 >
                                     <SwiperSlide >
                                         <IonImg className='slider-img pulsating-circle'
-                                            src="src/img/big-banner1.png"
+                                            src="/img/big-banner1.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
                                     <SwiperSlide >
                                         <IonImg
-                                            src="src/img/big-banner2.png"
+                                            src="/img/big-banner2.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
                                     <SwiperSlide >
                                         <IonImg
-                                            src="src/img/big-banner3.png"
+                                            src="/img/big-banner3.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
                                     <SwiperSlide >
                                         <IonImg
-                                            src="src/img/big-banner4.png"
+                                            src="/img/big-banner4.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
 
                                     <SwiperSlide >
                                         <IonImg
-                                            src="src/img/big-banner2.png"
+                                            src="/img/big-banner2.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
                                     <SwiperSlide >
                                         <IonImg
-                                            src="src/img/big-banner3.png"
+                                            src="/img/big-banner3.png"
                                             style={{ width: '100%', height: '100%', maxwidth: '180px', background: '#fff6ec', margin: '0', objectFit: 'contain', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                                         ></IonImg>
                                     </SwiperSlide>
@@ -210,20 +332,20 @@ function Category() {
                             </IonCol>
                         </IonRow>
                         <div>
-                            <h5 class="text-center mb-5 element">Category </h5>
+                            <h5 class="text-center mb-5 element" style={{marginBottom:'20px'}}>{itemname}  Category </h5>
                         </div>
                         <div className='main-catagory'>
                             <IonRow>
                                 <IonCol>
-                                    <h5>{itemname}</h5>
+                                    <h5></h5>
                                 </IonCol>
                             </IonRow>
                             <IonRow>
 
                                 {loading ? (
-                                    <p>Loading...</p>
+                                    <p style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>Loading...</p>
                                 ) : error ? (
-                                    <p className="error-message">{error}</p>
+                                    <p className="error-message" style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>{error}</p>
                                 ) : (
                                     categoryDetails?.map(item =>
                                         <IonCol size-md='4' size-sm='6' size='12'>
@@ -237,6 +359,9 @@ function Category() {
                                                 <div className='main-card-bottom'>
                                                     <div>
                                                         <h5>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
+                                                    </div>
+                                                    <div>
+                                                        <h5 style={{color:'#bc7700'}}>{item.category[0].name}</h5>
                                                     </div>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                         <div className='ctstop'>
@@ -401,31 +526,32 @@ function Category() {
                                         <div className='topbtn'>
                                             <span>Filter by:</span>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <IonButton style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Reset</IonButton>
-                                                <IonButton style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Apply</IonButton>
+                                                <IonButton onclick={handleReset} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Reset</IonButton>
+                                                <IonButton onClick={toggleOffcanvas} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Apply</IonButton>
                                             </div>
                                         </div>
                                         <IonAccordionGroup
                                             class='filter-drop'
                                             multiple={true}
-                                            value={["first", "second", "third", "fore"]} // Set the first accordion as open by default
+                                            // Set the first accordion as open by default
                                             style={{ padding: '0' }}>
                                             <IonAccordion value="first">
                                                 <IonItem slot="header" color='secondary'>
                                                     <p>Sub Category</p>
                                                 </IonItem>
                                                 <div className="ion-padding" slot="content">
-                                                    {subcategories.map(CategoryFilter => (
-                                                        <IonCheckbox
-                                                            key={CategoryFilter._id}
-                                                            size='large'
-                                                            labelPlacement="end"
-                                                            style={{ marginBottom: '10px' }}
-                                                            checked={selectedCategories.includes(CategoryFilter._id)}
-                                                            onIonChange={() => handleCategoryChange(CategoryFilter._id)}
-                                                        >
-                                                            <span>{CategoryFilter.name}</span>
-                                                        </IonCheckbox>
+                                                    {subcategories.map(subcategory => (
+                                                        <div key={subcategory._id} style={{ display: 'flex' }}>
+                                                            <IonCheckbox
+                                                                size='large'
+                                                                labelPlacement="end"
+                                                                style={{ marginBottom: '10px' }}
+                                                                //checked={selectedCategories.includes(subcategory._id)}
+                                                                checked={Array.isArray(CategoryFilter) && CategoryFilter.includes(subcategory._id)}
+                                                                onIonChange={() => handleCategoryChange(subcategory._id)}
+                                                            />
+                                                            <span style={{ margin: '1px 0px 0px 10px' }}>{subcategory.name}</span>
+                                                        </div>
                                                     ))}
                                                 </div>
                                             </IonAccordion>
@@ -440,7 +566,7 @@ function Category() {
                                                             size='large'
                                                             labelPlacement="end"
                                                             style={{ marginBottom: '10px' }}
-                                                            checked={selectedCollection.includes(CollectionFilter._id)}
+                                                            checked={Array.isArray(selectedCollection) && selectedCollection.includes(CollectionFilter._id)}
                                                             onIonChange={() => handleCollectionChange(CollectionFilter._id)}
                                                         >
                                                             <span>{CollectionFilter.name}</span>
@@ -448,18 +574,36 @@ function Category() {
                                                     ))}
                                                 </div>
                                             </IonAccordion>
-                                            <IonAccordion value="third">
+                                            <IonAccordion value="third" >
                                                 <IonItem slot="header" color='secondary'>
                                                     <p>CT Wts</p>
                                                 </IonItem>
                                                 <div className="ion-padding" slot="content">
                                                     <div className='d-flex'>
                                                         <span>Min</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
+                                                        <IonInput color="secondary" type="number" style={{ background: 'transparent' }} placeholder="0"
+                                                            min={0}
+                                                            max={100}
+                                                            step={0.01}
+                                                            name="minctwts"
+                                                            value={filterDetails?.minctwts || 0}
+                                                            // onIonChange={handleFilterChange}
+                                                            onIonBlur={handleFilterChange}
+
+                                                        ></IonInput>
                                                     </div>
                                                     <div className='d-flex'>
                                                         <span>Max</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
+                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
+                                                            min={0}
+                                                            max={100}
+                                                            step={0.01}
+                                                            name="maxctwts"
+                                                            value={filterDetails.maxctwts || 0}
+                                                            // onIonChange={handleFilterChange}
+                                                            onIonBlur={handleFilterChange}
+
+                                                        ></IonInput>
                                                     </div>
                                                 </div>
                                             </IonAccordion>
@@ -470,26 +614,212 @@ function Category() {
                                                 <div className="ion-padding" slot="content">
                                                     <div className='d-flex'>
                                                         <span>Min</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
+                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
+                                                            min={0}
+                                                            max={100}
+                                                            step={0.01}
+                                                            name="minGramWt"
+                                                            value={filterDetails?.minGramWt || 0}
+                                                            // onIonChange={handleFilterChange}
+                                                            onIonBlur={handleFilterChange}
+                                                        ></IonInput>
                                                     </div>
                                                     <div className='d-flex'>
                                                         <span>Max</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
+                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
+                                                            min={0}
+                                                            max={100}
+                                                            step={0.01}
+                                                            name="maxGramWt"
+                                                            value={filterDetails.maxGramWt || 0}
+                                                            // onIonChange={handleFilterChange}
+                                                            onIonBlur={handleFilterChange}
+                                                        ></IonInput>
                                                     </div>
                                                 </div>
                                             </IonAccordion>
+                                            {attr?.length > 0 && (
+                                                <IonAccordion value="five">
+                                                    <IonItem slot="header" color='secondary'>
+                                                        <p>Pointer</p>
+                                                    </IonItem>
+                                                    <div slot="content" style={{ margin: '10px 0px 0px 20px', width: '90%' }}>
+                                                        <div >
+                                                            <>
+                                                                {attr?.map((attribute, index) => {
+                                                                    switch (attribute.type) {
+                                                                        case "singleinput":
+                                                                            return (
+                                                                                <div key={attribute._id} >
+                                                                                    <label>
+                                                                                        {attribute?.name}
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        style={{ width: "65%" }}
+                                                                                        id={attribute.name}
+                                                                                        name={`attr${index}`}
+                                                                                        value={attribute.value}
+                                                                                        onChange={(e) =>
+                                                                                            handleFilterAttrChange(
+                                                                                                attr,
+                                                                                                attribute.name,
+                                                                                                e.target.value
+                                                                                            )
+                                                                                        }
+                                                                                    />
+                                                                                </div>
+                                                                            );
+                                                                        case "radio":
+                                                                            return (
+                                                                                <div key={attribute._id} >
+                                                                                    <label >
+                                                                                        {attribute?.name}
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        id={attribute.value}
+                                                                                        name={attribute.name}
+                                                                                        value={attribute.value}
+                                                                                        onChange={handleFilterAttrChange}
+                                                                                    />
+                                                                                    <label htmlFor={attribute.value}>
+                                                                                        {attribute.value}
+                                                                                    </label>
+                                                                                </div>
+                                                                            );
+                                                                        case "range1":
+                                                                            return (
+                                                                                <div key={attribute._id} >
+                                                                                    <label >
+                                                                                        {attribute?.name}
+                                                                                    </label>
+
+                                                                                    <IonRange
+                                                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px' }}
+                                                                                        dualKnobs={true}
+                                                                                        id={attribute.value}
+                                                                                        min={0.00}
+                                                                                        name={`attr${index}`}
+                                                                                        max={maxattr?.value}
+                                                                                        step={0.01}
+                                                                                        value={{
+                                                                                            lower: parseFloat(attribute.value.split("-")[0]) || 0,
+                                                                                            upper: parseFloat(attribute.value.split("-")[1]) || (maxattr?.value)
+                                                                                        }}
+                                                                                        pinFormatter={(value) => `${value}`}
+                                                                                        pin={true}
+                                                                                        ticks={true}
+                                                                                        snaps={true}
+                                                                                        onIonChange={(e) => {
+                                                                                            const newMinValue = e.detail.value.lower;
+                                                                                            const newMaxValue = e.detail.value.upper;
+                                                                                            handleFilterAttrChange(attr, attribute.name, `${newMinValue}-${newMaxValue}`);
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                            );
+                                                                        case "range":
+                                                                            return (
+                                                                                <div key={attribute._id} >
+                                                                                    <label >
+                                                                                        {attribute?.name}
+                                                                                    </label>
+                                                                                    <form
+                                                                                        name="price"
+                                                                                        action=""
+                                                                                        method="POST"
+                                                                                        style={{ display: "flex", marginTop: "5px" }}
+                                                                                    >
+                                                                                        <label htmlFor="price-start">
+                                                                                            min
+                                                                                            <input
+                                                                                                id="price-start"
+                                                                                                type="number"
+                                                                                                min={0}
+                                                                                                max={100}
+                                                                                                name={`max${attribute.name}`}
+                                                                                                value={attribute.value.split("-")[0]}
+                                                                                                onChange={(e) =>
+                                                                                                    handleFilterAttrChange(
+                                                                                                        attr,
+                                                                                                        attribute.name,
+                                                                                                        `${e.target.value}-${attribute.value.split("-")[1]
+                                                                                                        }`
+                                                                                                    )
+                                                                                                }
+                                                                                                style={{
+                                                                                                    marginLeft: "5px",
+                                                                                                    marginRight: "15px",
+                                                                                                }}
+                                                                                            />
+                                                                                        </label>
+                                                                                        <label htmlFor="price-end">
+                                                                                            Max
+                                                                                            <input
+                                                                                                id="price-end"
+                                                                                                type="number"
+                                                                                                min={0}
+                                                                                                max={100}
+                                                                                                name={`min${attribute.name}`}
+                                                                                                value={attribute.value.split("-")[1]}
+                                                                                                onChange={(e) =>
+                                                                                                    handleFilterAttrChange(
+                                                                                                        attr,
+                                                                                                        attribute.name,
+                                                                                                        `${attribute.value.split("-")[0]}-${e.target.value
+                                                                                                        }`
+                                                                                                    )
+                                                                                                }
+                                                                                                style={{ marginLeft: "5px" }}
+                                                                                            />
+                                                                                        </label>
+                                                                                    </form>
+                                                                                </div>
+                                                                            );
+                                                                        default:
+                                                                            return null;
+                                                                    }
+                                                                })}
+                                                            </>
+                                                        </div>
+                                                    </div>
+                                                </IonAccordion>
+                                            )}
                                         </IonAccordionGroup>
 
                                     </div>
                                 </div>
                             </div>
                             <div className="pagination-controls" style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                                <button onClick={handlePreviousPage} disabled={page === 1} style={{
-                                    color: 'rgb(24 9 2)', padding: '4px 8px', fontSize: '28px', border: '1px solid #e5e0db', background: '#ffe4c4', borderRadius: '10px',
-                                }}><ion-icon name="arrow-back-circle-outline" slot="icon-only"></ion-icon></button>
-                                <button onClick={handleNextPage} disabled={page * pageSize >= totalCount} style={{
-                                    color: 'rgb(24 9 2)', padding: '4px 8px', fontSize: '28px', border: '1px solid #e5e0db', background: '#ffe4c4', borderRadius: '10px'
-                                }}><ion-icon name="arrow-forward-circle-outline" slot="icon-only"></ion-icon></button>
+                                <button
+                                    onClick={handlePreviousPage}
+                                    disabled={page === 1}
+                                    style={{
+                                        color: page === 1 ? 'rgb(40 39 39)' : 'rgb(24 9 2)',
+                                        padding: '12px',
+                                        border: '1px solid #e5e0db',
+                                        background: page === 1 ? '#f0e4d7' : '#ffe4c4',
+                                        borderRadius: '10px',
+                                        cursor: page === 1 ? 'not-allowed' : 'pointer',
+                                    }}
+                                >
+                                    Previous
+                                </button>
+                                <button
+                                    onClick={handleNextPage}
+                                    disabled={page * pageSize >= totalCount}
+                                    style={{
+                                        color: (page * pageSize >= totalCount) ? 'rgb(40 39 39)s' : 'rgb(24 9 2)',
+                                        padding: '12px',
+                                        border: '1px solid #e5e0db',
+                                        borderRadius: '10px',
+                                        background: (page * pageSize >= totalCount) ? '#f0e4d7' : '#ffe4c4',
+                                        cursor: (page * pageSize >= totalCount) ? 'not-allowed' : 'pointer',
+                                    }}
+                                >
+                                    Next
+                                </button>
                             </div>
                         </div>
                     </IonGrid>

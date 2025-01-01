@@ -38,6 +38,8 @@ import SearchPage from './pages/searchbar';
 import Thanks from './pages/thanks';
 import Myquotations from './pages/myquotations';
 import Myquotationsview from './pages/myquotationsview';
+import Videojewal from './pages/videojewal';
+import Videoshow from './pages/videoshow';
 import Ccategorypage from './pages/c-category';
 import Head from './pages/head';
 import './pages/Tab1.css';
@@ -47,6 +49,8 @@ import DataProvider from "./context/DataProvider"
 import { addToCart } from "./store/actions";
 import { useDispatch } from "react-redux";
 import useAuthInterceptor from "./service/useAuthInterceptor";
+import samplePDF1 from "../public/footer/size.pdf";
+import samplePDF2 from "../public/footer/finding.pdf";
 
 function apps() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -56,12 +60,17 @@ function apps() {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({
+    username:"",
     mobileNumber: "",
-    company: "",
+    email:"",
     reference: "",
+    company:""
   });
   const [mobileNo, setMobileNo] = useState();
   const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+  const [refrence, setRefrence] = useState();
+  const [company, setCompany] = useState();
   let user = JSON.parse(localStorage.getItem("user"));
   let userId = JSON.parse(localStorage.getItem("user"))?._id;
   const [validated, setValidated] = useState(false);
@@ -75,10 +84,14 @@ function apps() {
         const response = await jwtAuthAxios.patch(`master/user/${userId}`, {
           username,
           mobileNo,
+          email,
+          refrence,
+          company
         });
         console.log('cccc', response)
         localStorage.setItem("user", JSON.stringify(response?.data));
         window.dispatchEvent(new Event("storage"));
+        setShowModal(false);
       } catch (error) {
         console.error(error?.response?.data?.error);
       }
@@ -92,6 +105,7 @@ function apps() {
       mobileNo: user?.mobileNo,
       company: user?.company,
       reference: user?.reference,
+      email: user?.email,
     });
   }, []);
 
@@ -117,6 +131,17 @@ function apps() {
     setMobileNo(event.target.value);
   };
 
+  const handleChangeemail = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleChangrefrence = (event) => {
+    setRefrence (event.target.value);
+  };
+
+  const handleChangcompany = (event) => {
+    setCompany (event.target.value);
+  };
 
   const openModal = () => {
     setShowDropdown(false);
@@ -163,6 +188,9 @@ function apps() {
     e?.stopPropagation();
     setUsername(user?.username);
     setMobileNo(user?.mobileNo);
+    setEmail(user?.email);
+    setRefrence(user?.refrence);
+    setCompany(user?.company);
     setShowDropdown(!showDropdown);
   };
   // const toggleDropdown = () => {
@@ -177,7 +205,7 @@ function apps() {
   }, []);
 
 
-  const hideTabBarRoutes = ['/login', '/registerhere'];
+  const hideTabBarRoutes = ['/login', '/registerhere', '/video', '/videoshow/:id'];
   return (
     <>
 
@@ -185,7 +213,8 @@ function apps() {
         <DataProvider>
           <IonTabs id="main-content">
             <IonRouterOutlet>
-              <Redirect exact path="/" to="/home" />
+              <Redirect exact path="/" to="/login" />
+              <Route path="/login" render={() => <Login />} exact={true} />
               <Route path="/home" render={() => <HomePage />} exact={true} />
               <Route path="/c-category/:id" render={() => <Ccategorypage />} exact={true} />
               <Route path="/category/:id" render={() => <Category />} exact={true} />
@@ -197,9 +226,10 @@ function apps() {
               <Route path="/privacypolicy" render={() => <PrivacyPolicy />} exact={true} />
               <Route path="/search" render={() => <SearchPage />} exact={true} />
               <Route path="/product/:id" render={() => <Productpage />} exact={true} />
-              <Route path="/login" render={() => <Login />} exact={true} />
               <Route path="/head" render={() => <><Head></Head></>} exact={true} />
               <Route path="/thanks" render={() => <><Thanks></Thanks></>} exact={true} />
+              <Route path="/video" render={() => <><Videojewal></Videojewal></>} exact={true} />
+              <Route path="/videoshow/:id" render={() => <><Videoshow></Videoshow></>} exact={true} />
             </IonRouterOutlet>
           </IonTabs>
         </DataProvider>
@@ -211,13 +241,13 @@ function apps() {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IonButtons slot="start">
                   <IonMenuButton fill='clear' >
-                    <Ion-Icon slot="start" src="src/img/align-left.svg" style={{ height: '100%', marginLeft: '10px', marginRight: '10px' }}></Ion-Icon>
+                    <Ion-Icon slot="start" src="/img/align-left.svg" style={{ height: '100%', marginLeft: '10px', marginRight: '10px' }}></Ion-Icon>
                   </IonMenuButton>
                 </IonButtons>
 
                 <IonImg
                   slot="start"
-                  src="src/img/logo.svg"
+                  src="/img/logo.svg"
                   style={{ height: '30px', margin: '0', marginLeft: '0px' }}
                 ></IonImg>
 
@@ -227,7 +257,7 @@ function apps() {
                 <button onClick={toggleDropdown} style={{ background: 'none', border: 'none', cursor: 'pointer', marginRight: '10px' }}>
                   <IonImg
                     slot="start"
-                    src="src/img/user.png"
+                    src="/img/user.png"
                     style={{ height: '30px', margin: '0' }}
                   ></IonImg>
                 </button>
@@ -256,6 +286,23 @@ function apps() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-blockquote-right" viewBox="0 0 16 16"><path d="M2.5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm10.113-5.373a7 7 0 0 0-.445-.275l.21-.352q.183.111.452.287.27.176.51.428.234.246.398.562.164.31.164.692 0 .54-.216.873-.217.328-.721.328-.322 0-.504-.211a.7.7 0 0 1-.188-.463q0-.345.211-.521.205-.182.569-.182h.281a1.7 1.7 0 0 0-.123-.498 1.4 1.4 0 0 0-.252-.37 2 2 0 0 0-.346-.298m-2.168 0A7 7 0 0 0 10 6.352L10.21 6q.183.111.452.287.27.176.51.428.234.246.398.562.164.31.164.692 0 .54-.216.873-.217.328-.721.328-.322 0-.504-.211a.7.7 0 0 1-.188-.463q0-.345.211-.521.206-.182.569-.182h.281a1.8 1.8 0 0 0-.117-.492 1.4 1.4 0 0 0-.258-.375 2 2 0 0 0-.346-.3z"></path></svg>
                   My Quotation</a>
               </ion-router-link>
+              <ion-router-link href="/video">
+                <a style={{ cursor: 'pointer' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-reels" viewBox="0 0 16 16">
+                    <path d="M6 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0M1 3a2 2 0 1 0 4 0 2 2 0 0 0-4 0" />
+                    <path d="M9 6h.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 8.73V7.27l-3.5 1.555v4.35zM1 8v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1" />
+                    <path d="M9 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6M7 3a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                  </svg>
+                  Exclusive Jewellery</a>
+              </ion-router-link>
+              <ion-router-link href="http://craft.dnav360.com/"
+                target="_blank">
+                <a style={{ cursor: 'pointer' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-boxes" viewBox="0 0 16 16">
+                    <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434zM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567zM7.5 9.933l-2.75 1.571v3.134l2.75-1.571zm1 3.134 2.75 1.571v-3.134L8.5 9.933zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567zm2.242-2.433V3.504L8.5 5.076V8.21zM7.5 8.21V5.076L4.75 3.504v3.134zM5.258 2.643 8 4.21l2.742-1.567L8 1.076zM15 9.933l-2.75 1.571v3.134L15 13.067zM3.75 14.638v-3.134L1 9.933v3.134z" />
+                  </svg>
+                  Live Stock</a>
+              </ion-router-link>
               {/* <a style={{ cursor: 'pointer' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-camera-reels" viewBox="0 0 16 16"><path d="M6 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0M1 3a2 2 0 1 0 4 0 2 2 0 0 0-4 0"></path><path d="M9 6h.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 8.73V7.27l-3.5 1.555v4.35zM1 8v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1"></path><path d="M9 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6M7 3a2 2 0 1 1 4 0 2 2 0 0 1-4 0"></path></svg>
                 Exclusive Jewellery</a> */}
@@ -271,7 +318,7 @@ function apps() {
                   <div>
                     <IonImg
                       slot="start"
-                      src="src/img/min-logo.svg"
+                      src="/img/min-logo.svg"
                       style={{ height: '35px', margin: '0', marginLeft: '20px', filter: 'invert(1)' }}
                     ></IonImg>
                   </div>
@@ -302,7 +349,7 @@ function apps() {
                           <ion-router-link href={`/category/${item._id}`} style={{ textDecoration: 'none' }}>
                             <div className='main-categoryimg'>
                               <IonImg className='categoryimg' src={IMG_PATH + item?.filepath} />
-                              <IonImg className='categoryimg1' src="src/img/catagory-bg.png" />
+                              <IonImg className='categoryimg1' src="/img/catagory-bg.png" />
                             </div>
                             <IonTitle>{item.name}</IonTitle>
                           </ion-router-link>
@@ -329,7 +376,7 @@ function apps() {
                         </div>
                       </ion-router-link>
 
-                      <ion-router-link href="/footer/size.pdf">
+                      <ion-router-link href={samplePDF1} target="_blank">
                         <div className='d-flex' style={{ gap: '10px', marginBottom: '7px' }}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#4c3226" class="bi bi-aspect-ratio" viewBox="0 0 16 16">
                             <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
@@ -338,7 +385,7 @@ function apps() {
                           <span style={{ color: "#f3a41c" }}>Size</span>
                         </div>
                       </ion-router-link>
-                      <ion-router-link href="/footer/finding.pdf">
+                      <ion-router-link href={samplePDF2} target="_blank">
                         <div className='d-flex' style={{ gap: '10px', marginBottom: '7px' }}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#4c3226" class="bi bi-infinity" viewBox="0 0 16 16">
                             <path d="M5.68 5.792 7.345 7.75 5.681 9.708a2.75 2.75 0 1 1 0-3.916ZM8 6.978 6.416 5.113l-.014-.015a3.75 3.75 0 1 0 0 5.304l.014-.015L8 8.522l1.584 1.865.014.015a3.75 3.75 0 1 0 0-5.304l-.014.015zm.656.772 1.663-1.958a2.75 2.75 0 1 1 0 3.916z" />
@@ -386,37 +433,54 @@ function apps() {
                 <div className='user-img'>
                   <IonImg
                     className='freemlogin2'
-                    src="src/img/userlogo.svg"
+                    src="/img/userlogo.svg"
                   ></IonImg>
-                  <div class="cell smaldesignleft">
+                  {/* <div class="cell smaldesignleft">
                     <div class="circle fade-in-left">
                       <img
-                        src="src/img/leftdesign.svg"
+                        src="/img/leftdesign.svg"
                       ></img>
                     </div>
                   </div>
                   <div class="cell smaldesignright">
                     <div class="circle fade-in-left">
                       <img
-                        src="src/img/rightdesign.svg"
+                        src="/img/rightdesign.svg"
                       ></img>
                     </div>
-                  </div>
+                  </div> */}
 
                 </div>
                 <IonItem>
                   <IonInput type='text' label="Username : " placeholder=" Enter text " fill="clear"
                     color="secondary" value={username}
-                    onIonChange={handleChangeUsername}>
+                    onBlur={handleChangeUsername}>
                   </IonInput>
                 </IonItem>
                 <IonItem>
                   <IonInput type='tel' label="Mobile No : " placeholder=" Enter number " fill="clear"
                     color="secondary" value={mobileNo}
-                    onIonChange={handleChangePhone}>
+                    onBlur={handleChangePhone}>
                   </IonInput>
                 </IonItem>
-
+                <IonItem>
+                  <IonInput type='text' label="Email : " placeholder=" Enter Email " fill="clear"
+                    color="secondary" value={email}
+                    onBlur={handleChangeemail}>
+                  </IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonInput type='text' label="Refrence Name : " placeholder="Enter Refrence " fill="clear"
+                    color="secondary" value={refrence}
+                    onBlur={handleChangrefrence}>
+                  </IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonInput type='text' label="Company Name : " placeholder="Enter Company " fill="clear"
+                    color="secondary" value={company}
+                    onBlur={handleChangcompany}>
+                  </IonInput>
+                </IonItem>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <IonButton type='submit' style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Save</IonButton>
                   <IonButton onClick={closeModal} style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Close</IonButton>

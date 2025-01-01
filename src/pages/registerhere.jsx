@@ -28,24 +28,24 @@ function Login() {
                     <div style={{ width: '100%', height: '30px', background: '#4c3226', position: 'absolute', left: ' 0', top: '0' }}></div>
                     <img
                         className='freemlogin1'
-                        src="src/img/freemlogin.png"
+                        src="/img/freemlogin.png"
                     ></img>
                     <div className='user-img'>
                         <IonImg
                             className='freemlogin2'
-                            src="src/img/userlogo.svg"
+                            src="/img/userlogo.svg"
                         ></IonImg>
                         <div class="cell smaldesignleft">
                             <div class="circle fade-in-left">
                                 <img
-                                    src="src/img/leftdesign.svg"
+                                    src="/img/leftdesign.svg"
                                 ></img>
                             </div>
                         </div>
                         <div class="cell smaldesignright">
                             <div class="circle fade-in-left">
                                 <img
-                                    src="src/img/rightdesign.svg"
+                                    src="/img/rightdesign.svg"
                                 ></img>
                             </div>
                         </div>

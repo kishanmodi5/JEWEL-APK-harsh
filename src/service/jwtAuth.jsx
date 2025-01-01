@@ -1,11 +1,18 @@
 import axios from 'axios';
 import { BACKEND_APP_URL, IMG_PATH } from '../config'; 
 
+// const jwtAuthAxios = axios.create({
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   baseURL: BACKEND_APP_URL,
+// });
+
 const jwtAuthAxios = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  baseURL: BACKEND_APP_URL,
+  baseURL: 'https://masterapi.greenlabjewels.com',
 });
 
 
