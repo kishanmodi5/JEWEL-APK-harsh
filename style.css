@@ -496,12 +496,21 @@ button.alert-button.ion-focusable.ion-activatable.sc-ion-alert-md {
     color: #4c3226;
     border: 1px solid #4c322661;
     font-size: 17px;
-    padding: 4px 8px;
+    padding: 6px 8px;
+    max-width: 50px;
+}
+
+.right .swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+    margin: 0px -20px 0px 0px;
 }
 
 .native-wrapper .radio-icon {
     --width: 25px !important;
     --height: 25px !important;
+}
+:host .ionicon {
+    fill: #4c3226 !important;
 }
 
 .freemlogin1 {
@@ -1104,11 +1113,20 @@ ion-modal {
     --height: 100%;
 }
 
-.swiper-button-prev:after,
+/* .swiper-button-prev:after,
 .swiper-button-next:after {
     font-size: 16px !important;
     padding: 7px 10px;
     background-color: #f3a41c;
+    color: #ffffff;
+    border-radius: 50%;
+} */
+
+.swiper-button-prev:after ,
+.swiper-button-next:after  {
+    font-size: 16px !important;
+    padding: 7px 10px;
+    background-color: #f3a41cb0;
     color: #ffffff;
     border-radius: 50%;
 }
@@ -1532,3 +1550,4 @@ p {
     object-fit: contain;
     background: black;
 }
+
