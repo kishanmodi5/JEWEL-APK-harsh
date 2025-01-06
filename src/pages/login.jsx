@@ -40,6 +40,21 @@ const Login = ({ handleClosep }) => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
+    useEffect(() => {
+        // Force reflow after the component loads
+        setTimeout(() => {
+            document.body.classList.add('force-reflow');
+        }, 0);
+
+        // Preload fonts/icons (You can also use custom fonts if needed)
+        const iconLink = document.createElement('link');
+        iconLink.rel = 'stylesheet';
+        iconLink.href = 'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css'; // Ensure it's the right version
+        document.head.appendChild(iconLink);
+
+    }, []);
+
+
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
@@ -91,26 +106,20 @@ const Login = ({ handleClosep }) => {
     };
 
     const handleChange = (e) => {
-        console.log('sdsd')
         const { name, value } = e.target;
         setInput((prevInput) => ({ ...prevInput, [name]: value }));
     };
 
 
-    useEffect(() => {
-        console.log('input', input)
-    }, [input])
-
-
     return (
         <>
             <IonPage>
-                <div className='main-bg' style={{ width: '100%', height: '100%' }}>
+                <div className='main-bg' style={{ width: '100%', height: '100%', marginTop:'30px' }}>
                     <img
                         className='freem253'
                         src="/img/logoa12.png"
                     ></img>
-                    <div style={{ width: '100%', height: '30px', background: '#4c3226', position: 'absolute', left: ' 0', top: '0' }}></div>
+                    {/* <div style={{ width: '100%', height: '30px', background: '#4c3226', position: 'absolute', left: ' 0', top: '50px' }}></div> */}
                     <img
                         className='freemlogin1'
                         src="/img/freemlogin.svg"
@@ -141,24 +150,25 @@ const Login = ({ handleClosep }) => {
 
                     </div>
                     <IonGrid>
-                        <IonRow className='loginrow'>
+                   
+                        <IonRow className='loginrow' >
                             <IonCol size-md='6' size-sm='8' size='12'>
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
                                     {isLogin ? (
                                         <>
-                                            <div style={{ display: 'flex' }}>
+                                            <div className='input-div'>
                                                 <IonInput
+                                                    className="input-field"
                                                     name="name"
                                                     placeholder="Enter Username"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
+                                                    color="secondary"
                                                     slot="start"
                                                     value={input.name}
                                                     onBlur={handleChange}
                                                     required
                                                     fill="clear"
                                                 >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person"></ion-icon>
+                                                    <ion-icon className="input-icon" color="secondary" slot="start" name="person"></ion-icon>
                                                 </IonInput>
                                             </div>
                                             <div style={{ display: 'flex' }}>
@@ -180,8 +190,8 @@ const Login = ({ handleClosep }) => {
                                             <IonButton
                                                 color='secondary'
                                                 type='submit'
+                                                className='submit-button'
                                                 expand="full"
-                                                style={{ marginTop: '20px', width: '100%', textTransform: 'uppercase' }}
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}

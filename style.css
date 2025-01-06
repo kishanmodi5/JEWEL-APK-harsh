@@ -14,7 +14,34 @@ body {
     --ion-color-primary: #ffdeb30e;
     --ion-color-temary: #ffdeb3;
     --ion-color-success: #f3a41c;
+    --ion-background-color: #ffdeb300;
 }
+
+
+.input-div{
+    display: flex;
+}
+
+.input-field {
+    background: #ffdeb300;
+    color: #000;
+  }
+  
+.input-icon {
+    margin-left: 15px;
+    margin-right: 27px;
+}
+  
+.submit-button {
+    margin-top: 20px;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+.force-reflow {
+    display: block; /* or any other reflow action */
+  }
+
 
 span {
     display: block;

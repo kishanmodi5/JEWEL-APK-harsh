@@ -25,7 +25,7 @@ import {
 // import { useLocation } from "react-router-dom";
 import { IonMenuToggle } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, useHistory } from 'react-router';
 import HomePage from './pages/home';
 import AddtocardPage from './pages/addtocard';
 import Login from './pages/login';
@@ -51,8 +51,10 @@ import { useDispatch } from "react-redux";
 import useAuthInterceptor from "./service/useAuthInterceptor";
 import samplePDF1 from "../public/footer/size.pdf";
 import samplePDF2 from "../public/footer/finding.pdf";
+import { colorFill } from 'ionicons/icons';
 
 function apps() {
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [homeDetails, setHomeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,9 +73,18 @@ function apps() {
   const [email, setEmail] = useState();
   const [refrence, setRefrence] = useState();
   const [company, setCompany] = useState();
+;
+
   let user = JSON.parse(localStorage.getItem("user"));
   let userId = JSON.parse(localStorage.getItem("user"))?._id;
   const [validated, setValidated] = useState(false);
+
+  const isAuthenticatedR = () => {
+    const token = localStorage.getItem("token");
+    return !!token;
+  };
+
+  const [isAuthenticated, setIsAuthenticated] = useState(isAuthenticatedR())
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -149,18 +160,13 @@ function apps() {
   };
   const closeModal = () => setShowModal(false);
 
-  const isAuthenticatedR = () => {
-    const token = localStorage.getItem("token");
-    return !!token;
-  };
-  const [isAuthenticated, setIsAuthenticated] = useState(isAuthenticatedR());
+
 
 
   const LogOutHandler = () => {
     localStorage.clear();
     setIsAuthenticated(false);
     window.location.href = '/login';
-
   };
 
   // useAuthInterceptor();
@@ -240,8 +246,8 @@ function apps() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', background: '#fff6ec' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IonButtons slot="start">
-                  <IonMenuButton fill='clear' >
-                    <Ion-Icon slot="start" src="/img/align-left.svg" style={{ height: '100%', marginLeft: '10px', marginRight: '10px' }}></Ion-Icon>
+                  <IonMenuButton fill='clear'>
+                  <ion-icon name="menu-outline" size='large' style={{ color: 'black' }}></ion-icon>
                   </IonMenuButton>
                 </IonButtons>
 
@@ -351,7 +357,8 @@ function apps() {
                               <IonImg className='categoryimg' src={IMG_PATH + item?.filepath} />
                               <IonImg className='categoryimg1' src="/img/catagory-bg.png" />
                             </div>
-                            <IonTitle>{item.name}</IonTitle>
+                            {/* <IonTitle>{item.name}</IonTitle> */}
+                    <span style={{color:'black', display:'flex',justifyContent:'center' , fontSize:'12px', marginBottom:'10px'}}>{item?.name}</span>
                           </ion-router-link>
                         </IonCol>
                       ))

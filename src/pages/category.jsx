@@ -261,7 +261,7 @@ function Category() {
             <Header />
 
             <IonPage>
-                <div style={{ margin: '30px' }}></div>
+                <div style={{ margin: '50px' }}></div>
 
                 <IonContent color="primary">
                     <IonGrid>

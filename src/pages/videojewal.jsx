@@ -42,20 +42,16 @@ const Videojewal = () => {
         }
     };
 
-
     useEffect(() => {
         fetchVideoData();
     }, []);
 
-    
     const handleItemClick = (item) => {
         history.push({
             pathname: `/videoshow/${item?._id}`,
-            state: { rowData: item } 
+            state: { rowData: item }
         });
-   
     };
-
 
     const handlePDFDownload = async () => {
         try {
@@ -81,7 +77,6 @@ const Videojewal = () => {
         }
     };
 
-
     const getUniqueCategories = () => {
         const uniqueTypes = [...new Set(data.map(item => item.type))];
         return uniqueTypes;
@@ -91,13 +86,11 @@ const Videojewal = () => {
         setSelectedOption(event.target.value);
         setCurrentPage(1);
     };
-  
 
     const handleItemsPerPageChange = (event) => {
         setItemsPerPage(Number(event.target.value));
         setCurrentPage(1);
     };
-
 
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -109,11 +102,7 @@ const Videojewal = () => {
                 <div className="pb-3">
                     <IonGrid>
                         <IonRow className="ion-align-items-center mb-4">
-                            <IonCol size-sm="3" size="12" >
-                                {/* <h4 className="breadcrumb-item" style={{ fontFamily: 'Circular' }}>
-                                    Jewellery Assets
-                                </h4> */}
-
+                            <IonCol size-sm="3" size="12" style={{marginTop:'70px'}} >
                                 <a href="/home" style={{ padding: '0', }}>
                                     <IonImg
                                         className='logo'
@@ -121,8 +110,6 @@ const Videojewal = () => {
                                         style={{ width: '130px', height: '40px' }}
                                     ></IonImg>
                                 </a>
-
-
                             </IonCol>
 
                             <IonCol size-sm="9" size="12">
@@ -132,6 +119,15 @@ const Videojewal = () => {
                                             id="simple-select"
                                             value={selectedOption}
                                             onChange={handleSelectChange}
+                                            style={{
+                                                padding: '5px',
+                                                fontSize: '14px',
+                                                borderRadius: '4px',
+                                                border: '1px solid #ccc',
+                                                backgroundColor: '#fff',
+                                                color: '#333',
+                                                cursor: 'pointer'
+                                            }}
                                         >
                                             <option value="">All Select Jewellery</option>
                                             {getUniqueCategories().map((type, index) => (
@@ -139,35 +135,57 @@ const Videojewal = () => {
                                                     {type}
                                                 </option>
                                             ))}
-
                                         </select>
                                     </div>
-                                    <IonButton    color='secondary' expand="full" style={{ height: '46px', width: '50px' }} onClick={handlePDFDownload}>
-                                        <ion-icon name="download-outline" ></ion-icon>
+                                    <IonButton
+                                        color='secondary'
+                                        expand="full"
+                                        style={{
+                                            height: '46px',
+                                            width: '50px',
+                                            backgroundColor: '#f3a41c',
+                                            borderRadius: '4px',
+                                            border: 'none'
+                                        }}
+                                        onClick={handlePDFDownload}
+                                    >
+                                        <ion-icon name="download-outline"></ion-icon>
                                     </IonButton>
-
                                 </div>
                             </IonCol>
                         </IonRow>
-                        <div style={{ marginTop: '15px',  borderTop: '1.6px solid #00000047', display:'flex', justifyContent:'space-between' }}>
+                        <div style={{ marginTop: '15px', borderTop: '1.6px solid #00000047', display: 'flex', justifyContent: 'space-between' }}>
                             <h3>Exclusive Jewellery</h3>
-                            <div style={{background:'#fff'}}>
-                            <IonCol size='1' style={{display:'flex' ,justifyContent:'center'}}>
-                                    <IonSelect value={itemsPerPage} className="w-auto" style={{marginLeft:'auto',display:'flex'}} onIonChange={handleItemsPerPageChange}>
+                            <div style={{ background: '#fff' }}>
+                                <IonCol size='1' style={{ display: 'flex', justifyContent: 'center' }}>
+                                    
+                                    <IonSelect
+                                        value={itemsPerPage}
+                                        className="w-auto custom-ion-select"
+                                        style={{
+                                            marginLeft: 'auto',
+                                            display: 'flex',
+                                            backgroundColor: '#f3a41c',
+                                            color: 'black',
+                                            border: 'none',
+                                            borderRadius: '5px',
+                                        }}
+                                        onIonChange={handleItemsPerPageChange}
+                                    >
                                         <IonSelectOption value={24}>24</IonSelectOption>
                                         <IonSelectOption value={48}>48</IonSelectOption>
                                         <IonSelectOption value={72}>72</IonSelectOption>
                                         <IonSelectOption value={100}>100</IonSelectOption>
                                     </IonSelect>
                                 </IonCol>
-                                </div>  
+                            </div>
                         </div>
                         <IonRow>
                             {currentItems.map(item => (
-                                <IonCol size="12" size-sm="6" size-md="4" size-lg="2">
-                                    <IonCard style={{ background: '#fbf2e5', position: 'relative', margin: '0px' }} key={item._id}>
+                                <IonCol size="12" size-sm="6" size-md="4" size-lg="2" key={item._id}>
+                                    <IonCard style={{ background: '#fbf2e5', position: 'relative', margin: '0px' }}>
                                         <IonButton
-                                           href={`https://api.whatsapp.com/send?text=Check out this item: ${item.filepath}`}
+                                            href={`https://api.whatsapp.com/send?text=Check out this item: ${item.filepath}`}
                                             color='secondary'
                                             fill="solid"
                                             shape="round"
@@ -187,11 +205,10 @@ const Videojewal = () => {
                                             alt="Jewelry"
                                             className='picjewels'
                                         />
-                                        <div class='videogld'>
+                                        <div className='videogld'>
                                             <h6 style={{ margin: '0' }}>{item.name}</h6>
                                             <IonButton
-                                            
-                                              onClick={() => handleItemClick(item)}
+                                                onClick={() => handleItemClick(item)}
                                                 color='success'
                                                 fill="solid"
                                                 shape="round"
@@ -208,7 +225,6 @@ const Videojewal = () => {
                                                 gap: '10px',
                                                 padding: '10px',
                                                 borderTop: '1px solid rgba(0, 0, 0, 0.22)',
-
                                             }}
                                         >
                                             <p className='videotip'>Dia pcs: <span> {item?.diapcs}</span></p>
@@ -219,45 +235,45 @@ const Videojewal = () => {
                                 </IonCol>
                             ))}
                         </IonRow>
-                        <IonRow style={{justifyContent:'space-between'}}>
-                                <IonCol size='11'>
-                                    <IonButtons>
+                        <IonRow style={{ justifyContent: 'space-between' }}>
+                            <IonCol size='11'>
+                                <IonButtons>
+                                    <IonButton
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                        style={{ backgroundColor: '#f3a41c' }}
+                                    >
+                                        <ion-icon name="arrow-back-circle-outline"></ion-icon>
+                                    </IonButton>
+                                    {Array.from({ length: totalPages }, (_, index) => (
                                         <IonButton
-                                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            disabled={currentPage === 1}
+                                            key={index + 1}
+                                            style={{
+                                                backgroundColor: index + 1 === currentPage ? '#f3a41c' : 'transparent',
+                                                color: index + 1 === currentPage ? '#fff' : '#000',
+                                                borderRadius: index + 1 === currentPage ? '100%' : '100%',
+                                                padding: index + 1 === currentPage ? '4px 7px' : '4px 7px',
+                                            }}
+                                            onClick={() => setCurrentPage(index + 1)}
                                         >
-                                            <ion-icon name="arrow-back-circle-outline"></ion-icon>
+                                            {index + 1}
                                         </IonButton>
-                                        {Array.from({ length: totalPages }, (_, index) => (
-                                            <IonButton
-                                                key={index + 1}
-                                                style={{
-                                                    backgroundColor: index + 1 === currentPage ? '#f3a41c' : 'transparent',
-                                                    color: index + 1 === currentPage ? '#fff' : '#000',
-                                                    borderRadius: index + 1 === currentPage ? '100%' : '100%',
-                                                    padding: index + 1 === currentPage ? '4px 7px' : '4px 7px',
-
-                                                }}
-                                                onClick={() => setCurrentPage(index + 1)}
-                                            >
-                                                {index + 1}
-                                            </IonButton>
-                                        ))}
-                                        <IonButton
-                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            <ion-icon name="arrow-forward-circle-outline" ></ion-icon>
-                                        </IonButton>
-                                    </IonButtons>
-                                </IonCol>
-
+                                    ))}
+                                    <IonButton
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        disabled={currentPage === totalPages}
+                                        style={{ backgroundColor: '#f3a41c' }}
+                                    >
+                                        <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+                                    </IonButton>
+                                </IonButtons>
+                            </IonCol>
                         </IonRow>
                     </IonGrid>
                 </div>
             </IonContent>
-            <p style={{ textAlign: 'center', fontSize:'13px' }}>All rights are reserved. GreenLab Jewels</p>
-        </IonPage >
+            <p style={{ textAlign: 'center', fontSize: '13px' }}>All rights are reserved. GreenLab Jewels</p>
+        </IonPage>
     );
 };
 

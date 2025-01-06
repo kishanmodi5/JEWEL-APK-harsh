@@ -163,6 +163,8 @@ function CategoryPage() {
             </IonHeader>
             <Header />
 
+            <div style={{ margin: '20px' }}></div>
+
             <IonContent color="primary">
                 <IonGrid>
                     <IonRow>

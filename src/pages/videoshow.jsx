@@ -18,7 +18,7 @@ const Videoshow = () => {
     return (
         <IonPage>
             <div>
-                <div style={{ background: "black", height: "100vh", paddingTop: '50px' }}>
+                <div style={{ background: "black", height: "100vh", paddingTop: '150px' }}>
                     <iframe
                         width="100%"
                         height='700px'
@@ -29,8 +29,8 @@ const Videoshow = () => {
                         style={{ borderRadius: '10px' }}
                     ></iframe>
                 </div>
-                <div className='min-tiop text-center' >
-            <h5 style={{color: '#c0629a', textAlign:'center'}}>{rowData?.name}</h5>
+                <div className='min-tiop text-center'  >
+            <h5 style={{color: '#c0629a', textAlign:'center',marginTop:'100px'}}>{rowData?.name}</h5>
             <div className='min-tiop1'>
             <p class="videotip">Dia pcs: <span>{rowData?.diapcs}</span></p>
             <p class="videotip">Dia wt: <span>{rowData?.diawt}</span></p>

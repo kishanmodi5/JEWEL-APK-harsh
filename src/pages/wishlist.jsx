@@ -56,13 +56,12 @@ const WishlistPage = () => {
 
   return (
     <>
-
       <IonHeader>
         <h1>home</h1>
       </IonHeader>
       <Header />
       <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px' }}>
-        <h4 className="text-center mb-5 element" style={{ marginTop: '20px' }}>Your Wishlist</h4>
+        <h4 className="text-center mb-5 element" style={{ marginTop: '80px' }}>Your Wishlist</h4>
         <div style={{ paddingBottom: '80x', marginBottom: '100px', position: 'relative' }}>
 
           {wishData?.length > 0 ? (

@@ -73,7 +73,7 @@ const LibraryPage = () => {
             <div>
               <IonCard style={{
                 marginBottom: '20px',
-                marginTop: '75px'
+                marginTop: '140px'
               }}>
                 <IonCardHeader className='maindheadider' style={{ backgraount: '#a97550' }}>
                   <IonCardTitle> Search </IonCardTitle>

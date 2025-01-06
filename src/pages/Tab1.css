@@ -19,7 +19,7 @@
 }
 
 .slider-img img {
-    order-radius: 9px !important;
+    border-radius: 9px !important;
 }
 
 .swiper-slide {

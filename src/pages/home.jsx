@@ -12,7 +12,13 @@ import { IonButtons, IonButton, IonModal, IonHeader, IonPage } from '@ionic/reac
 import { IMG_PATH } from "../config";
 import jwtAuthAxios from "../service/jwtAuth";
 import Head from './head';
+import { isPlatform } from '@ionic/react';
+
+
 const HomePage = () => {
+
+    const isIos = isPlatform('ios');
+
 
   const [homeDetails, setHomeDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +54,7 @@ const HomePage = () => {
         <IonGrid>
           <IonRow>
             <IonCol>
-              <Swiper style={{ marginBottom: '20px', marginTop: '10px' }}
+              <Swiper style={{ marginBottom: '20px', marginTop: '30px' }}
                 spaceBetween={50}
                 slidesPerView={1}
                 onSlideChange={() => console.log('slide change')}
@@ -97,7 +103,8 @@ const HomePage = () => {
                         src="/img/catagory-bg.png"
                       ></IonImg>
                     </div>
-                    <IonTitle>{item.name}</IonTitle>
+                    {/* <IonTitle>{item?.name}</IonTitle> */}
+                    <span style={{color:'black', display:'flex',justifyContent:'center' , fontSize:'15px', marginBottom:'10px'}}>{item?.name}</span>
                   </ion-router-link>
                 </IonCol>
               ))}
