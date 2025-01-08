@@ -40,7 +40,7 @@ const Login = ({ handleClosep }) => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-    useEffect(() => {
+       useEffect(() => {
         // Force reflow after the component loads
         setTimeout(() => {
             document.body.classList.add('force-reflow');
@@ -156,21 +156,44 @@ const Login = ({ handleClosep }) => {
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
                                     {isLogin ? (
                                         <>
-                                            <div className='input-div'>
-                                                <IonInput
-                                                    className="input-field"
-                                                    name="name"
-                                                    placeholder="Enter Username"
-                                                    color="secondary"
-                                                    slot="start"
-                                                    value={input.name}
-                                                    onBlur={handleChange}
-                                                    required
-                                                    fill="clear"
-                                                >
-                                                    <ion-icon className="input-icon" color="secondary" slot="start" name="person"></ion-icon>
-                                                </IonInput>
-                                            </div>
+                                           <div className="input-div" style={{ display: 'flex' }}>
+    
+
+                                            <IonInput
+                                                className="input-field"
+                                                name="name"
+                                                placeholder="Enter Username"
+                                                color="secondary"
+                                                slot="start"
+                                                
+                                                value={input.name}
+                                                onBlur={handleChange}
+                                                required
+                                                fill="clear"
+                                                
+                                        >
+
+                                                <div slot='start' style={{ paddingLeft:'10px' , width:'45px' }}>
+                                            <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill="currentColor"
+        className="bi bi-person-fill"
+        viewBox="0 0 16 16"
+    >
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+    </svg>
+                                            </div>    
+
+                                        
+                                            </IonInput>
+
+                                                    </div>
+
+
+
+
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
                                                     name='password'

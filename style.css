@@ -17,6 +17,55 @@ body {
     --ion-background-color: #ffdeb300;
 }
 
+select:focus {
+    outline: 0 !important;
+    border: 0;
+}
+/* Ensure dropdown options have a solid background */
+ion-select .select-interface {
+    background-color: white !important; /* Set a solid background color */
+    opacity: 1 !important; /* Ensure full opacity */
+  }
+  
+  /* Ensure the text color is visible */
+  ion-select .select-interface .select-option {
+    color: rgb(76, 50, 38) !important; /* Set text color */
+  }
+
+/* .custom-select-options{
+    background-color: white !important;
+} */
+  /* iOS-specific styling for the select popover */
+.platform-ios .select-popover {
+    background-color: #fff; /* White background */
+    border-radius: 8px !important;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.platform-ios .select-popover .select-option {
+    background-color: #ffffff !important;
+    color: #4c3226; /* Option text color */
+}
+
+.platform-ios .select-popover .select-option:hover {
+    background-color: #f1f1f1; /* Option hover effect */
+}
+
+
+
+.sc-ion-select-popover-md-h{
+    overflow-y: auto;
+    background-color: white !important;
+}
+
+.alert-wrapper.sc-ion-alert-md{
+    background-color: white !important;
+}
+  
+
+.input-field {
+    --padding-end: 12px;
+}
 
 .input-div{
     display: flex;
@@ -265,10 +314,18 @@ ion-thumbnail.md.hydrated {
     margin-right: 3px !important;
 }
 
-ion-card-header.maindheadider.ion-inherit-color.md.hydrated {
-    background: #4C3226;
+
+
+.maindheadider {
+    background: #4C3226 !important;  /* Make sure the background color is applied with !important */
     padding: 15px 10px;
-}
+  }
+  
+  /* Fallback for iOS, in case the above styles don't apply correctly */
+  ion-card-header.maindheadider {
+    background-color: #4C3226 !important;
+    padding: 15px 10px !important;
+  }
 
 ion-card-header.ion-inherit-color.md.hydrated ion-card-title.ion-inherit-color.md.hydrated {
     color: #ffdeb3;
@@ -523,12 +580,21 @@ button.alert-button.ion-focusable.ion-activatable.sc-ion-alert-md {
     color: #4c3226;
     border: 1px solid #4c322661;
     font-size: 17px;
-    padding: 4px 8px;
+    padding: 6px 8px;
+    max-width: 50px;
+}
+
+.right .swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+    margin: 0px -20px 0px 0px;
 }
 
 .native-wrapper .radio-icon {
     --width: 25px !important;
     --height: 25px !important;
+}
+:host .ionicon {
+    fill: #4c3226 !important;
 }
 
 .freemlogin1 {
@@ -1131,11 +1197,20 @@ ion-modal {
     --height: 100%;
 }
 
-.swiper-button-prev:after,
+/* .swiper-button-prev:after,
 .swiper-button-next:after {
     font-size: 16px !important;
     padding: 7px 10px;
     background-color: #f3a41c;
+    color: #ffffff;
+    border-radius: 50%;
+} */
+
+.swiper-button-prev:after ,
+.swiper-button-next:after  {
+    font-size: 16px !important;
+    padding: 7px 10px;
+    background-color: #f3a41cb0;
     color: #ffffff;
     border-radius: 50%;
 }
@@ -1559,3 +1634,4 @@ p {
     object-fit: contain;
     background: black;
 }
+

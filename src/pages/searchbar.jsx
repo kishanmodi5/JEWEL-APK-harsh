@@ -75,15 +75,28 @@ const LibraryPage = () => {
                 marginBottom: '20px',
                 marginTop: '140px'
               }}>
-                <IonCardHeader className='maindheadider' style={{ backgraount: '#a97550' }}>
-                  <IonCardTitle> Search </IonCardTitle>
-                </IonCardHeader>
+                <IonCardHeader className='maindheadider' style={{ background: '#a97550', padding: '15px 10px' }}>
+                <IonCardTitle 
+    style={{
+        fontSize: '21px',   // Adjust font size
+        fontWeight: '600',   // Set font weight
+        color: 'rgb(209 181 168)',    // Set font color (e.g., white)
+        fontFamily: 'Georgia, serif',  // Custom font family
+        letterSpacing: '0.5px',  // Optional: Adjust spacing between letters
+        textAlign: 'center',  // Center the text
+        textTransform: 'uppercase' // Optional: Make text uppercase
+    }}
+>
+    Search
+</IonCardTitle>
+</IonCardHeader>
+
                 <IonCardContent style={{ paddingLeft: '0', paddingRight: '0', height: '100vh' }}>
                   <form onSubmit={handleSearch}>
                     <div className="search">
                       <input
 
-                        style={{ border: '0', width0: '100%' }}
+                        style={{ border: '0', width: '100%' , backgroundColor:'transparent'}}
                         type="text"
                         placeholder="Type your search Name..."
                         value={searchName}

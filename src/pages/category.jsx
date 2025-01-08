@@ -20,7 +20,7 @@ import {
     IonAccordionGroup,
     IonInput,
     IonCheckbox,
-    IonRange
+    IonRange,
 } from '@ionic/react';
 import { useParams } from "react-router-dom";
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
@@ -49,7 +49,7 @@ function Category() {
     const [page, setPage] = useState(1);
     const [totalCount, setTotalCount] = useState(1);
     const [hoveredImage, setHoveredImage] = useState('');
-    const [pageSize, setPageSize] = useState(21);
+    const [pageSize, setPageSize] = useState(24);
     const [CategoryFilter, setCategoryFilter] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState([])
@@ -196,7 +196,7 @@ function Category() {
             fetchCategoryData();
 
         }
-    }, [id, page, CategoryFilter, selectedCollection,]);
+    }, [id, page, CategoryFilter, selectedCollection,pageSize]);
 
 
     useEffect(() => {
@@ -254,8 +254,18 @@ function Category() {
         setSelectedCollection([]);
     };
 
+    const handlePageSizeChange = (event) => {
+        setPageSize(Number(event.target.value));
+        setPage(1);
+    };
 
+  // State to store the selected value
+  const [selectedValue, setSelectedValue] = useState('');
 
+  // Handle change in selected value
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
     return (
         <>
             <Header />
@@ -332,9 +342,41 @@ function Category() {
                             </IonCol>
                         </IonRow>
                         <div>
-                            <h5 class="text-center mb-5 element" style={{marginBottom:'20px'}}>{itemname}  Category </h5>
+                            <h5 class="text-center mb-5 element" style={{ marginBottom: '20px' }}>{itemname}  Category </h5>
                         </div>
-                        <div className='main-catagory'>
+                        <IonCol size='12' style={{ display: 'flex', justifyContent: 'end' }}>
+                            {/* <IonSelect
+                                className="w-auto"
+                                style={{ marginLeft: 'auto', display: 'flex',color:'#4c3226',border:'2px solid #9d7664',marginLeft:'auto',width:'auto', padding:'0 10px',borderRadius:'9px' }}
+                                value={pageSize}
+                                onIonChange={handlePageSizeChange}
+                            >
+                                <IonSelectOption value={24} style={{color:'black'}}>24</IonSelectOption>
+                                <IonSelectOption value={48} style={{color:'red'}}>48</IonSelectOption>
+                                <IonSelectOption value={72}>72</IonSelectOption>
+                                <IonSelectOption value={100}>100</IonSelectOption>
+                            </IonSelect> */}
+                            <div>
+                            <select
+                                id="simple-select"
+                                value={pageSize}
+                                onChange={handlePageSizeChange}
+                                style={{
+                                padding: '8px',
+                                borderRadius: '4px',
+                                border: '1px solid #ccc',
+                                fontSize: '16px',
+                                width: '65px',
+                                background:'#4c3226'
+                                }}
+                            >
+                                <option value="24">24</option>
+                                <option value="48">48</option>
+                                <option value="72">72</option>
+                                <option value="100">100</option>
+                            </select>
+                            </div>
+                        </IonCol>     <div className='main-catagory'>
                             <IonRow>
                                 <IonCol>
                                     <h5></h5>
@@ -347,50 +389,56 @@ function Category() {
                                 ) : error ? (
                                     <p className="error-message" style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>{error}</p>
                                 ) : (
-                                    categoryDetails?.map(item =>
-                                        <IonCol size-md='4' size-sm='6' size='12'>
-                                            <div key={item._id} className='main-card-ctgy' style={{ marginBottom: '30px' }}>
-                                                <ion-router-link href={`/c-category/${item?._id}`}>
-                                                    <div className='main-card-top'>
-                                                        <img src={hoveredItemId === item._id ? hoveredImage : IMG_PATH + item?.thumbnailImage} alt="ig145" />
-                                                        <span className='igsticky'>{hoveredItemId === item._id ? selectedSku : item.sku}</span>
-                                                    </div>
-                                                </ion-router-link>
-                                                <div className='main-card-bottom'>
-                                                    <div>
-                                                        <h5>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
-                                                    </div>
-                                                    <div>
-                                                        <h5 style={{color:'#bc7700'}}>{item.category[0].name}</h5>
+                                    categoryDetails?.map(item => {
+                                        const hasSubItems = item.subItems && item.subItems.length > 0;
+                                        const redirectTo = hasSubItems ? `/c-category/${item._id}` : `/product/${item._id}`;
+
+                                        return (
+                                            <IonCol size-md='4' size-sm='6' size='12' key={item._id}>
+                                                <div className='main-card-ctgy' style={{ marginBottom: '30px' }}>
+                                                    <ion-router-link href={redirectTo}>
+                                                        <div className='main-card-top'>
+                                                            <img src={hoveredItemId === item._id ? hoveredImage : IMG_PATH + item?.thumbnailImage} alt="ig145" />
+                                                            <span className='igsticky'>{hoveredItemId === item._id ? selectedSku : item.sku}</span>
+                                                        </div>
+                                                    </ion-router-link>
+                                                    <div className='main-card-bottom'>
+                                                        <div>
+                                                            <h5>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
+                                                        </div>
+                                                        <div>
+                                                            <h5 style={{ color: '#bc7700' }}>{item.category[0].name}</h5>
+                                                        </div>
                                                     </div>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                         <div className='ctstop'>
                                                             <span>CTS:</span>
                                                         </div>
-                                                        <div style={{ width: '80%', margin: 'auto' }}>
+                                                        <div style={{ width: '80%', margin: '0px 0px 0px 20px' }}>
                                                             <div style={{ width: '100%', maxWidth: "250px" }}>
                                                                 <div className='right'>
                                                                     {/* <Swiper style={{ margin: '4px 4px' }} spaceBetween={5} slidesPerView={4}>
-                                                                        {[item, ...item?.subItems]?.map(subItem => (
-                                                                            <SwiperSlide
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    window.location.href = `/product/${subItem._id}`;
-                                                                                }}
-                                                                                key={subItem._id}
-                                                                                onMouseEnter={() => handleMouseEnter(subItem.sku, subItem.description, IMG_PATH + subItem.thumbnailImage, item._id)}
-                                                                                onMouseLeave={handleMouseLeave}
-                                                                            >
-                                                                                <span style={{ fontSize: '12px' }}>{subItem?.ctswts?.toFixed(2)}</span>
-                                                                            </SwiperSlide>
-                                                                        ))}
-                                                                    </Swiper> */}
+                                                                    {[item, ...item?.subItems]?.map(subItem => (
+                                                                        <SwiperSlide
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                window.location.href = `/product/${subItem._id}`;
+                                                                            }}
+                                                                            key={subItem._id}
+                                                                            onMouseEnter={() => handleMouseEnter(subItem.sku, subItem.description, IMG_PATH + subItem.thumbnailImage, item._id)}
+                                                                            onMouseLeave={handleMouseLeave}
+                                                                        >
+                                                                            <span style={{ fontSize: '12px' }}>{subItem?.ctswts?.toFixed(2)}</span>
+                                                                        </SwiperSlide>
+                                                                    ))}
+                                                                </Swiper> */}
                                                                     <Swiper
-                                                                        style={{ padding: '4px 4px' }}
+                                                                        style={{ padding: '4px 4px', margin: '0px 0px 0px 10px' }}
                                                                         spaceBetween={5}
                                                                         slidesPerView={3}
                                                                         autoplay={{ delay: 3000, disableOnInteraction: false }}
                                                                         modules={[Navigation]}
+                                                                        navigation
                                                                         breakpoints={{
                                                                             320: { slidesPerView: 3, spaceBetween: 6 },
                                                                             480: { slidesPerView: 3, spaceBetween: 6 },
@@ -407,6 +455,7 @@ function Category() {
                                                                                 key={subItem._id}
                                                                                 onMouseEnter={() => handleMouseEnter(subItem.sku, subItem.description, IMG_PATH + subItem.thumbnailImage, item._id)}
                                                                                 onMouseLeave={handleMouseLeave}
+
                                                                             >
                                                                                 <span style={{ fontSize: '12px' }}>{subItem?.ctswts?.toFixed(2)}</span>
                                                                             </SwiperSlide>
@@ -417,10 +466,10 @@ function Category() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </IonCol>
 
-                                    )
+                                            </IonCol>
+                                        );
+                                    })
                                 )}
                             </IonRow>
 
@@ -513,6 +562,7 @@ function Category() {
                             {/* <button className="open-btn right_bottom_fix" onClick={toggleOffcanvas}>
                                 <ion-icon name="filter-outline" slot="icon-only"></ion-icon>
                             </button> */}
+
                             <IonButton className='right_bottom_fix' shape='round' size='large' color='secondary' onClick={toggleOffcanvas}>
                                 {isOpen ? (
                                     <ion-icon name="close-outline" slot="icon-only"></ion-icon>

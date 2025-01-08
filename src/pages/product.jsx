@@ -101,7 +101,7 @@ function Product() {
         }
     };
 
-
+    
 
     const fetchProductData = async () => {
         if (isFetching.current) return;
@@ -275,6 +275,9 @@ function Product() {
     const handleThumbsSwiper = (swiper) => {
         setThumbsSwiper(swiper); // Set the Swiper instance
     };
+
+    
+
     return (
         <>
             <IonHeader>
@@ -282,7 +285,7 @@ function Product() {
             </IonHeader>
             <Header />
 
-            <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
+            <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px' }}>
                 <div style={{ marginTop: '80px' }}>
                     <h5 class="text-center mb-5 element">Ring Products</h5>
                 </div>
@@ -540,44 +543,86 @@ function Product() {
                                                 </IonRadioGroup>
 
                                             </div>
-                                            <IonCol>
+                                           
+                                            <IonCol size='12'>
                                                 {colorstone ? (
-                                                    <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
-                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', }}>Color Stone Details : <div slot='end'
+                                                    <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0',width:"100%" }}>
+                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', width:"100%", padding: '5px 25px', border: '2px solid #9f9993',borderRadius:"9px" }}>Color Stone Details : <div slot='end'
                                                             labelPlacement="end" style={{ color: 'rgb(76, 50, 38)', marginRight: '0', marginTop: '5px', fontSize: '14px' }}>{colorstone}</div></span>
                                                     </div>
                                                 ) : (
                                                     ""
                                                 )}
                                             </IonCol>
-                                            <IonCol>
-                                                {sortedSizes?.length > 0 && (
+                                            <IonCol size='12'>
+                                                
+                                                    {/* {sortedSizes?.length > 0 && (
                                                     <IonSelect
-                                                        value={selectSize}
-                                                        placeholder="Select Size"
-                                                        onIonChange={(e) => handleSizeChange(e)}
-                                                        interface="popover"
-                                                        style={{
-                                                            fontSize: '14px',
-                                                            border: '1px solid #7f7d7d',
-                                                            backgroundColor: '#fff6ec',
-                                                            color: 'rgb(76 50 38)',
-                                                            padding: '0px 12px',
-                                                            borderRadius: '7px'
-
-                                                        }}
-                                                        size="small"
+                                                    value={selectSize}
+                                                    placeholder="Select Size"
+                                                    onIonChange={(e) => handleSizeChange(e)}
+                                                    interface="popover"
+                                                    interfaceOptions={{
+                                                        cssClass: 'custom-select-options', // Add a custom class for styling
+                                                    }}
+                                                    cssClass="custom-select" 
+                                                    style={{
+                                                        fontSize: '14px',
+                                                        border: '1px solid #7f7d7d',
+                                                        backgroundColor: '#fff6ec',
+                                                        color: 'rgb(76, 50, 38)',
+                                                        padding: '0px 12px',
+                                                        borderRadius: '7px'
+                                                    }}
+                                                    size="small"
                                                     >
-                                                        {sortedSizes?.map((size) => (
-                                                            <IonSelectOption key={size?._id} value={size?.size}>
+                                                    
+                                                    {sortedSizes?.map((size) => (
+                                                        <div style={{backgroundColor:'white'}}>
+                                                            <IonSelectOption key={size?._id} value={size?.size} style={{color:'red'}}>
                                                                 {size?.size}
                                                             </IonSelectOption>
-                                                        ))}
+                                                        </div>
+                                                    ))}
+                                                    
                                                     </IonSelect>
-                                                )}
+                                                    )} */}
+                                         <div style={{ width: '100%' }}>
+                                            {sortedSizes?.length > 0 && (
+                                                <div style={{padding:'7px 10px', border:"2px solid #9f9993", borderRadius:'9px' }}>
+                                                <select
+                                                    value={selectSize}
+                                                    onChange={handleSizeChange}
+                                                    style={{
+                                                    fontSize: '14px',
+                                                    border: '1px solid #7f7d7d',
+                                                    backgroundColor: '#fff6ec',
+                                                    color: 'rgb(76, 50, 38)',
+                                                    padding: '15px 12px',
+                                                    border: 'none',
+                                                    width: '100%',  // This ensures it takes full width of its container
+                                                    fontFamily: 'Arial, sans-serif',
+                                                    padding:'10px',
+                                                    }}
+                                                >
+                                                    <option value="" disabled>Select Size</option>
+                                                    {sortedSizes.map((size) => (
+                                                    <option
+                                                        key={size?._id}
+                                                        value={size?.size}
+                                                        style={{ color: 'red', padding:'10px' }}
+                                                    >
+                                                        {size?.size}
+                                                    </option>
+                                                    ))}
+                                                </select>
+                                                </div>
+                                            )}
+                                            </div>
+                                                                                        
                                             </IonCol>
                                             <IonCol>
-                                                {findings?.length > 0 && (
+                                                {/* {findings?.length > 0 && (
                                                     <IonSelect
                                                         value={selectedFindings || (findings.length > 0 ? findings[0].finding : "")}
                                                         placeholder="Select Finding"
@@ -598,13 +643,38 @@ function Product() {
                                                             </IonSelectOption>
                                                         ))}
                                                     </IonSelect>
+                                                )} */}
+                                                {findings?.length > 0 && (
+                                                    <div>
+                                                    <select
+                                                        value={selectedFinding || (findings.length > 0 ? findings[0].finding : '')}
+                                                        onChange={handleFindingsChange}
+                                                        style={{
+                                                        fontSize: '14px',
+                                                        border: '1px solid #7f7d7d',
+                                                        backgroundColor: '#fff6ec',
+                                                        color: 'rgb(76, 50, 38)',
+                                                        padding: '0px 12px',
+                                                        borderRadius: '7px',
+                                                        width: '100%',  // This ensures it takes full width of its container
+                                                        fontFamily: 'Arial, sans-serif',
+                                                        }}
+                                                    >
+                                                        <option value="" disabled>Select Finding</option>
+                                                        {findings?.map((finding, i) => (
+                                                        <option key={finding?._id} value={finding?.finding}>
+                                                            {finding?.finding}
+                                                        </option>
+                                                        ))}
+                                                    </select>
+                                                    </div>
                                                 )}
                                             </IonCol>
                                             <IonTextarea
                                                 fill="outline"
                                                 onIonChange={(e) => handleTypeMessage(e)}
                                                 placeholder="Type Message (Special Instruction eg: Nickel Free, No Rhodium Tip, Inscriptions etc.)"
-                                                style={{ color: '#201d1d', height: '70px', fontSize: '14px' }}
+                                                style={{ color: '#201d1d', height: '70px', fontSize: '14px',padding:'10px',border:'2px solid #9f9993', borderRadius:'9px' }}
                                             ></IonTextarea>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <div className='main-coune' style={{ display: 'flex', alignItems: 'center', margin: '10px 0', fontFamily: 'Poppins' }}>

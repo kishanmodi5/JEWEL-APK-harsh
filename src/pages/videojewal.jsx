@@ -102,7 +102,7 @@ const Videojewal = () => {
                 <div className="pb-3">
                     <IonGrid>
                         <IonRow className="ion-align-items-center mb-4">
-                            <IonCol size-sm="3" size="12" style={{marginTop:'70px'}} >
+                            <IonCol size-sm="3" size="12" style={{marginTop:'70px' ,display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'start' }} >
                                 <a href="/home" style={{ padding: '0', }}>
                                     <IonImg
                                         className='logo'
@@ -120,14 +120,18 @@ const Videojewal = () => {
                                             value={selectedOption}
                                             onChange={handleSelectChange}
                                             style={{
-                                                padding: '5px',
-                                                fontSize: '14px',
-                                                borderRadius: '4px',
-                                                border: '1px solid #ccc',
+                                                marginLeft: 'auto',
+                                                padding: '0 10px',
                                                 backgroundColor: '#fff',
-                                                color: '#333',
-                                                cursor: 'pointer'
-                                            }}
+                                                border: "1px solid black",
+                                                color: 'black',
+                                                border: 'none',
+                                                height:"48px",
+                                                borderRadius: '9px',
+                                                fontSize:"16px",
+                                                width: '175px',
+                                                boxSizing: 'border-box',
+                                              }}
                                         >
                                             <option value="">All Select Jewellery</option>
                                             {getUniqueCategories().map((type, index) => (
@@ -154,9 +158,11 @@ const Videojewal = () => {
                                 </div>
                             </IonCol>
                         </IonRow>
-                        <div style={{ marginTop: '15px', borderTop: '1.6px solid #00000047', display: 'flex', justifyContent: 'space-between' }}>
-                            <h3>Exclusive Jewellery</h3>
-                            <div style={{ background: '#fff' }}>
+                        <IonRow>
+                            <IonCol>
+                            <div style={{ marginTop: '15px', borderTop: '1.6px solid #00000047', display: 'flex', justifyContent: 'space-between',alignItems:'center' }}>
+                            <h4>Exclusive Jewellery</h4>
+                            {/* <div style={{ background: '#fff' }}>
                                 <IonCol size='1' style={{ display: 'flex', justifyContent: 'center' }}>
                                     
                                     <IonSelect
@@ -178,8 +184,32 @@ const Videojewal = () => {
                                         <IonSelectOption value={100}>100</IonSelectOption>
                                     </IonSelect>
                                 </IonCol>
+                            </div> */}
+                            <div>
+                            <select
+                                id="simple-select"
+                                value={itemsPerPage}
+                                onChange={handleItemsPerPageChange}
+                                style={{
+                                    marginLeft: 'auto',
+                                    display: 'flex',
+                                    backgroundColor: '#f3a41c',
+                                    color: 'black',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    color:"white"
+                                }}
+                            >
+                                <option value="24">24</option>
+                                <option value="48">48</option>
+                                <option value="72">72</option>
+                                <option value="100">100</option>
+                            </select>
                             </div>
                         </div>
+                            </IonCol>
+                        </IonRow>
+                        
                         <IonRow>
                             {currentItems.map(item => (
                                 <IonCol size="12" size-sm="6" size-md="4" size-lg="2" key={item._id}>

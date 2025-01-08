@@ -318,24 +318,38 @@ function apps() {
             </div>
           )}
           <IonMenu contentId="main-content">
-            <IonHeader >
-              <IonToolbar color="secondary">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <IonImg
-                      slot="start"
-                      src="/img/min-logo.svg"
-                      style={{ height: '35px', margin: '0', marginLeft: '20px', filter: 'invert(1)' }}
-                    ></IonImg>
-                  </div>
-                  <div>
-                    <IonMenuToggle>
-                      <IonButton fill='clear'><ion-icon name="close-outline" size='large' style={{ color: 'white' }}></ion-icon></IonButton>
-                    </IonMenuToggle>
-                  </div>
-                </div>
-              </IonToolbar>
-            </IonHeader>
+          <IonHeader>
+  <IonToolbar color="secondary">
+    
+      <div style={{ display: 'flex', alignItems: 'center' }} slot="start">
+        <IonImg
+          
+          src="/img/min-logo.svg"
+          style={{
+            width: 'auto',  
+            height: '35px',
+            marginLeft: '20px',
+            filter: 'invert(1)',
+            display: 'inline-block', 
+          }}
+        />
+      </div>
+
+     
+
+      <div slot='end'>
+        <IonMenuToggle>
+          <IonButton fill="clear">
+            <ion-icon name="close-outline" size="large" style={{ color: 'white' }}></ion-icon>
+          </IonButton>
+        </IonMenuToggle>
+      </div>
+
+
+  
+  </IonToolbar>
+</IonHeader>
+
             <IonContent class='main-saidebar'>
               <IonGrid style={{ marginTop: '6px' }} >
                 <IonRow>

@@ -54,7 +54,7 @@ const HomePage = () => {
         <IonGrid>
           <IonRow>
             <IonCol>
-              <Swiper style={{ marginBottom: '20px', marginTop: '30px' }}
+              <Swiper style={{ marginBottom: '20px', marginTop: '80px' }}
                 spaceBetween={50}
                 slidesPerView={1}
                 onSlideChange={() => console.log('slide change')}
