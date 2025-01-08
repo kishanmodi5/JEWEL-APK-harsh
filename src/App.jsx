@@ -29,6 +29,7 @@ import { Route, Redirect, useHistory } from 'react-router';
 import HomePage from './pages/home';
 import AddtocardPage from './pages/addtocard';
 import Login from './pages/login';
+import Register from './pages/register';
 import Productpage from './pages/product';
 import Registerhere from './pages/registerhere';
 import Category from './pages/category';
@@ -211,7 +212,7 @@ function apps() {
   }, []);
 
 
-  const hideTabBarRoutes = ['/login', '/registerhere', '/video', '/videoshow/:id'];
+  const hideTabBarRoutes = ['/login', '/registerhere', '/video', '/videoshow/:id','/register'];
   return (
     <>
 
@@ -221,6 +222,7 @@ function apps() {
             <IonRouterOutlet>
               <Redirect exact path="/" to="/login" />
               <Route path="/login" render={() => <Login />} exact={true} />
+              <Route path="/register" render={() => <Register />} exact={true} />
               <Route path="/home" render={() => <HomePage />} exact={true} />
               <Route path="/c-category/:id" render={() => <Ccategorypage />} exact={true} />
               <Route path="/category/:id" render={() => <Category />} exact={true} />

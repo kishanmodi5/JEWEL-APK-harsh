@@ -63,7 +63,6 @@ const Login = ({ handleClosep }) => {
         console.log(input)
 
         try {
-            if (isLogin) {
                 const response = await jwtAuthAxios.post("client/auth", {
                     name: input.name,
                     password: input.password,
@@ -79,21 +78,8 @@ const Login = ({ handleClosep }) => {
                     history.push("/home");
                     window.location.href = '/home';
                     handleClosep();
-
                 }
-            } else {
-                const response = await jwtAuthAxios.post("client/register", input);
-                if (response.status === 200) {
-
-                    setInput({
-                        name: input.name,
-                        password: input.password,
-                    });
-                    setIsLogin(true);
-                    setToastMessage('Register Successful');
-                    setShowToast(true);
-                }
-            }
+     
         } catch (error) {
             console.error(error?.response?.data || "Invalid ");
             setToastMessage(error.response.data)
@@ -154,8 +140,7 @@ const Login = ({ handleClosep }) => {
                         <IonRow className='loginrow' >
                             <IonCol size-md='6' size-sm='8' size='12'>
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
-                                    {isLogin ? (
-                                        <>
+                                    
                                            <div className="input-div" style={{ display: 'flex' }}>
     
 
@@ -219,119 +204,24 @@ const Login = ({ handleClosep }) => {
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}
                                             </IonButton>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name="name"
-                                                    placeholder="Enter Username"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.name}
-                                                    onBlur={handleChange}
-                                                    required
-                                                    fill="clear"
-                                                >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person"></ion-icon>
-                                                </IonInput>
-                                            </div>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name="email"
-                                                    type="email"
-                                                    placeholder="Enter Email"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.email || ''}
-                                                    onBlur={handleChange}
-                                                    required
-                                                    fill="clear"
-                                                >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="mail"></ion-icon>
-                                                </IonInput>
-                                            </div>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name='mobileNo'
-                                                    type="tel"
-                                                    placeholder="Enter Mobile NO"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.mobileNo || ''}
-                                                    onBlur={handleChange}
-                                                    required
-                                                    fill="clear"
-                                                >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="call"></ion-icon>
-                                                </IonInput>
-                                            </div>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name='company'
-                                                    placeholder="Enter Business Name"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.company || ''}
-                                                    onBlur={handleChange}
-                                                >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="business"></ion-icon>
-                                                </IonInput>
-                                            </div>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name='refrence'
-                                                    placeholder="Enter Refrence Name"
-                                                    color='secondary'
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.refrence || ''}
-                                                    onBlur={handleChange}
-                                                >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person-add"></ion-icon>
-                                                </IonInput>
-                                            </div>
-                                            <div style={{ display: 'flex' }}>
-                                                <IonInput
-                                                    name='password'
-                                                    type="password"
-                                                    color='secondary'
-                                                    placeholder="Enter Password"
-                                                    fill="clear"
-                                                    style={{ background: '#ffdeb300', color: '#000' }}
-                                                    slot="start"
-                                                    value={input.password}
-                                                    onBlur={handleChange}
-                                                    required
-                                                >
-                                                    <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
-                                                </IonInput>
-                                            </div>
-
-                                            <IonButton color='secondary' type='submit' expand="full" style={{ marginTop: '20px', width: '95%', textTransform: 'capitalize' }}>Register</IonButton>
-                                        </>
-                                    )}
+                                        
                                 </form>
                                 <div style={{ width: '100%', display: 'flex', margin: 'auto', flexDirection: 'column', textAlign: 'center', fontSize: '14px' }}>
-                                    {isLogin ? (
+                                   
                                         <div style={{ justifyContent: 'center', display: 'flex', marginTop: '10px' }}>
                                             Don't have an account ? {" "}
-                                            <span onClick={() => setIsLogin(false)} style={{ cursor: "pointer", color: '#bc7700', marginLeft: '5px' }}>
+                                            <span onClick={() => window.location.href="/register"} style={{ cursor: "pointer", color: '#bc7700', marginLeft: '5px' }}>
                                                 Register here
                                             </span>
                                         </div>
-                                    ) : (
-                                        <div style={{ justifyContent: 'center', display: 'flex', marginTop: '10px' }}>
+                                
+                                        {/* <div style={{ justifyContent: 'center', display: 'flex', marginTop: '10px' }}>
                                             Already have an account?{" "}
                                             <span onClick={() => setIsLogin(true)} style={{ cursor: "pointer", color: '#bc7700', marginLeft: '5px' }}>
                                                 Login here
                                             </span>
-                                        </div>
-                                    )}
+                                        </div> */}
+                                   
                                 </div>
                             </IonCol>
                         </IonRow>
