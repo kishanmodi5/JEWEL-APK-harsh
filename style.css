@@ -29,10 +29,15 @@ ion-button {
 }
 
 .loginrow {
-    justify-content: center;
-    margin-top: 11%;
+    margin-top: 290px;
+}
+.loginrow2 {
+    margin-top: 200px;
 }
 
+.loginrow1{
+    justify-content: center;
+}
 .dropdown-menu {
     position: absolute;
     right: 0px;
@@ -88,11 +93,11 @@ ion-button {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    max-width: 312px;
+    max-width: 466px;
 }
 
 .modal2 .freemlogin2 {
-    width: 125px;
+    width: 225px;
     height: 100%;
     margin: 39px auto;
     max-width: 94px;
@@ -506,8 +511,8 @@ button.alert-button.ion-focusable.ion-activatable.sc-ion-alert-md {
 }
 
 .native-wrapper .radio-icon {
-    --width: 25px !important;
-    --height: 25px !important;
+    --width:    22px !important;
+    --height:   22px !important;
 }
 :host .ionicon {
     fill: #4c3226 !important;
@@ -523,8 +528,8 @@ button.alert-button.ion-focusable.ion-activatable.sc-ion-alert-md {
 }
 
 ion-radio::part(container) {
-    width: 25px;
-    height: 25px;
+    width:  22px;
+    height: 22px;
 }
 
 .foem-details {
@@ -651,9 +656,14 @@ ion-modal ion-list.md.list-md.hydrated {
     width: 90%;
 }
 
+
+
 .product-img {
     position: relative;
     z-index: 2;
+    display: flex ;
+    align-items: center;
+    height: 100%;
 }
 
 .main-color .option-label {
@@ -785,7 +795,7 @@ ion-radio.yellow {
 .stickdsclaimer {
     background: red;
     padding: 6px 28px;
-    border-radius: 25px;
+    border-radius:  22px;
     width: auto;
     width: fit-content;
     font-family: 'Reem Kufi';
@@ -909,7 +919,7 @@ ion-button.addticaed {
 }
 
 .product-detail-mainc {
-    padding: 0px 35px 25px;
+    padding: 0px 35px   22px;
 }
 
 /* .bottombtm::before {
@@ -931,27 +941,24 @@ ion-button.addticaed {
     bottom: 0px;
     padding: 10px 50px;
     position: fixed;
-    /* top: 0px; */
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: flex
-;
+    display: flex;
     z-index: 1050;
-    align-items: flex-start;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
 }
 
 
 .modalimage2 {
-    margin-top: 90px;
     background: white;
     padding: 20px 20px;
     border-radius: 8px;
     text-align: center;
     width: 100%;
-    max-width: 320px;
+    max-width: 732px;
 }
 
 .imgbtn {
@@ -1066,7 +1073,7 @@ ion-content {
 }
 
 .main-catagory {
-    margin-bottom: 25px;
+    margin-bottom:  22px;
 }
 
 .search input[type="text"]:focus-visible {
@@ -1157,11 +1164,21 @@ ion-img.thummail.md.hydrated {
     display: block;
 }
 
-.product-imgmini .swiper .swiper-slide {
+.product-imgmini .swiper .swiper-slide, .thumblineimage {
     width: 100% !important;
     background-color: transparent !important;
 }
-
+.thumblineimage {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.swiper .swiper-slide img, .thumblineimage a img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+}
 .swiper .swiper-slide img {
     width: auto;
     max-width: 100%;
@@ -1169,16 +1186,17 @@ ion-img.thummail.md.hydrated {
     max-height: 100%;
 }
 
-img.twominimg {
+img.twominimg, .thumblineimage a img {
     max-width: 90px !important;
     height: 90px !important;
-    display: flex;
+    display: flex
+;
     margin-bottom: 20px;
     border: 1px solid #4c322633;
     border-radius: 4px;
 }
 
-.product-img .swiper::before {
+/* .product-img::before {
     content: "";
     position: absolute;
     left: 50%;
@@ -1189,7 +1207,7 @@ img.twominimg {
     z-index: -1;
     transform: translate(-50%, 0);
     border-radius: 0px 0px 50% 50%;
-}
+} */
 
 .slider-img.pulsating-circle {
     width: 238px !important;
@@ -1203,10 +1221,14 @@ img.twominimg {
 .mySwipermain {
     margin-bottom: 0px;
     margin-top: 7px;
-    max-width: 364px;
     width: 100%;
-    height: 384px;
 }
+/* .product-img .mySwipermain {
+    max-width: 275px;
+} */
+/* .product-img .swiper .swiper-slide img{
+    border-radius: 100%;
+} */
 
 .diamondcolmin ion-radio.radio-checked::part(container) {
     border-color: #34221a;
@@ -1227,6 +1249,13 @@ ion-radio.radio-label-placement-start.ion-activatable.ion-focusable.hydrated.rad
 }
 .product-img .swiper-slide {
     background-color: #ffffff00 !important;
+}
+ion-select.w-auto.md.has-value.ion-focusable.select-ltr.select-label-placement-start.hydrated {
+    border: 2px solid #4c3226;
+    height: 6px;
+    padding: 0 10px;
+    border-radius: 10px;
+    color: #4c3226;
 }
 
 .left-hed h6 {
@@ -1289,16 +1318,32 @@ h5:empty {
 
 @media only screen and (max-width: 779px) {
     .loginrow {
-        margin-top: 20%;
+        margin-top: 277px;
+    }
+    .loginrow2 {
+        margin-top: 200px !important;
+    }
+    .loginrow1 {
         justify-content: flex-start;
+    }
+    .offcanvas {
+        max-width: 481px;
     }
 }
 
 @media only screen and (max-width: 575px) {
     .loginrow {
-        margin-top: 40%;
+        margin-top: 160px;
     }
-
+    .loginrow2 {
+        margin-top: 100px;
+    }
+    .product-imgmini {
+        margin-top: 30px;
+    }
+    .offcanvas {
+        max-width: 318px;
+    }
     .bottombtm {
         max-width: 312px;
         width: 100%;
@@ -1309,23 +1354,25 @@ h5:empty {
         font-size: 12px !important;
         padding: 3px 3px;
     }
-
-    img.twominimg {
+    
+    img.twominimg ,.thumblineimage a img{
         max-width: 65px !important;
         height: 65px !important;
         display: flex;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
         border-radius: 4px;
     }
 
     .product-imgmini .swiper .swiper-slide {
         width: fit-content !important;
     }
-
+    .thumblineimage {
+        width: fit-content !important;
+        margin-left: 15px;
+    }
     .twominimgmain .swiper-wrapper {
         display: flex;
         justify-content: space-between;
-        margin-top: 35px !important;
     }
 
     .product-detail-mainc {
@@ -1334,21 +1381,20 @@ h5:empty {
 
     }
 
-    .mySwipermain {
+    /* .mySwipermain {
         height: 265px;
-    }
+    } */
 
-    .product-img .swiper::before {
-        width: 245px;
-        height: 245px;
+  
+    .product-imgmini .swiper {
+        display: flex ;
+        align-items: center;
     }
-
-    .swiper .swiper-slide img {
+    .swiper .swiper-slide img, .thumblineimage a img{
         width: auto;
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border-radius: 100%;
     }
 
     img.freem253 {
@@ -1396,7 +1442,24 @@ h5:empty {
     }
 }
 
-@media only screen and (max-width: 430px) {}
+@media only screen and (max-width: 430px) {
+    .thumblineimage {
+        width: fit-content !important;
+        margin-left: 0px;
+    }
+    img.twominimg, .thumblineimage a img {
+        max-width: 55px !important;
+        height: 55px !important;
+       
+    }
+    select#simple-select {
+        padding: 11px 7px;
+        border: 1px solid #00000042;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+}
+
 
 @media only screen and (min-width: 480px) {
 
@@ -1409,7 +1472,12 @@ h5:empty {
         height: 101px;
     }
 }
-
+@media only screen and (max-width: 345px){
+    img.twominimg, .thumblineimage a img {
+        max-width: 47px !important;
+        height: 47px !important;
+    }
+    }
 @media only screen and (min-width: 768px) {
     .categoryimg {
         width: 190px;
@@ -1499,9 +1567,9 @@ ion-range::part(tick) {
 }
 
 select#simple-select {
-    padding: 12px;
+    padding: 8px 15px;
     border: 1px solid #00000042;
-    border-radius: 5px;
+    border-radius: 7px;
 }
 
 .min-tiop {
@@ -1551,3 +1619,42 @@ p {
     background: black;
 }
 
+.select-cart{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+  .select-cart input[type="checkbox"] {
+    background-color: #bc7700;
+    background: #ffffff00;
+    border: 2px solid #bc7700;
+    -webkit-appearance: none;
+    appearance: none;
+    width:  22px;
+    height: 22px;
+  }
+  .select-cart input[type="checkbox"]:checked {
+    background-color: #bc7700;
+    color: red;
+  }
+  .select-cart input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+  }
+  
+  .select-cart input[type="checkbox"]:checked::before {
+    transform: scale(1);
+    transform-origin: bottom left;
+    clip-path: polygon(12% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    /* border: 7px solid #fbf2e5; */
+    z-index: 0;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    font-size: 25px;
+}

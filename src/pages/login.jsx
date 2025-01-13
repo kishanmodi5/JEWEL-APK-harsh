@@ -141,11 +141,11 @@ const Login = ({ handleClosep }) => {
 
                     </div>
                     <IonGrid>
-                        <IonRow className='loginrow'>
-                            <IonCol size-md='6' size-sm='8' size='12'>
+                        <IonRow className='loginrow1'>
+                            <IonCol size-lg='10' size-md='10' size-sm='8' size='12'>
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
                                     {isLogin ? (
-                                        <>
+                                        <div className='loginrow'>
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
                                                     name="name"
@@ -186,9 +186,9 @@ const Login = ({ handleClosep }) => {
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}
                                             </IonButton>
-                                        </>
+                                        </div>
                                     ) : (
-                                        <>
+                                        <div className='loginrow loginrow2'>
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
                                                     name="name"
@@ -280,7 +280,7 @@ const Login = ({ handleClosep }) => {
                                             </div>
 
                                             <IonButton color='secondary' type='submit' expand="full" style={{ marginTop: '20px', width: '95%', textTransform: 'capitalize' }}>Register</IonButton>
-                                        </>
+                                        </div>
                                     )}
                                 </form>
                                 <div style={{ width: '100%', display: 'flex', margin: 'auto', flexDirection: 'column', textAlign: 'center', fontSize: '14px' }}>

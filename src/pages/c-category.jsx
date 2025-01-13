@@ -64,9 +64,11 @@ function CategoryPage() {
             const response = await jwtAuthAxios.get(`client/citems?id=${id}`);
             const items = response?.data?.data;
             setCategoryDetails(items);
-            if (items.length > 0) {
-                setSelectedMetal(items[0].metalcolor);
-            }
+            const initialSelectedMetals = {};
+            items.forEach(item => {
+                initialSelectedMetals[item._id] = item.metalcolor; // Default to item's metal color
+            });
+            setSelectedMetal(initialSelectedMetals);
 
             setError(null);
         } catch (error) {
@@ -83,14 +85,15 @@ function CategoryPage() {
     const handleAddToCart = async (item) => {
         if (isFetching.current) return;
         isFetching.current = true;
+        setLoading(true);
+        
         try {
-
-            // alert(item.itemtype)
-            setLoading(true);
+            const selectedMetalForItem = selectedMetal[item._id] || item.metalcolor; 
+            
             const payload = {
                 itemId: item._id,
                 quantity: 1,
-                metal: `${item.metal}-${selectedMetal}-GOLD`.toUpperCase(),
+                metal: `${item.metal}-${selectedMetalForItem}-GOLD`.toUpperCase(),
                 diamondQuality: 'DEF VVS+',
                 colorstone: item.colorstone,
                 size: item.size,
@@ -101,6 +104,7 @@ function CategoryPage() {
                 sidectwt: item.sidectwt,
                 centerctwt: item.centerctwt
             };
+    
             const response = await jwtAuthAxios.post('/client/cart/add', payload);
             setCart([...cart, response.data]);
             dispatch(addToCart({ item: item._id, quantity: 1 }));
@@ -108,7 +112,7 @@ function CategoryPage() {
             setShowToast(true);
         } catch (error) {
             console.error(error || "Invalid ");
-            setToastMessage('Error adding item to cart')
+            setToastMessage('Error adding item to cart');
             setShowToast(true);
         } finally {
             setLoading(false);
@@ -274,14 +278,24 @@ function CategoryPage() {
                                                     <IonButton fill="clear" size="large" onClick={() => {
                                                         handleAddToCart(item);
                                                     }}>
-                                                        <ion-icon name="bag-add-outline" slot="icon-only"></ion-icon>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="#67686d" class="bi bi-cart3" viewBox="0 0 16 16">
+                                                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                                                        </svg>
                                                     </IonButton>
-                                                    <IonRadioGroup value={selectedMetal} onIonChange={e => setSelectedMetal(e.detail.value)} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                    <IonRadioGroup
+                                                        value={selectedMetal[item._id]}
+                                                        onIonChange={e =>
+                                                            setSelectedMetal({
+                                                                ...selectedMetal,
+                                                                [item._id]: e.detail.value
+                                                            })
+                                                        }
+                                                        style={{ display: 'flex', alignItems: 'center', gap: '15px' }}
+                                                    >
                                                         <IonRadio className='pink' value="ROSE" />
                                                         <IonRadio className='silver' value="WHITE" />
                                                         <IonRadio className='yellow' value="YELLOW" />
                                                     </IonRadioGroup>
-
                                                     <IonButton
                                                         key={item._id}
                                                         color={checkedItems[item._id] ? "danger" : "medium"}

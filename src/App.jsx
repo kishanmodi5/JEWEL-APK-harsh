@@ -20,7 +20,8 @@ import {
   IonRow,
   IonCol,
   IonItem,
-  IonInput
+  IonInput,
+  IonToast,
 } from '@ionic/react';
 // import { useLocation } from "react-router-dom";
 import { IonMenuToggle } from '@ionic/react';
@@ -74,6 +75,8 @@ function apps() {
   let user = JSON.parse(localStorage.getItem("user"));
   let userId = JSON.parse(localStorage.getItem("user"))?._id;
   const [validated, setValidated] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -88,7 +91,8 @@ function apps() {
           refrence,
           company
         });
-        console.log('cccc', response)
+        setToastMessage('Profile Update Successfully');
+        setShowToast(true);
         localStorage.setItem("user", JSON.stringify(response?.data));
         window.dispatchEvent(new Event("storage"));
         setShowModal(false);
@@ -295,7 +299,7 @@ function apps() {
                   </svg>
                   Exclusive Jewellery</a>
               </ion-router-link>
-              <ion-router-link href="http://craft.dnav360.com/"
+              <ion-router-link href="https://craft.greenlabjewels.com/"
                 target="_blank">
                 <a style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-boxes" viewBox="0 0 16 16">
@@ -423,8 +427,15 @@ function apps() {
               </IonGrid>
             </IonContent >
           </IonMenu>
+          <IonToast
+                      isOpen={showToast}
+                      onDidDismiss={() => setShowToast(false)}
+                      message={toastMessage}
+                      duration={2000}
+                  />
         </>
       )}
+          
       <>
         {showModal && (
           <div className="modal1">

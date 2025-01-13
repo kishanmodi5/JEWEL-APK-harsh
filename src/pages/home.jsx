@@ -58,25 +58,25 @@ const HomePage = () => {
                 <SwiperSlide>
                   <IonImg className='slider-img'
                     src="/img/slider-banner-1.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
                 <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-2.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
-                <SwiperSlide>
+                {/* <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-3.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
-                </SwiperSlide>
+                </SwiperSlide> */}
                 <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-4.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
               </Swiper>
