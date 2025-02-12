@@ -16,21 +16,25 @@ import {
     IonImg,
     IonFooter,
     IonButtons,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { Tooltip } from 'react-tooltip'
 import { camera } from 'ionicons/icons';
 import jwtAuthAxios from "../service/jwtAuth";
 import { useHistory } from 'react-router-dom';
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 const Videojewal = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(24);
+    const [itemsPerPage, setItemsPerPage] = useState(100);
     const filteredItems = selectedOption ? data.filter(item => item.type === selectedOption) : data;
     const history = useHistory();
     const [selectedItems, setSelectedItems] = useState([]);
+    const [hoveredItemId, setHoveredItemId] = useState(null);
+    const [selectAll, setSelectAll] = useState(false);
 
     const fetchVideoData = async () => {
         try {
@@ -67,6 +71,27 @@ const Videojewal = () => {
 
     };
 
+    const handleSelectAllChange = () => {
+        setSelectAll(prevSelectAll => {
+            const newSelectAll = !prevSelectAll;
+            setSelectAll(newSelectAll);
+
+            if (newSelectAll) {
+                setSelectedItems(data.map(item => item._id));
+            } else {
+                // Deselect all
+                setSelectedItems([]);
+            }
+
+            return newSelectAll;
+        });
+    };
+
+
+    const getHoverImageUrl = (filePath) => {
+        const filename = filePath.split('/')[5].split('?')[0];
+        return `https://console.studio360.tech/explore/e/${filename}?mode=p`; // adjust the URL
+    };
 
     const handlePDFDownload = async () => {
         try {
@@ -95,6 +120,14 @@ const Videojewal = () => {
     };
 
 
+    const handleRefresh = async (event) => {
+        await fetchVideoData();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
+
     const getUniqueCategories = () => {
         const uniqueTypes = [...new Set(data.map(item => item.type))];
         return uniqueTypes;
@@ -119,6 +152,12 @@ const Videojewal = () => {
     return (
         <IonPage>
             <IonContent style={{ background: "rgba(188, 119, 0, 0.07)" }}>
+                <IonRefresher slot="fixed" onIonRefresh={handleRefresh} style={{ marginTop: '20px' }}>
+                    <IonRefresherContent
+                        pullingIcon={chevronDownCircleOutline}
+                        refreshingSpinner="circles"
+                    ></IonRefresherContent>
+                </IonRefresher>
                 <div className="pb-3">
                     <IonGrid>
                         <IonRow className="ion-align-items-center mb-4">
@@ -164,18 +203,26 @@ const Videojewal = () => {
                         </IonRow>
                         <IonRow>
                             <IonCol>
-                                 <div style={{ marginTop: '15px',paddingTop: '10px', borderTop: '1.6px solid #00000047', display: 'flex',alignItems:"center", justifyContent: 'space-between' }}>
-                            <h4>Exclusive Jewellery</h4>
-                            <IonSelect value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex',width:'auto' }} onIonChange={handleItemsPerPageChange}>
-                                <IonSelectOption value={24}>24</IonSelectOption>
-                                <IonSelectOption value={48}>48</IonSelectOption>
-                                <IonSelectOption value={72}>72</IonSelectOption>
-                                <IonSelectOption value={100}>100</IonSelectOption>
-                            </IonSelect>
-                        </div>
+                                <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1.6px solid #00000047', display: 'flex', alignItems: "center", justifyContent: 'space-between' }}>
+                                    <h4>Exclusive Jewellery</h4>
+                                    <IonSelect value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex', width: 'auto' }} onIonChange={handleItemsPerPageChange}>
+                                        <IonSelectOption value={24}>24</IonSelectOption>
+                                        <IonSelectOption value={48}>48</IonSelectOption>
+                                        <IonSelectOption value={72}>72</IonSelectOption>
+                                        <IonSelectOption value={100}>100</IonSelectOption>
+                                    </IonSelect>
+                                </div>
                             </IonCol>
                         </IonRow>
-                       
+                        <div className='' style={{margin:'0px 0px 10px 5px'}}>
+                            <label style={{color:'#4C3226', fontSize:'17px'}}>Select All Box : </label>
+                            <input
+                                style={{ margin: '-10px 0px 13px 0px', width:'20px', height:'20px'}}
+                                type='checkbox'
+                                checked={selectAll}
+                                onChange={handleSelectAllChange}
+                            />
+                        </div>
                         <IonRow>
                             {currentItems.map(item => (
                                 <IonCol size="12" size-sm="6" size-md="4" size-lg="2">
@@ -196,11 +243,24 @@ const Videojewal = () => {
                                         >
                                             <ion-icon name="logo-whatsapp" slot="icon-only"></ion-icon>
                                         </IonButton>
-                                        <img
-                                            src={`https://s3.ap-south-1.amazonaws.com/console.v360.tech.output/thumbnails/${item.filepath.split('/')[5].split('?')[0]}.webp`}
-                                            alt="Jewelry"
-                                            className='picjewels'
-                                        />
+                                        <div
+                                            onMouseEnter={() => setHoveredItemId(item._id)}
+                                            onMouseLeave={() => setHoveredItemId(null)}
+                                        >
+                                            {hoveredItemId === item._id ? (
+                                                <img
+                                                    src={getHoverImageUrl(item.filepath)}
+                                                    alt="Jewelry Hover"
+                                                    className='picjewels hover-image'
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={`https://s3.ap-south-1.amazonaws.com/console.v360.tech.output/thumbnails/${item.filepath.split('/')[5].split('?')[0]}.jpg`}
+                                                    alt="Jewelry"
+                                                    className='picjewels'
+                                                />
+                                            )}
+                                        </div>
                                         <div class='videogld'>
                                             <h6 style={{ margin: '0' }}>{item.name}</h6>
                                             <IonButton
@@ -220,7 +280,7 @@ const Videojewal = () => {
                                                 flexWrap: 'wrap',
                                                 fontFamily: 'Outfit',
                                                 gap: '10px',
-                                                padding: '10px',
+                                                padding: '13px',
                                                 borderTop: '1px solid rgba(0, 0, 0, 0.22)',
 
                                             }}
@@ -278,7 +338,7 @@ const Videojewal = () => {
                     </IonGrid>
                 </div>
             </IonContent>
-            <p style={{ textAlign: 'center', fontSize: '13px', backgroundColor:"transparent"}}>All rights are reserved. GreenLab Jewels</p>
+            <p style={{ textAlign: 'center', fontSize: '13px', backgroundColor: "transparent" }}>All rights are reserved. GreenLab Jewels</p>
         </IonPage >
     );
 };

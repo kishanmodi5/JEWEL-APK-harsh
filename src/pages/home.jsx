@@ -42,7 +42,7 @@ const HomePage = () => {
       <Head />
 
       <IonHeader>
-        <h1>home</h1>
+        {/* <h1>home</h1> */}
       </IonHeader>
       <IonContent color="primary">
         <IonGrid>

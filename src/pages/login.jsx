@@ -37,6 +37,7 @@ const Login = ({ handleClosep }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const [isRememberMe, setIsRememberMe] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
@@ -52,13 +53,25 @@ const Login = ({ handleClosep }) => {
                 const response = await jwtAuthAxios.post("client/auth", {
                     name: input.name,
                     password: input.password,
+                    rememberMe: isRememberMe,
                 });
                 if (response.status === 200) {
-                    setAuthToken(response?.data);
+                    setAuthToken(response?.data, isRememberMe);
                     localStorage.setItem("token", response?.data?.token);
                     localStorage.setItem("user", JSON.stringify(response?.data?.data));
                     jwtAuthAxios.defaults.headers.common["Authorization"] =
                         "Bearer " + response?.data?.token;
+                    
+                        if (isRememberMe) {
+                            localStorage.setItem('rememberedUsername', input.name);
+                            localStorage.setItem('rememberedPassword', input.password);
+                            localStorage.setItem('rememberMeChecked', 'true');
+                        } else {
+                            localStorage.removeItem('rememberedUsername');
+                            localStorage.removeItem('rememberedPassword');
+                            localStorage.removeItem('rememberMeChecked');
+                        }
+
                     setToastMessage(response?.data?.message);
                     setShowToast(true);
                     history.push("/home");
@@ -101,6 +114,27 @@ const Login = ({ handleClosep }) => {
         console.log('input', input)
     }, [input])
 
+
+    const handleItemClick = () => {
+        history.push(
+            window.location.href = '/forgets'
+        );
+    };
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('rememberedUsername');
+        const storedPassword = localStorage.getItem('rememberedPassword');
+        const rememberMeChecked = localStorage.getItem('rememberMeChecked') === 'true'; // Get the boolean value
+
+        if (storedUsername && storedPassword && rememberMeChecked) {
+            setInput(prevState => ({
+                ...prevState,
+                name: storedUsername,
+                password: storedPassword
+            }));
+            setIsRememberMe(true);
+        }
+    }, []);
 
     return (
         <>
@@ -145,11 +179,11 @@ const Login = ({ handleClosep }) => {
                             <IonCol size-lg='10' size-md='10' size-sm='8' size='12'>
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
                                     {isLogin ? (
-                                        <div className='loginrow'>
+                                        <div className='loginrow' >
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
                                                     name="name"
-                                                    placeholder="Enter Username"
+                                                    placeholder="Enter your Username or Phone No or Email"
                                                     color='secondary'
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
@@ -167,21 +201,40 @@ const Login = ({ handleClosep }) => {
                                                     type="password"
                                                     color='secondary'
                                                     placeholder="Enter Password"
-                                                    fill="clear"
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.password}
                                                     onBlur={handleChange}
                                                     required
+                                                    // fill="clear"
                                                 >
                                                     <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
                                                 </IonInput>
                                             </div>
+                                            <IonCol size='12'>
+                                               <IonRow >
+                                                   <IonCol size='6' style={{display:'flex'}}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isRememberMe}
+                                                            onChange={() => setIsRememberMe(!isRememberMe)}
+                                                        />
+                                                        <span style={{marginLeft:'5px',fontSize:'14px', color:'rgb(76 50 38)'}}>
+                                                            <label>Remember Me</label>
+                                                        </span>
+                                                    </IonCol>   
+                                                    <IonCol size='6' className="col-6 " style={{textAlign:'end'}}>
+                                                        <span onClick={() => handleItemClick()} style={{ cursor: "pointer", fontSize: '14px', color: '#bc7700' }}>
+                                                            Forget Password ?
+                                                        </span>
+                                                    </IonCol>
+                                                </IonRow> 
+                                            </IonCol>
                                             <IonButton
                                                 color='secondary'
                                                 type='submit'
                                                 expand="full"
-                                                style={{ marginTop: '20px', width: '100%', textTransform: 'uppercase' }}
+                                                style={{ marginTop: '10px', width: '100%', textTransform: 'uppercase', letterSpacing: '1.1px' }}
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}
@@ -279,7 +332,7 @@ const Login = ({ handleClosep }) => {
                                                 </IonInput>
                                             </div>
 
-                                            <IonButton color='secondary' type='submit' expand="full" style={{ marginTop: '20px', width: '95%', textTransform: 'capitalize' }}>Register</IonButton>
+                                            <IonButton color='secondary' type='submit' expand="full" style={{ marginTop: '20px', width: '95%', textTransform: 'uppercase', letterSpacing: '1.1px' }}>Register</IonButton>
                                         </div>
                                     )}
                                 </form>

@@ -298,7 +298,6 @@ ion-tab-bar.md.hydrated::before {
     font-family: 'Poppins';
     font-weight: 300;
     letter-spacing: 2px;
-    border-bottom: 1px solid rgb(255 216 174 / 22%);
     color: rgb(255 216 174);
     width: 100%;
     display: block;
@@ -312,9 +311,9 @@ ion-tab-bar.md.hydrated::before {
 
 .right_bottom_fix {
     position: fixed;
-    right: 9px;
+    right: 16px;
     bottom: 64px;
-    z-index: 99999;
+    z-index: 1;
 }
 
 button.btn {
@@ -1321,7 +1320,7 @@ h5:empty {
         margin-top: 277px;
     }
     .loginrow2 {
-        margin-top: 200px !important;
+        margin-top: 78px !important;
     }
     .loginrow1 {
         justify-content: flex-start;
@@ -1342,7 +1341,7 @@ h5:empty {
         margin-top: 30px;
     }
     .offcanvas {
-        max-width: 318px;
+        max-width: 390px;
     }
     .bottombtm {
         max-width: 312px;
@@ -1372,7 +1371,7 @@ h5:empty {
     }
     .twominimgmain .swiper-wrapper {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .product-detail-mainc {
@@ -1448,8 +1447,8 @@ h5:empty {
         margin-left: 0px;
     }
     img.twominimg, .thumblineimage a img {
-        max-width: 55px !important;
-        height: 55px !important;
+        max-width: 60px !important;
+        height: 60px !important;
        
     }
     select#simple-select {
@@ -1505,6 +1504,7 @@ h5:empty {
 
 ion-range::part(tick) {
     background: #f4a724;
+ 
   }
   
   ion-range::part(tick-active) {
@@ -1512,21 +1512,20 @@ ion-range::part(tick) {
   }
   
   ion-range::part(pin) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  
-    background: #4c3226;
-    color: #fff;
-  
-    border-radius: 50%;
-    transform: scale(1.01);
-  
-    top: -20px;
-  
-    min-width: 28px;
-    height: 28px;
-    transition: transform 120ms ease, background 120ms ease;
+    display: inline-flex
+    ;
+        align-items: center;
+        justify-content: center;
+        background: #4c3226;
+        color: #fff;
+        border-radius: 2px;
+        /* padding: 12px 3px; */
+        transform: scale(1.01);
+        top: -20px;
+        min-width: 36px;
+        height: 28px;
+        transition: transform 120ms ease, background 120ms ease;
+        font-size: 15px;
   }
   
   ion-range::part(pin)::before {
@@ -1658,3 +1657,18 @@ p {
     background: #ffffff;
     font-size: 25px;
 }
+
+.sortfilter {
+    width: 135px;
+    border-radius: 9px;
+    font-weight: 300;
+    color: #4c3226;
+    background: #fff6ec;
+    margin: 0px 0px 0px 0px;
+    padding: 6px 5px;
+    border: 2px solid rgb(157, 118, 100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

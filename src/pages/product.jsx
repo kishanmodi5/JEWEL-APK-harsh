@@ -25,6 +25,7 @@ import {
     IonicSlides,
     IonButtons,
     IonToast,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -54,7 +55,7 @@ import { toast } from "react-toastify";
 import 'swiper/css/free-mode';
 import 'swiper/css/thumbs';
 import { FreeMode, Thumbs } from 'swiper/modules';
-
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function Product() {
     const { id } = useParams();
@@ -234,6 +235,13 @@ function Product() {
         setSelectedFindings(e.target.value);
     };
 
+    const handleRefresh = async (event) => {
+        await fetchProductData();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
 
     // useEffect(() => {
     // }, [selectedType]);
@@ -282,8 +290,13 @@ function Product() {
                 <h1>home</h1>
             </IonHeader>
             <Header />
-
             <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingIcon={chevronDownCircleOutline}
+                            refreshingSpinner="circles"
+                        ></IonRefresherContent>
+                    </IonRefresher>
                 <div style={{ marginTop: '20px' }}>
                     <h5 class="text-center mb-5 element">Products</h5>
                 </div>
@@ -393,7 +406,7 @@ function Product() {
                                                             </div>
                                                             <img
                                                                 style={{  marginBottom:"0" }}
-                                                                src={`https://s10.v360.in/images/company/3848/imaged/${videopath?.split('_')[1]}/still.jpg`}
+                                                                src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
                                                             />
                                                         </a>
                                                     </div>
@@ -410,7 +423,7 @@ function Product() {
                                     <IonCol>
                                         <div className='productreduiom' >
                                             <IonChip color="secondary" style={{ fontWeight: '500px' }}>{sku}</IonChip>
-                                            <h5 style={{ color: 'black' }}>{description}</h5>
+                                            <h5 style={{ textTransform: 'uppercase', fontSize:'15px' }}>{description}</h5>
                                         </div>
                                         <div className='productreduio'>
                                             <h6>Metal</h6>
@@ -564,7 +577,7 @@ function Product() {
                                             <IonCol>
                                                 {colorstone ? (
                                                     <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
-                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', }}>Color Stone Details : <div slot='end'
+                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', borderRadius:'20px' }}>Color Stone Details : <div slot='end'
                                                             labelPlacement="end" style={{ color: 'rgb(76, 50, 38)', marginRight: '0', marginTop: '5px', fontSize: '14px' }}>{colorstone}</div></span>
                                                     </div>
                                                 ) : (
@@ -574,6 +587,7 @@ function Product() {
                                             <IonCol>
                                                 {sortedSizes?.length > 0 && (
                                                     <IonSelect
+                                                        label-placement="floating"
                                                         value={selectSize}
                                                         placeholder="Select Size"
                                                         onIonChange={(e) => handleSizeChange(e)}
@@ -583,7 +597,7 @@ function Product() {
                                                             border: '1px solid #7f7d7d',
                                                             backgroundColor: '#fff6ec',
                                                             color: 'rgb(76 50 38)',
-                                                            padding: '0px 12px',
+                                                            padding: '0px 10px',
                                                             borderRadius: '7px'
 
                                                         }}
@@ -602,6 +616,7 @@ function Product() {
                                                     <IonSelect
                                                         value={selectedFindings || (findings.length > 0 ? findings[0].finding : "")}
                                                         placeholder="Select Finding"
+                                                          labelPlacement="floating"
                                                         onIonChange={(e) => handleFindingsChange(e)}
                                                         interface="popover"
                                                         style={{
@@ -609,7 +624,8 @@ function Product() {
                                                             border: '1px solid #7f7d7d',
                                                             backgroundColor: '#fff6ec',
                                                             color: 'rgb(76 50 38)',
-                                                            padding: '0px 12px',
+                                                            padding: '0px 10px',
+                                                            borderRadius: '7px'
                                                         }}
                                                         size="small"
                                                     >

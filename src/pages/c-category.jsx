@@ -20,7 +20,8 @@ import {
     IonAccordionGroup,
     IonRadio,
     IonRadioGroup,
-    IonToast
+    IonToast,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -38,7 +39,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { IonIcon } from "@ionic/react";
 import { heartOutline, heart } from "ionicons/icons";
 import { addToCart, showCarts } from "../store/actions";
-
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function CategoryPage() {
     const { id } = useParams();
@@ -158,7 +159,13 @@ function CategoryPage() {
         }
     }, [id]);
 
-
+    const handleRefresh = async (event) => {
+        await fetchCategoryData();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
 
     return (
         <IonPage>
@@ -168,6 +175,12 @@ function CategoryPage() {
             <Header />
 
             <IonContent color="primary">
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingIcon={chevronDownCircleOutline}
+                            refreshingSpinner="circles"
+                        ></IonRefresherContent>
+                    </IonRefresher>
                 <IonGrid>
                     <IonRow>
                         <IonCol>
@@ -267,7 +280,7 @@ function CategoryPage() {
                                             </ion-router-link>
                                             <div className='main-card-bottom'>
                                                 <div>
-                                                    <h5>{item.description}</h5>
+                                                    <h5 style={{ textTransform: 'uppercase' }}>{item.description}</h5>
                                                 </div>
                                                 <div style={{
                                                     display: 'flex',

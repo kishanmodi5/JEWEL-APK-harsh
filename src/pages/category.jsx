@@ -21,6 +21,7 @@ import {
     IonInput,
     IonCheckbox,
     IonRange,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { useParams } from "react-router-dom";
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
@@ -36,7 +37,7 @@ import jwtAuthAxios from "../service/jwtAuth";
 import { Navigation, Autoplay } from 'swiper/modules';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '../store/actions';
-
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function Category() {
     const { id } = useParams();
@@ -49,7 +50,7 @@ function Category() {
     const [page, setPage] = useState(1);
     const [totalCount, setTotalCount] = useState(1);
     const [hoveredImage, setHoveredImage] = useState('');
-    const [pageSize, setPageSize] = useState(24);
+    const [pageSize, setPageSize] = useState(100);
     const [CategoryFilter, setCategoryFilter] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState([])
@@ -61,13 +62,16 @@ function Category() {
     const [pendingFetch, setPendingFetch] = useState(false);
     const [attr, setAttr] = useState([]);
     const [filterDetails, setFilterDetails] = useState(filters?.filter || {
-        minctwts: 0, maxctwts: 0, minGramWt: 0, maxGramWt: 0, minpointer: 0,
+        minctswts: 0, maxctswts: null, minGramWt: 0, maxGramWt: null, minpointer: 0,
         maxpointer: 0,
-        attr: [],
+        attr: [], shape: []
     });
-
+    const [sortOrder, setSortOrder] = useState("asc");
     const [maxattr, setMaxttr] = useState({});
-
+    const [maxctswts, setMaxctswts] = useState(null);
+    const [maxGramWt, setMaxGramWt] = useState(null);
+    const [shape, setShape] = useState([])
+    
 
     const fetchCategoryData = async (filterflag) => {
         if (isFetching.current) return;
@@ -77,7 +81,7 @@ function Category() {
 
 
         try {
-            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}`, {
+            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}`, {
                 CategoryFilter,
                 CollectionFilter: selectedCollection,
                 filter: filterDetails,
@@ -90,19 +94,39 @@ function Category() {
             }
             if (filterflag) {
                 setFilterDetails({
-                    minctwts: 0,
-                    maxctwts: 0,
+                    minctswts: 0,
+                    maxctswts: null,
                     minGramWt: 0,
-                    maxGramWt: 0,
+                    maxGramWt: null,
                     minpointer: 0,
                     maxpointer: 0,
                     attr: [],
+                    shape: []
                 });
             } else {
                 setFilterDetails(response?.data?.filter);
+                if (maxctswts === null && response?.data?.maxctswts !== undefined) {
+                    // console.log("Max CTWTS from API:", response.data.maxctswts);
+                    setMaxctswts(response.data.maxctswts); 
+                    setFilterDetails(prev => ({
+                        ...prev,
+                        maxctswts: response.data.maxctswts 
+                    }));
+
+                }
+
+                if (maxGramWt === null && response?.data?.maxGramWt !== undefined) {
+                    setMaxGramWt(response.data.maxGramWt); 
+                    setFilterDetails(prev => ({
+                        ...prev,
+                        maxGramWt: response.data.maxGramWt 
+                    }));
+                }
+
             }
             setCategoryDetails(response?.data?.data);
             // setSubcategories(response?.data.CategoryFilter);
+            setShape(response?.data?.shapeData);
             setSubcollection(response.data.CollectionFilter)
             setTotalCount(response?.data?.pagination?.totalCount);
             setItemname(response.data.data[0].itemtype.name)
@@ -117,7 +141,7 @@ function Category() {
     };
 
     const demosub = async () => {
-        const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}`, {
+        const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}`, {
             CategoryFilter,
             CollectionFilter: selectedCollection,
             filter: filterDetails,
@@ -196,9 +220,12 @@ function Category() {
             fetchCategoryData();
 
         }
-    }, [id, page, CategoryFilter, selectedCollection,pageSize]);
+    }, [id, page, CategoryFilter, selectedCollection, pageSize, sortOrder]);
 
-
+    const handleSortChange = (order) => {
+        setSortOrder(order);
+        setPage(1);
+    };
     useEffect(() => {
         if (pendingFetch) {
             fetchCategoryData();
@@ -237,13 +264,13 @@ function Category() {
     };
 
     useEffect(() => {
-        console.log('filter', filterDetails)
+        // console.log('filter', filterDetails)
     }, [filterDetails])
 
     const handleReset = () => {
         setFilterDetails({
-            minctwts: 0,
-            maxctwts: 0,
+            minctswts: 0,
+            maxctswts: 0,
             minGramWt: 0,
             maxGramWt: 0,
             minpointer: 0,
@@ -259,6 +286,41 @@ function Category() {
         setPage(1);
     };
 
+    const handleRefresh = async (event) => {
+        await fetchCategoryData();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
+
+    // useEffect(() => {
+    //     console.log("filterDetails", filterDetails);
+    // }, [filterDetails])
+
+    // useEffect(() => {
+    //     jwtAuthAxios.get(`/master/tags/shapes`)
+    //         .then(response => setShape(response.data[0]?.data))
+    //         .catch(error => console.error('Error fetching synonyms:', error));
+    // }, []);
+
+    const handleShapeCheckboxChange = (event, item) => {
+        const { checked } = event.target;
+    
+        // console.log("Before update:", filterDetails.shape);
+    
+        setFilterDetails((prev) => {
+            const newShapes = checked 
+                ? [...new Set([...prev.shape, item])]
+                : prev.shape.filter((shapeName) => shapeName !== item);
+    
+            // console.log("After update:", newShapes);
+            return { ...prev, shape: newShapes };
+        });
+    
+        setPendingFetch(true);
+    };
+    
 
     return (
         <>
@@ -268,6 +330,12 @@ function Category() {
                 <div style={{ margin: '30px' }}></div>
 
                 <IonContent color="primary">
+                <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingIcon={chevronDownCircleOutline}
+                            refreshingSpinner="circles"
+                        ></IonRefresherContent>
+                    </IonRefresher>
                     <IonGrid>
                         <IonRow>
                             <IonCol>
@@ -338,10 +406,29 @@ function Category() {
                         <div>
                             <h5 class="text-center mb-5 element" style={{ marginBottom: '20px' }}>{itemname}  Category </h5>
                         </div>
+
                         <IonCol size='12' style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button
+                                className="sortfilter"
+                                onClick={() => handleSortChange(sortOrder === "asc" ? "desc" : "asc")}
+                            >
+                                {sortOrder === "asc" ? (
+                                    <>
+                                        Sort By ASC <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5" />
+                                        </svg></span>
+                                    </>
+                                ) : (
+                                    <>
+                                        Sort By DESC <span style={{ display: 'block' }}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4" />
+                                        </svg></span>
+                                    </>
+                                )}
+                            </button>
                             <IonSelect
                                 className="w-auto"
-                                style={{ marginLeft: 'auto', display: 'flex',color:'#4c3226',border:'2px solid #9d7664',marginLeft:'auto',width:'auto', padding:'0 10px',borderRadius:'9px' }}
+                                style={{ marginLeft: 'auto', display: 'flex', color: '#4c3226', border: '2px solid #9d7664', marginLeft: 'auto', width: 'auto', padding: '0 10px', borderRadius: '9px' }}
                                 value={pageSize}
                                 onIonChange={handlePageSizeChange}
                             >
@@ -362,7 +449,7 @@ function Category() {
                                     <p style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>Loading...</p>
                                 ) : error ? (
                                     <p className="error-message" style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>{error}</p>
-                                ) : (
+                                ) :  categoryDetails && categoryDetails.length > 0 ? (
                                     categoryDetails?.map(item => {
                                         const hasSubItems = item.subItems && item.subItems.length > 0;
                                         const redirectTo = hasSubItems ? `/c-category/${item._id}` : `/product/${item._id}`;
@@ -378,7 +465,7 @@ function Category() {
                                                     </ion-router-link>
                                                     <div className='main-card-bottom'>
                                                         <div>
-                                                            <h5>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
+                                                            <h5 style={{ textTransform: 'uppercase' }}>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
                                                         </div>
                                                         <div>
                                                             <h5 style={{ color: '#bc7700' }}>{item.category[0].name}</h5>
@@ -444,98 +531,24 @@ function Category() {
                                             </IonCol>
                                         );
                                     })
+                                ) : (
+                                    <div
+                                        style={{
+                                            background: "#fff6ec",
+                                            margin: 'auto'
+                                        }}
+                                    >
+                                        <div>
+                                            <IonImg
+                                                src='/img/datanotfound.png'
+                                                style={{ maxWidth: "360px", width: "100%" }}
+                                            />
+                                            <h3 style={{ textAlign: 'center', marginBottom: '30px' }}>Data Not Found</h3>
+                                        </div>
+                                    </div>
                                 )}
                             </IonRow>
 
-                            {/* <IonButton className='right_bottom_fix' shape='round' size='large' color='secondary' id="open-modal">
-                                <ion-icon name="filter-outline" slot="icon-only"></ion-icon>
-                            </IonButton>
-                            <IonModal trigger="open-modal" color='secondary' initialBreakpoint={0.25} breakpoints={[0, 0.25, 0.5, 0.75]}>
-                                <IonContent className="ion-padding" color='secondary'>
-                                    <IonList>
-                                        <div className='topbtn'>
-                                            <span>Filter by:</span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <IonButton style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Reset</IonButton>
-                                                <IonButton style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Apply</IonButton>
-                                            </div>
-                                        </div>
-                                        <IonAccordionGroup class='filter-drop' multiple={true} style={{ padding: '0' }}>
-                                            <IonAccordion value="first">
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>Sub Category</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    {subcategories.map(CategoryFilter => (
-                                                        <IonCheckbox
-                                                            key={CategoryFilter._id}
-                                                            size='large'
-                                                            labelPlacement="end"
-                                                            style={{ marginBottom: '10px' }}
-                                                            checked={selectedCategories.includes(CategoryFilter._id)}
-                                                            onIonChange={() => handleCategoryChange(CategoryFilter._id)}
-                                                        >
-                                                            <span>{CategoryFilter.name}</span>
-                                                        </IonCheckbox>
-                                                    ))}
-                                                </div>
-                                            </IonAccordion>
-                                            <IonAccordion value="second">
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>Collection</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    {subcollection.map(CollectionFilter => (
-                                                        <IonCheckbox
-                                                            key={CollectionFilter._id}
-                                                            size='large'
-                                                            labelPlacement="end"
-                                                            style={{ marginBottom: '10px' }}
-                                                            checked={selectedCollection.includes(CollectionFilter._id)}
-                                                            onIonChange={() => handleCollectionChange(CollectionFilter._id)}
-                                                        >
-                                                            <span>{CollectionFilter.name}</span>
-                                                        </IonCheckbox>
-                                                    ))}
-                                                </div>
-                                            </IonAccordion>
-                                            <IonAccordion value="third" >
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>CT Wts</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    <div className='d-flex'>
-                                                        <span>Min</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
-                                                    </div>
-                                                    <div className='d-flex'>
-                                                        <span>Max</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
-                                                    </div>
-                                                </div>
-                                            </IonAccordion>
-                                            <IonAccordion value="fore">
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>Gram Wts</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    <div className='d-flex'>
-                                                        <span>Min</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
-                                                    </div>
-                                                    <div className='d-flex'>
-                                                        <span>Max</span>
-                                                        <IonInput type="number" style={{ background: 'transparent' }} placeholder="0"></IonInput>
-                                                    </div>
-                                                </div>
-                                            </IonAccordion>
-                                        </IonAccordionGroup>
-                                    </IonList>
-                                </IonContent>
-                            </IonModal> */}
-                            {/* <button className="open-btn right_bottom_fix" onClick={toggleOffcanvas}>
-                                <ion-icon name="filter-outline" slot="icon-only"></ion-icon>
-                            </button> */}
 
                             <IonButton className='right_bottom_fix' shape='round' size='large' color='secondary' onClick={toggleOffcanvas}>
                                 {isOpen ? (
@@ -548,7 +561,15 @@ function Category() {
                                 <div className="content">
                                     <div color='secondary'>
                                         <div className='topbtn'>
-                                            <span>Filter by:</span>
+                                            <div style={{display:"flex", alignItems:"center",justifyContent:"space-between",    borderBottom: "1px solid rgb(255 216 174 / 22%)"}}>
+                                                <div>
+                                                    <span>Filter by:</span>
+                                                </div>
+                                                <div>
+                                                    <ion-button onClick={toggleOffcanvas}  fill="clear" style={{ width: '100%', color:"#ffd8ae"}} size="large"><ion-icon name="close-outline"></ion-icon></ion-button>
+                                                </div>
+                                            </div>
+                                            
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <IonButton onclick={handleReset} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Reset</IonButton>
                                                 <IonButton onClick={toggleOffcanvas} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Apply</IonButton>
@@ -579,6 +600,94 @@ function Category() {
                                                     ))}
                                                 </div>
                                             </IonAccordion>
+
+                                            <IonAccordion value="third" >
+                                                <IonItem slot="header" color='secondary'>
+                                                    <p>CT Wts</p>
+                                                </IonItem>
+                                                <div className="ion-padding" slot="content">
+                                                    <IonRange
+                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px',padding:'21px 12px 0 12px' }}
+                                                        dualKnobs={true}
+                                                        min={0}
+                                                        step={0.05}
+                                                        max={maxctswts?.toFixed(2) || 100} // Set a default max if maxctswts is null
+                                                        value={{
+                                                            lower: filterDetails?.minctswts,
+                                                            upper: filterDetails?.maxctswts || maxctswts || 100 // Default upper value
+                                                        }}
+                                                        pinFormatter={(value) => `${value}`}
+                                                        pin={true}
+                                                        ticks={true}
+                                                        snaps={true}
+                                                        onIonChange={(e) => {
+                                                            const newMinValue = e?.detail?.value?.lower;
+                                                            const newMaxValue = e?.detail?.value?.upper;
+                                                            setFilterDetails(prev => ({
+                                                                ...prev,
+                                                                minctswts: newMinValue,
+                                                                maxctswts: newMaxValue
+                                                            }));
+                                                            setPendingFetch(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </IonAccordion>
+                                            <IonAccordion value="fore">
+                                                <IonItem slot="header" color='secondary'>
+                                                    <p>Gram Wts</p>
+                                                </IonItem>
+                                                <div className="ion-padding" slot="content">
+                                                    <IonRange
+                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px', padding:'21px 12px 0 12px' }}
+                                                        dualKnobs={true}
+                                                        min={0}
+                                                        step={0.05}
+                                                        max={maxGramWt?.toFixed(2) || 100} // Set a default max if maxctswts is null
+                                                        value={{
+                                                            lower: filterDetails?.minGramWt,
+                                                            upper: filterDetails?.maxGramWt || maxGramWt || 100 // Default upper value
+                                                        }}
+                                                        pinFormatter={(value) => `${value}`}
+                                                        pin={true}
+                                                        ticks={true}
+                                                        snaps={true}
+                                                        onIonChange={(e) => {
+                                                            const newMinValue = e?.detail?.value?.lower;
+                                                            const newMaxValue = e?.detail?.value?.upper;
+                                                            setFilterDetails(prev => ({
+                                                                ...prev,
+                                                                minGramWt: newMinValue,
+                                                                maxGramWt: newMaxValue
+                                                            }));
+                                                            setPendingFetch(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </IonAccordion>
+                                            {shape?.length > 0 && (
+                                                <IonAccordion value="six">
+                                                    <IonItem slot="header" color='secondary'>
+                                                        <p>Shape</p>
+                                                    </IonItem>
+                                                    <div className="ion-padding" slot="content">
+                                                        {shape?.map((item, index) => (
+                                                            <div key={index} style={{ display: 'flex' }}>
+                                                                <IonCheckbox
+                                                                    id={item}
+                                                                    size='large'
+                                                                    labelPlacement="end"
+                                                                    style={{ marginBottom: '10px' }}
+                                                                                                    
+                                                                    onIonChange={(event) => handleShapeCheckboxChange(event, item)}
+                                                                    checked={filterDetails?.shape?.includes(item)}
+                                                                />
+                                                                <span style={{ margin: '1px 0px 0px 10px', textTransform: 'uppercase' }}>{item}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </IonAccordion>
+                                            )}
                                             <IonAccordion value="second">
                                                 <IonItem slot="header" color='secondary'>
                                                     <p>Collection</p>
@@ -598,77 +707,13 @@ function Category() {
                                                     ))}
                                                 </div>
                                             </IonAccordion>
-                                            <IonAccordion value="third" >
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>CT Wts</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    <div className='d-flex'>
-                                                        <span>Min</span>
-                                                        <IonInput color="secondary" type="number" style={{ background: 'transparent' }} placeholder="0"
-                                                            min={0}
-                                                            max={100}
-                                                            step={0.01}
-                                                            name="minctwts"
-                                                            value={filterDetails?.minctwts || 0}
-                                                            // onIonChange={handleFilterChange}
-                                                            onIonBlur={handleFilterChange}
-
-                                                        ></IonInput>
-                                                    </div>
-                                                    <div className='d-flex'>
-                                                        <span>Max</span>
-                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
-                                                            min={0}
-                                                            max={100}
-                                                            step={0.01}
-                                                            name="maxctwts"
-                                                            value={filterDetails.maxctwts || 0}
-                                                            // onIonChange={handleFilterChange}
-                                                            onIonBlur={handleFilterChange}
-
-                                                        ></IonInput>
-                                                    </div>
-                                                </div>
-                                            </IonAccordion>
-                                            <IonAccordion value="fore">
-                                                <IonItem slot="header" color='secondary'>
-                                                    <p>Gram Wts</p>
-                                                </IonItem>
-                                                <div className="ion-padding" slot="content">
-                                                    <div className='d-flex'>
-                                                        <span>Min</span>
-                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
-                                                            min={0}
-                                                            max={100}
-                                                            step={0.01}
-                                                            name="minGramWt"
-                                                            value={filterDetails?.minGramWt || 0}
-                                                            // onIonChange={handleFilterChange}
-                                                            onIonBlur={handleFilterChange}
-                                                        ></IonInput>
-                                                    </div>
-                                                    <div className='d-flex'>
-                                                        <span>Max</span>
-                                                        <IonInput type="number" color="secondary" style={{ background: 'transparent' }} placeholder="0"
-                                                            min={0}
-                                                            max={100}
-                                                            step={0.01}
-                                                            name="maxGramWt"
-                                                            value={filterDetails.maxGramWt || 0}
-                                                            // onIonChange={handleFilterChange}
-                                                            onIonBlur={handleFilterChange}
-                                                        ></IonInput>
-                                                    </div>
-                                                </div>
-                                            </IonAccordion>
                                             {attr?.length > 0 && (
                                                 <IonAccordion value="five">
                                                     <IonItem slot="header" color='secondary'>
                                                         <p>Pointer</p>
                                                     </IonItem>
-                                                    <div slot="content" style={{ margin: '10px 0px 0px 20px', width: '90%' }}>
-                                                        <div >
+                                                    <div slot="content" style={{ margin: '10px 0px 0px 20px', width: '90%',padding:'21px 12px 0 12px' }}>
+                                                        <div>
                                                             <>
                                                                 {attr?.map((attribute, index) => {
                                                                     switch (attribute.type) {

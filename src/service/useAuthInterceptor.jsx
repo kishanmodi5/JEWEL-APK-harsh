@@ -11,7 +11,7 @@ const useAuthInterceptor = () => {
       (err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear();
-          history.push("/home"); 
+          history.push("/login"); 
         }
         return Promise.reject(err);
       }

@@ -18,7 +18,8 @@ import {
   IonSelectOption,
   IonLabel,
   IonInput,
-  IonToast
+  IonToast,
+  IonRefresher, IonRefresherContent,
 
 } from '@ionic/react';
 import '../pages/Tab1.css';
@@ -35,7 +36,7 @@ import { DataContext } from "../context/DataProvider";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { chevronDownCircleOutline } from 'ionicons/icons'
 
 
 const RadioPage = () => {
@@ -76,8 +77,8 @@ const RadioPage = () => {
     referenceName: "",
   });
   const history = useHistory();
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
 
 
@@ -124,7 +125,13 @@ const RadioPage = () => {
     setShowDropdown(false);
   };
 
-
+  const handleRefresh = async (event) => {
+    await fetchCartData();
+    setTimeout(() => {
+      // Any calls to load data go here
+      event.detail.complete();
+    }, 1500); // Signal that the refresh is complete
+  };
 
   const handleRemoveItem = async (id) => {
     try {
@@ -356,6 +363,12 @@ const RadioPage = () => {
       </IonHeader>
       <Header />
       <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px' }}>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh} >
+          <IonRefresherContent
+            pullingIcon={chevronDownCircleOutline}
+            refreshingSpinner="circles"
+          ></IonRefresherContent>
+        </IonRefresher>
         <h4 className="text-center mb-5 element" style={{ marginTop: '20px' }}>add to Card</h4>
         {cartDetails?.items?.length === 0 || cartDetails?.message ? (
           <div
@@ -382,7 +395,7 @@ const RadioPage = () => {
                   <IonRow key={`${item.item?._id}-${index}`} >
                     <IonCol size='12'>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '5px', justifyContent: 'space-between' }}>
-                        <IonCardTitle style={{ color: 'black', justifyContent: 'center', display: 'flex', fontSize: '16px' }}>
+                        <IonCardTitle style={{ color: '#4c3226', textTransform: 'uppercase', justifyContent: 'center', display: 'flex', fontSize: '16px' }}>
                           {item?.item?.name}
                         </IonCardTitle>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
@@ -650,6 +663,7 @@ const RadioPage = () => {
                                     <IonSelect
                                       value={selectSize}
                                       placeholder="Select Size"
+                                      label-placement="floating"
                                       onIonChange={(e) => handleSizeChange(e)}
                                       interface="popover"
                                       style={{
@@ -659,7 +673,7 @@ const RadioPage = () => {
                                         border: '1px solid #7f7d7d',
                                         backgroundColor: '#fff6ec',
                                         color: 'rgb(76 50 38)',
-                                        padding: '0px 35px'
+                                        padding: '0px 15px'
                                       }}
                                       size="small"
                                     >
@@ -680,6 +694,7 @@ const RadioPage = () => {
                                   <IonSelect
                                     value={selectedFindings || ""}
                                     placeholder="Select Size"
+                                    label-placement="floating"
                                     onIonChange={(e) => handleFindingsChange(e)}
                                     interface="popover"
                                     style={{
@@ -720,12 +735,12 @@ const RadioPage = () => {
 
               </div>
             ))}
-          <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={toastMessage}
-          duration={2000}
-        />
+            <IonToast
+              isOpen={showToast}
+              onDidDismiss={() => setShowToast(false)}
+              message={toastMessage}
+              duration={2000}
+            />
             <div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <IonButton color='secondary' onClick={toggleDropdown}>
