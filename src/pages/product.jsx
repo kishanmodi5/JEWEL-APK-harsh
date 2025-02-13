@@ -25,6 +25,7 @@ import {
     IonicSlides,
     IonButtons,
     IonToast,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -54,7 +55,7 @@ import { toast } from "react-toastify";
 import 'swiper/css/free-mode';
 import 'swiper/css/thumbs';
 import { FreeMode, Thumbs } from 'swiper/modules';
-
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function Product() {
     const { id } = useParams();
@@ -86,7 +87,7 @@ function Product() {
         setActiveIndex(index); // Set active index based on clicked image
         setShowModal(true);    // Open modal
     };
-    
+
     const closeModal = () => setShowModal(false);
 
     const incrementCounter = () => {
@@ -186,7 +187,8 @@ function Product() {
         pointer,
         itemsize,
         itemtype,
-        attr
+        attr,
+        videopath
     } = productDetails;
     const [selectedMetal, setSelectedMetal] = useState(metalcolor);
     const [selectedQuality, setSelectedQuality] = useState(diamondGroup[0]);
@@ -233,6 +235,13 @@ function Product() {
         setSelectedFindings(e.target.value);
     };
 
+    const handleRefresh = async (event) => {
+        await fetchProductData();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
 
     // useEffect(() => {
     // }, [selectedType]);
@@ -284,10 +293,15 @@ function Product() {
                 <h1>home</h1>
             </IonHeader>
             <Header />
-
-            <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px' }}>
-                <div style={{ marginTop: '80px' }}>
-                    <h5 class="text-center mb-5 element">Ring Products</h5>
+            <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingIcon={chevronDownCircleOutline}
+                            refreshingSpinner="circles"
+                        ></IonRefresherContent>
+                    </IonRefresher>
+                <div style={{ marginTop: '20px' }}>
+                    <h5 class="text-center mb-5 element">Products</h5>
                 </div>
 
                 <div className='main-catagory' style={{ marginBottom: '70px' }}>
@@ -295,7 +309,7 @@ function Product() {
                         <IonRow>
                             <IonCol size-lg='6' size='12' >
                                 <IonRow>
-                                    <IonCol size-sm='8' size='12'>
+                                    <IonCol size-sm='8' size='12' style={{backgroundColor:'#fff'}}>
                                         <div className="product-img">
                                             {/* <div className='imgbtn' >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
@@ -305,8 +319,7 @@ function Product() {
                                                 </svg>
                                             </div> */}
                                             <Swiper
-                                                spaceBetween={10}
-                                                navigation={true}
+                                                spaceBetween={0}
                                                 thumbs={{ swiper: thumbsSwiper }}
                                                 modules={[FreeMode, Navigation, Thumbs]}
                                                 className="mySwiper2 mySwipermain"
@@ -315,24 +328,24 @@ function Product() {
                                                 {otherUploadImg ? (
                                                     otherUploadImg?.split(",")?.map((img, index) => (
                                                         <SwiperSlide>
-                                                            
+
                                                             <div onClick={() => openModal(index)}  >
-                                                                                  <div className='imgbtn' >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
-                                                    <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
-                                                    <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5" />
-                                                </svg>
-                                            </div>
-                                                            <img src={IMG_PATH + img} key={index} className="slider-img pulsating-circle" />
-                                                           </div>
+                                                                <div className='imgbtn' >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                                                                        <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
+                                                                        <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
+                                                                        <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5" />
+                                                                    </svg>
+                                                                </div>
+                                                                <img src={IMG_PATH + img} key={index} className="slider-img" />
+                                                            </div>
                                                         </SwiperSlide>
                                                     ))
                                                 ) : (
                                                     <SwiperSlide>
-                                                      
+
                                                         <img src={IMG_PATH + thumbnailImage} className="slider-img pulsating-circle" />
-                                                        
+
                                                     </SwiperSlide>
                                                 )}
                                                 {/* <SwiperSlide >
@@ -346,12 +359,15 @@ function Product() {
                                                 </SwiperSlide> */}
 
                                             </Swiper>
+
                                         </div>
+
 
                                     </IonCol>
                                     <IonCol size-sm='4' size='12'>
                                         <div className='product-imgmini'>
                                             <Swiper
+                                                // style={{ display: 'flex', alignItems: 'center' }}
                                                 onSwiper={handleThumbsSwiper} // Use the handler function here
                                                 spaceBetween={10}
                                                 slidesPerView={4}
@@ -382,8 +398,26 @@ function Product() {
                                                         <img src={IMG_PATH + thumbnailImage} class="twominimg" />
                                                     </SwiperSlide>
                                                 )}
+                                                 {videopath?.length > 0 && (
+                                                <div className='thumblineimage'>
+                                                        <a href={videopath} target="_black">
+                                                            <div style={{ maxWidth: "30px", height: '30px', objectFit: 'contain', borderRadius: '5px', position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
+                                                                </svg>
+                                                            </div>
+                                                            <img
+                                                                style={{  marginBottom:"0" }}
+                                                                src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
+                                                            />
+                                                        </a>
+                                                    </div>
+                                                 )}
                                             </Swiper>
+
                                         </div>
+
                                     </IonCol>
                                 </IonRow>
                             </IonCol>
@@ -392,7 +426,7 @@ function Product() {
                                     <IonCol>
                                         <div className='productreduiom' >
                                             <IonChip color="secondary" style={{ fontWeight: '500px' }}>{sku}</IonChip>
-                                            <h5 style={{ color: 'black' }}>{description}</h5>
+                                            <h5 style={{ textTransform: 'uppercase', fontSize:'15px' }}>{description}</h5>
                                         </div>
                                         <div className='productreduio'>
                                             <h6>Metal</h6>
@@ -546,8 +580,8 @@ function Product() {
                                            
                                             <IonCol size='12'>
                                                 {colorstone ? (
-                                                    <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0',width:"100%" }}>
-                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', width:"100%", padding: '5px 25px', border: '2px solid #9f9993',borderRadius:"9px" }}>Color Stone Details : <div slot='end'
+                                                    <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
+                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', borderRadius:'20px' }}>Color Stone Details : <div slot='end'
                                                             labelPlacement="end" style={{ color: 'rgb(76, 50, 38)', marginRight: '0', marginTop: '5px', fontSize: '14px' }}>{colorstone}</div></span>
                                                     </div>
                                                 ) : (
@@ -558,23 +592,21 @@ function Product() {
                                                 
                                                     {/* {sortedSizes?.length > 0 && (
                                                     <IonSelect
-                                                    value={selectSize}
-                                                    placeholder="Select Size"
-                                                    onIonChange={(e) => handleSizeChange(e)}
-                                                    interface="popover"
-                                                    interfaceOptions={{
-                                                        cssClass: 'custom-select-options', // Add a custom class for styling
-                                                    }}
-                                                    cssClass="custom-select" 
-                                                    style={{
-                                                        fontSize: '14px',
-                                                        border: '1px solid #7f7d7d',
-                                                        backgroundColor: '#fff6ec',
-                                                        color: 'rgb(76, 50, 38)',
-                                                        padding: '0px 12px',
-                                                        borderRadius: '7px'
-                                                    }}
-                                                    size="small"
+                                                        label-placement="floating"
+                                                        value={selectSize}
+                                                        placeholder="Select Size"
+                                                        onIonChange={(e) => handleSizeChange(e)}
+                                                        interface="popover"
+                                                        style={{
+                                                            fontSize: '14px',
+                                                            border: '1px solid #7f7d7d',
+                                                            backgroundColor: '#fff6ec',
+                                                            color: 'rgb(76 50 38)',
+                                                            padding: '0px 10px',
+                                                            borderRadius: '7px'
+
+                                                        }}
+                                                        size="small"
                                                     >
                                                     
                                                     {sortedSizes?.map((size) => (
@@ -626,6 +658,7 @@ function Product() {
                                                     <IonSelect
                                                         value={selectedFindings || (findings.length > 0 ? findings[0].finding : "")}
                                                         placeholder="Select Finding"
+                                                          labelPlacement="floating"
                                                         onIonChange={(e) => handleFindingsChange(e)}
                                                         interface="popover"
                                                         style={{
@@ -633,7 +666,8 @@ function Product() {
                                                             border: '1px solid #7f7d7d',
                                                             backgroundColor: '#fff6ec',
                                                             color: 'rgb(76 50 38)',
-                                                            padding: '0px 12px',
+                                                            padding: '0px 10px',
+                                                            borderRadius: '7px'
                                                         }}
                                                         size="small"
                                                     >
@@ -840,33 +874,33 @@ function Product() {
                                                         ""
                                                     )}
 
-{
-                            attr && categoryattr?.map((val, index) => {
-                              return Number(attr[index]?.value) && <div href="#/action-2">
-                                <div
-                                  key={index}
-                                  className="product-details-title d-flex align-items-center justify-content-between"
-                                  style={{
-                                    paddingBottom: "5px",
-                                  }}
-                                >
-                                  <span className="d-block">
-                                    {val?.name}
-                                  </span>
-                                  <span
-                                    className="d-block"
-                                    style={{
-                                      fontSize: "15px",
-                                      fontFamily: "monospace",
-                                    }}
-                                  >
-                                    {Number(attr[index]?.value).toFixed(2)}
-                                    {/* {?.toFixed(2)} */}
-                                  </span>
-                                </div>
-                              </div>
-                            })
-                          }
+                                                    {
+                                                        attr && categoryattr?.map((val, index) => {
+                                                            return Number(attr[index]?.value) && <div href="#/action-2">
+                                                                <div
+                                                                    key={index}
+                                                                    className="product-details-title d-flex align-items-center justify-content-between"
+                                                                    style={{
+                                                                        paddingBottom: "5px",
+                                                                    }}
+                                                                >
+                                                                    <span className="d-block">
+                                                                        {val?.name}
+                                                                    </span>
+                                                                    <span
+                                                                        className="d-block"
+                                                                        style={{
+                                                                            fontSize: "15px",
+                                                                            fontFamily: "monospace",
+                                                                        }}
+                                                                    >
+                                                                        {Number(attr[index]?.value).toFixed(2)}
+                                                                        {/* {?.toFixed(2)} */}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        })
+                                                    }
 
                                                 </div>
                                             </div>
@@ -901,37 +935,35 @@ function Product() {
 
 
                         <Swiper
-                            style={{ marginBottom: '0px', marginTop: '7px', width: '100%' }}
-                            spaceBetween={50}
+                            style={{ marginBottom: '0px', width: '100%' }}
+                            spaceBetween={0}
                             slidesPerView={1}
                             onSlideChange={() => console.log('slide change')}
                             onSwiper={(swiper) => console.log(swiper)}
                             autoplay={true}
                             initialSlide={activeIndex}
                         >
-                           {otherUploadImg ? (
-                otherUploadImg.split(",").map((img, index) => (
-                    <SwiperSlide key={index}> {/* Add key prop here */}
-                        <img 
-                            src={IMG_PATH + img} 
-                            className="slider-img pulsating-circle" 
-                            onClick={() => openModal(index)} // Pass index correctly
-                            alt={`Product Image ${index}`} 
-                        />
-                    </SwiperSlide>
-                ))
-            ) : (
-                <SwiperSlide key={0}> {/* Add key prop here */}
-                    <img 
-                        src={IMG_PATH + thumbnailImage} 
-                        className="slider-img pulsating-circle" 
-                        onClick={() => openModal(0)} // Open modal for thumbnail image
-                        alt="Thumbnail Image" 
-                    />
-                </SwiperSlide>
-            )}
+                            {otherUploadImg ? (
+                                otherUploadImg.split(",").map((img, index) => (
+                                    <SwiperSlide key={index}> {/* Add key prop here */}
+                                        <img
+                                            src={IMG_PATH + img}
+                                            onClick={() => openModal(index)} // Pass index correctly
+                                            alt={`Product Image ${index}`}
+                                        />
+                                    </SwiperSlide>
+                                ))
+                            ) : (
+                                <SwiperSlide key={0}> {/* Add key prop here */}
+                                    <img
+                                        src={IMG_PATH + thumbnailImage}
+                                        onClick={() => openModal(0)} // Open modal for thumbnail image
+                                        alt="Thumbnail Image"
+                                    />
+                                </SwiperSlide>
+                            )}
 
-                
+
                             {/* <SwiperSlide>
                             <IonImg
                                 src="src/img/produc-maoin.jpg"

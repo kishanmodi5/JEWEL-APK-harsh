@@ -20,7 +20,8 @@ import {
   IonRow,
   IonCol,
   IonItem,
-  IonInput
+  IonInput,
+  IonToast,
 } from '@ionic/react';
 // import { useLocation } from "react-router-dom";
 import { IonMenuToggle } from '@ionic/react';
@@ -30,6 +31,7 @@ import HomePage from './pages/home';
 import AddtocardPage from './pages/addtocard';
 import Login from './pages/login';
 import Register from './pages/register';
+import Forgets from './pages/Forget';
 import Productpage from './pages/product';
 import Registerhere from './pages/registerhere';
 import Category from './pages/category';
@@ -52,7 +54,9 @@ import { useDispatch } from "react-redux";
 import useAuthInterceptor from "./service/useAuthInterceptor";
 import samplePDF1 from "../public/footer/size.pdf";
 import samplePDF2 from "../public/footer/finding.pdf";
+import NotFound from './pages/NotFound';
 import { colorFill } from 'ionicons/icons';
+
 
 function apps() {
 
@@ -63,11 +67,11 @@ function apps() {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({
-    username:"",
+    username: "",
     mobileNumber: "",
-    email:"",
+    email: "",
     reference: "",
-    company:""
+    company: ""
   });
   const [mobileNo, setMobileNo] = useState();
   const [username, setUsername] = useState();
@@ -79,13 +83,8 @@ function apps() {
   let user = JSON.parse(localStorage.getItem("user"));
   let userId = JSON.parse(localStorage.getItem("user"))?._id;
   const [validated, setValidated] = useState(false);
-
-  const isAuthenticatedR = () => {
-    const token = localStorage.getItem("token");
-    return !!token;
-  };
-
-  const [isAuthenticated, setIsAuthenticated] = useState(isAuthenticatedR())
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -100,7 +99,8 @@ function apps() {
           refrence,
           company
         });
-        console.log('cccc', response)
+        setToastMessage('Profile Update Successfully');
+        setShowToast(true);
         localStorage.setItem("user", JSON.stringify(response?.data));
         window.dispatchEvent(new Event("storage"));
         setShowModal(false);
@@ -148,11 +148,11 @@ function apps() {
   };
 
   const handleChangrefrence = (event) => {
-    setRefrence (event.target.value);
+    setRefrence(event.target.value);
   };
 
   const handleChangcompany = (event) => {
-    setCompany (event.target.value);
+    setCompany(event.target.value);
   };
 
   const openModal = () => {
@@ -161,15 +161,32 @@ function apps() {
   };
   const closeModal = () => setShowModal(false);
 
+  const isAuthenticatedR = () => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    return !!token;
+};
 
+  const [isAuthenticated, setIsAuthenticated] = useState(isAuthenticatedR());
 
 
   const LogOutHandler = () => {
-    localStorage.clear();
+    const rememberMeChecked = localStorage.getItem('rememberMeChecked') === 'true';
+    localStorage.removeItem("token"); 
+    sessionStorage.removeItem("token");  
+    
+
+    if (rememberMeChecked) {
+
+    } else {
+        localStorage.removeItem('rememberedUsername');
+        localStorage.removeItem('rememberedPassword');
+        localStorage.removeItem('rememberMeChecked');
+        localStorage.removeItem('user') 
+    }
+
     setIsAuthenticated(false);
     window.location.href = '/login';
-  };
-
+};
   // useAuthInterceptor();
 
   useEffect(() => {
@@ -211,37 +228,62 @@ function apps() {
     fetchHomeData();
   }, []);
 
+  useEffect(() => {
+    setIsAuthenticated(isAuthenticatedR());
+  }, []);
 
-  const hideTabBarRoutes = ['/login', '/registerhere', '/video', '/videoshow/:id','/register'];
+  const hideTabBarRoutes = ['/login', '/registerhere', '/video', '/videoshow/:id', '/forgets','/register'];
   return (
     <>
 
-      <IonReactRouter>
+<IonReactRouter>
         <DataProvider>
           <IonTabs id="main-content">
             <IonRouterOutlet>
-              <Redirect exact path="/" to="/login" />
-              <Route path="/login" render={() => <Login />} exact={true} />
-              <Route path="/register" render={() => <Register />} exact={true} />
-              <Route path="/home" render={() => <HomePage />} exact={true} />
-              <Route path="/c-category/:id" render={() => <Ccategorypage />} exact={true} />
-              <Route path="/category/:id" render={() => <Category />} exact={true} />
-              <Route path="/addtocard" render={() => <AddtocardPage />} exact={true} />
-              <Route path="/wishlist" render={() => <WishlistPage />} exact={true} />
-              <Route path="/registerhere" render={() => <Registerhere />} exact={true} />
-              <Route path="/myquotations" render={() => <Myquotations />} exact={true} />
-              <Route path="/myquotationsview/:id" render={() => <Myquotationsview />} exact={true} />
-              <Route path="/privacypolicy" render={() => <PrivacyPolicy />} exact={true} />
-              <Route path="/search" render={() => <SearchPage />} exact={true} />
-              <Route path="/product/:id" render={() => <Productpage />} exact={true} />
-              <Route path="/head" render={() => <><Head></Head></>} exact={true} />
-              <Route path="/thanks" render={() => <><Thanks></Thanks></>} exact={true} />
-              <Route path="/video" render={() => <><Videojewal></Videojewal></>} exact={true} />
-              <Route path="/videoshow/:id" render={() => <><Videoshow></Videoshow></>} exact={true} />
+              <Route exact path="/">
+                {isAuthenticated ? <Redirect to="/home" /> : <Redirect to="/login" />}
+              </Route>
+
+              <Route path="/register" component={Register} exact={true} />
+
+
+              <Route
+                path="/login"
+                render={() => (isAuthenticated ? <Redirect to="/home" /> : <Login setIsAuthenticated={setIsAuthenticated} />)}
+                exact={true}
+              />
+
+              {isAuthenticated ? (
+                <>
+                  <Route path="/home" component={HomePage} exact={true} />
+                  <Route path="/c-category/:id" component={Ccategorypage} exact={true} />
+                  <Route path="/category/:id" component={Category} exact={true} />
+                  <Route path="/addtocard" component={AddtocardPage} exact={true} />
+                  <Route path="/wishlist" component={WishlistPage} exact={true} />
+                  <Route path="/registerhere" component={Registerhere} exact={true} />
+                  <Route path="/myquotations" component={Myquotations} exact={true} />
+                  <Route path="/myquotationsview/:id" component={Myquotationsview} exact={true} />
+                  <Route path="/privacypolicy" component={PrivacyPolicy} exact={true} />
+                  <Route path="/search" component={SearchPage} exact={true} />
+                  <Route path="/product/:id" component={Productpage} exact={true} />
+                  <Route path="/head" component={Head} exact={true} />
+                  <Route path="/thanks" component={Thanks} exact={true} />
+                  <Route path="/forgets" component={Forgets} exact={true} />
+                  <Route path="/video" component={Videojewal} exact={true} />
+                  <Route path="/videoshow/:id" component={Videoshow} exact={true} />
+
+                </>
+              ) : (
+                <Redirect to="/" />
+              )}
+
+              {/* <Route render={() => <Notfound />} /> */}
             </IonRouterOutlet>
           </IonTabs>
         </DataProvider>
       </IonReactRouter>
+
+
       {!hideTabBarRoutes.includes(window.location.pathname) && (
         <IonHeader>
           <IonToolbar style={{ background: '#a97550' }}>
@@ -303,7 +345,7 @@ function apps() {
                   </svg>
                   Exclusive Jewellery</a>
               </ion-router-link>
-              <ion-router-link href="http://craft.dnav360.com/"
+              <ion-router-link href="https://craft.greenlabjewels.com/"
                 target="_blank">
                 <a style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-boxes" viewBox="0 0 16 16">
@@ -426,10 +468,10 @@ function apps() {
                           <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
                           <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                         </svg>
-                        <span>Plot No. B-05 & B-06/2,
-                          Fourth Floor, Greenlab Diamonds LLP,
-                          Gujarat Hira Bourse, Hajira Road,
-                          Ichhapore, Surat – 394510
+                          <span>Plot No. B-05 & B-06/2,
+                            3rd Floor, Greenlab Diamonds LLP,
+                            Gujarat Hira Bourse, Hajira Road,
+                            Ichhapore, Surat – 394510
                         </span>
                       </div>
                       <div className='d-flex' style={{ gap: '10px', marginBottom: '10px' }}>
@@ -446,8 +488,15 @@ function apps() {
               </IonGrid>
             </IonContent >
           </IonMenu>
+          <IonToast
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            message={toastMessage}
+            duration={2000}
+          />
         </>
       )}
+
       <>
         {showModal && (
           <div className="modal1">

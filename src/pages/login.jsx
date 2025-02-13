@@ -37,22 +37,11 @@ const Login = ({ handleClosep }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const [isRememberMe, setIsRememberMe] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-       useEffect(() => {
-        // Force reflow after the component loads
-        setTimeout(() => {
-            document.body.classList.add('force-reflow');
-        }, 0);
-
-        // Preload fonts/icons (You can also use custom fonts if needed)
-        const iconLink = document.createElement('link');
-        iconLink.rel = 'stylesheet';
-        iconLink.href = 'https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css'; // Ensure it's the right version
-        document.head.appendChild(iconLink);
-
-    }, []);
+  
 
 
     const handleSubmit = async (e) => {
@@ -66,13 +55,25 @@ const Login = ({ handleClosep }) => {
                 const response = await jwtAuthAxios.post("client/auth", {
                     name: input.name,
                     password: input.password,
+                    rememberMe: isRememberMe,
                 });
                 if (response.status === 200) {
-                    setAuthToken(response?.data);
+                    setAuthToken(response?.data, isRememberMe);
                     localStorage.setItem("token", response?.data?.token);
                     localStorage.setItem("user", JSON.stringify(response?.data?.data));
                     jwtAuthAxios.defaults.headers.common["Authorization"] =
                         "Bearer " + response?.data?.token;
+                    
+                        if (isRememberMe) {
+                            localStorage.setItem('rememberedUsername', input.name);
+                            localStorage.setItem('rememberedPassword', input.password);
+                            localStorage.setItem('rememberMeChecked', 'true');
+                        } else {
+                            localStorage.removeItem('rememberedUsername');
+                            localStorage.removeItem('rememberedPassword');
+                            localStorage.removeItem('rememberMeChecked');
+                        }
+
                     setToastMessage(response?.data?.message);
                     setShowToast(true);
                     history.push("/home");
@@ -96,10 +97,31 @@ const Login = ({ handleClosep }) => {
         setInput((prevInput) => ({ ...prevInput, [name]: value }));
     };
 
+    const handleItemClick = () => {
+        history.push(
+            window.location.href = '/forgets'
+        );
+    };
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('rememberedUsername');
+        const storedPassword = localStorage.getItem('rememberedPassword');
+        const rememberMeChecked = localStorage.getItem('rememberMeChecked') === 'true'; // Get the boolean value
+
+        if (storedUsername && storedPassword && rememberMeChecked) {
+            setInput(prevState => ({
+                ...prevState,
+                name: storedUsername,
+                password: storedPassword
+            }));
+            setIsRememberMe(true);
+        }
+    }, []);
 
     return (
         <>
             <IonPage>
+            <IonContent>
                 <div className='main-bg' style={{ width: '100%', height: '100%', marginTop:'30px' }}>
                     <img
                         className='freem253'
@@ -136,75 +158,74 @@ const Login = ({ handleClosep }) => {
 
                     </div>
                     <IonGrid>
-                   
-                        <IonRow className='loginrow' >
-                            <IonCol size-md='6' size-sm='8' size='12'>
+                        <IonRow className='loginrow1'>
+                            <IonCol size-lg='10' size-md='10' size-sm='8' size='12'>
                                 <form className='form-details' color='secondary' onSubmit={handleSubmit}>
                                     
-                                           <div className="input-div" style={{ display: 'flex' }}>
-    
-
-                                            <IonInput
-                                                className="input-field"
-                                                name="name"
-                                                placeholder="Enter Username"
-                                                color="secondary"
-                                                slot="start"
-                                                
-                                                value={input.name}
-                                                onBlur={handleChange}
-                                                required
-                                                fill="clear"
-                                                
-                                        >
-
-                                                <div slot='start' style={{ paddingLeft:'10px' , width:'45px' }}>
-                                            <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        fill="currentColor"
-        className="bi bi-person-fill"
-        viewBox="0 0 16 16"
-    >
-        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-    </svg>
-                                            </div>    
-
-                                        
-                                            </IonInput>
-
-                                                    </div>
-
-
-
-
+                                        <div className='loginrow' >
+                                            <div style={{ display: 'flex' }}>
+                                                <IonInput
+                                                    name="name"
+                                                    placeholder="Enter your Username or Phone No or Email"
+                                                    color='secondary'
+                                                    style={{ background: '#ffdeb300', color: '#000' }}
+                                                    slot="start"
+                                                    value={input.name}
+                                                    onBlur={handleChange}
+                                                    required
+                                                    fill="clear"
+                                                >
+                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person"></ion-icon>
+                                                </IonInput>
+                                            </div>
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
                                                     name='password'
                                                     type="password"
                                                     color='secondary'
                                                     placeholder="Enter Password"
-                                                    fill="clear"
                                                     style={{ background: '#ffdeb300', color: '#000' }}
                                                     slot="start"
                                                     value={input.password}
                                                     onBlur={handleChange}
                                                     required
+                                                    // fill="clear"
                                                 >
                                                     <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
                                                 </IonInput>
                                             </div>
+                                            <IonCol size='12'>
+                                               <IonRow >
+                                                   <IonCol size='6' style={{display:'flex'}}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isRememberMe}
+                                                            onChange={() => setIsRememberMe(!isRememberMe)}
+                                                        />
+                                                        <span style={{marginLeft:'5px',fontSize:'14px', color:'rgb(76 50 38)'}}>
+                                                            <label>Remember Me</label>
+                                                        </span>
+                                                    </IonCol>   
+                                                    <IonCol size='6' className="col-6 " style={{textAlign:'end'}}>
+                                                        <span onClick={() => handleItemClick()} style={{ cursor: "pointer", fontSize: '14px', color: '#bc7700' }}>
+                                                            Forget Password ?
+                                                        </span>
+                                                    </IonCol>
+                                                </IonRow> 
+                                            </IonCol>
                                             <IonButton
                                                 color='secondary'
                                                 type='submit'
                                                 className='submit-button'
                                                 expand="full"
+                                                style={{ marginTop: '10px', width: '100%', textTransform: 'uppercase', letterSpacing: '1.1px' }}
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Logging in...' : 'Login'}
                                             </IonButton>
                                         
+                                        </div>
+                                    
                                 </form>
                                 <div style={{ width: '100%', display: 'flex', margin: 'auto', flexDirection: 'column', textAlign: 'center', fontSize: '14px' }}>
                                    
@@ -227,6 +248,7 @@ const Login = ({ handleClosep }) => {
                         </IonRow>
                     </IonGrid>
                 </div>
+                </IonContent>
             </IonPage>
             <IonToast
                 isOpen={showToast}

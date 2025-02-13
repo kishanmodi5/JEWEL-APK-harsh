@@ -24,7 +24,8 @@ import {
     IonTextarea,
     IonChip,
     IonicSlides,
-    IonButtons
+    IonButtons,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -43,6 +44,7 @@ import 'swiper/css/scrollbar';
 import 'swiper/css/zoom';
 import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import { IMG_PATH } from "../config";
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function Product() {
     const [counter, setCounter] = useState(0);
@@ -68,6 +70,16 @@ function Product() {
     console.log(location.state)
     const { quotation } = location.state;
 
+
+    const handleRefresh = async (event) => {
+
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
+
+
     return (
         <>
             <Header />
@@ -75,20 +87,26 @@ function Product() {
                 <h1>home</h1>
             </IonHeader>
             <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
-                <div style={{ marginTop: '80px', marginBottom: '10px' }}>
+                <IonRefresher slot="fixed" onIonRefresh={handleRefresh} style={{ marginTop: '20px' }}>
+                    <IonRefresherContent
+                        pullingIcon={chevronDownCircleOutline}
+                        refreshingSpinner="circles"
+                    ></IonRefresherContent>
+                </IonRefresher>
+                <div style={{ marginTop: '20px', marginBottom: '10px' }}>
                     <h5 class="text-center mb-5 element">My Quotations View</h5>
                 </div>
                 <div className='myquotations'>
                     <IonGrid>
                         <IonRow>
-                            <IonCol size='12'>
+                            <IonCol size='12' style={{ marginBottom: '60px' }}>
                                 <IonAccordionGroup className='main-qustion main-qustion1'>
                                     {quotation.items.map((item, index) => (
-                                        <IonAccordion key={item._id} value={`item-${index}`} eventKey={index + 1}>
+                                        <IonAccordion key={item._id} value={`item-${index}`} eventKey={index + 1} style={{ marginTop: '5px' }}>
                                             <IonItem slot="header" color="secondary">
                                                 <p>SKU : {item.item.sku}</p>
                                             </IonItem>
-                                            <div className="ion-padding" slot="content" style={{height:'700px'}}>
+                                            <div className="ion-padding" slot="content" style={{ border: '2px solid #4c322659' }}>
                                                 <div className='d-flex'>
                                                     <div className='left-hed'>
                                                         <h6>

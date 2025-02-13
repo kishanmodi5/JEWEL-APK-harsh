@@ -96,6 +96,7 @@ const Login = ({ handleClosep }) => {
     return (
         <>
             <IonPage>
+                
                 <div className='main-bg' style={{ width: '100%', height: '100%', marginTop:'30px' }}>
                     <img
                         className='freem253'

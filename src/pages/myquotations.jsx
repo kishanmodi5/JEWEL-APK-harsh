@@ -23,7 +23,8 @@ import {
     IonTextarea,
     IonChip,
     IonicSlides,
-    IonButtons
+    IonButtons,
+    IonRefresher, IonRefresherContent,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -46,7 +47,7 @@ import jwtAuthAxios from "../service/jwtAuth";
 import { DataContext } from "../context/DataProvider";
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-
+import { chevronDownCircleOutline } from 'ionicons/icons';
 
 function Product() {
     const [counter, setCounter] = useState(0);
@@ -72,13 +73,13 @@ function Product() {
     };
 
 
-    useEffect(() => {
+
         const fetchQuotations = async () => {
             try {
                 setLoading(true);
                 const response = await jwtAuthAxios.get('/client/clientquote');
                 console.log('clientquote', response.data)
-                setQuotations(response.data.quoteRequests.map(quoteRequests => ({
+                setQuotations(response?.data?.quoteRequests?.map(quoteRequests => ({
                     id: quoteRequests._id,
                     date: quoteRequests.createdAt,
                     fullName: quoteRequests.userData.fullName,
@@ -101,6 +102,8 @@ function Product() {
             }
         };
 
+
+    useEffect(() => {
         fetchQuotations();
     }, []);
 
@@ -111,6 +114,13 @@ function Product() {
         });
     };
 
+    const handleRefresh = async (event) => {
+        await fetchQuotations();
+        setTimeout(() => {
+            // Any calls to load data go here
+            event.detail.complete();
+        }, 1500); // Signal that the refresh is complete
+    };
 
     const sortedQuotations = [...quotations]?.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -122,16 +132,22 @@ function Product() {
                 <h1>home</h1>
             </IonHeader>
             <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
-                <div style={{ marginTop: '80px' }}>
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh} style={{ marginTop: '20px' }}>
+                    <IonRefresherContent
+                        pullingIcon={chevronDownCircleOutline}
+                        refreshingSpinner="circles"
+                    ></IonRefresherContent>
+                </IonRefresher>
+                <div style={{ marginTop: '20px' }}>
                     <h5 class="text-center mb-5 element">My quotations</h5>
                 </div>
                 <div className='myquotations'>
                     <IonGrid>
-                        <IonRow>
+                        <IonRow style={{marginBottom:'60px'}}>
                             <IonCol>
                                 {sortedQuotations.map((quotation) => (
-                                    <IonAccordionGroup className='main-qustion' key={quotation.id} value={quotation.id}>
-                                        <IonAccordion value="first" eventKey="1" style={{ marginTop: '20px' }}>
+                                    <IonAccordionGroup className='main-qustion' key={quotation.id} value={quotation.id} >
+                                        <IonAccordion value="first" eventKey="1" style={{ marginTop: '10px' }}>
                                             <IonItem slot="header" color="secondary">
                                                 <p>{moment(quotation.date).format('DD/MM/YY')}</p>
                                                 <ion-router-link onClick={() => handleViewQuotation(quotation)}>
@@ -140,7 +156,7 @@ function Product() {
                                                     </IonButton>
                                                 </ion-router-link>
                                             </IonItem>
-                                            <div className="ion-padding" slot="content">
+                                            <div className="ion-padding" slot="content" style={{border: '2px solid #4c322659' }}>
                                                 <div className='d-flex'>
                                                     <div className='left-hed'>
                                                         <h6>

@@ -48,13 +48,13 @@ const HomePage = () => {
       <Head />
 
       <IonHeader>
-        <h1>home</h1>
+        {/* <h1>home</h1> */}
       </IonHeader>
       <IonContent color="primary">
         <IonGrid>
           <IonRow>
             <IonCol>
-              <Swiper style={{ marginBottom: '20px', marginTop: '80px' }}
+              <Swiper style={{ marginBottom: '20px', marginTop: '140px' }}
                 spaceBetween={50}
                 slidesPerView={1}
                 onSlideChange={() => console.log('slide change')}
@@ -64,25 +64,25 @@ const HomePage = () => {
                 <SwiperSlide>
                   <IonImg className='slider-img'
                     src="/img/slider-banner-1.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
                 <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-2.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
-                <SwiperSlide>
+                {/* <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-3.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
-                </SwiperSlide>
+                </SwiperSlide> */}
                 <SwiperSlide>
                   <IonImg
                     src="/img/slider-banner-4.jpg"
-                    style={{ width: '100%', height: '200px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
+                    style={{ width: '100%', height: '235px', margin: '0', objectFit: 'cover', borderRadius: '9px', borderRadius: '9px', overflow: 'hidden' }}
                   ></IonImg>
                 </SwiperSlide>
               </Swiper>
