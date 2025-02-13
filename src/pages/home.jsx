@@ -44,8 +44,8 @@ const HomePage = () => {
       <IonHeader>
         {/* <h1>home</h1> */}
       </IonHeader>
-      <IonContent color="primary">
-        <IonGrid>
+      <IonContent color="primary" >
+        <IonGrid style={{marginTop:'55px'}}>
           <IonRow>
             <IonCol>
               <Swiper style={{ marginBottom: '20px', marginTop: '10px' }}
