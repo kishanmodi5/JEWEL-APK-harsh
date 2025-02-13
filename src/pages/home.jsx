@@ -91,9 +91,9 @@ const HomePage = () => {
         </IonGrid>
         <div>
           <h6 class="text-center mb-5 element">Categories at a Glance</h6>
-          <IonGrid style={{ marginBottom: '100px', marginTop: '30px' }}>
+          <IonGrid style={{ marginBottom: '100px', marginTop: '30p  ' }}>
             <IonRow>
-              {homeDetails.map((item) => (
+              {homeDetails?.map((item) => (
                 <IonCol size-lg="3" size-md="4" size-sm="4" size="4" key={item._id}>
                   <ion-router-link href={`/category/${item._id}`} style={{ textDecoration: 'none' }}>
                     <div className='main-categoryimg'>

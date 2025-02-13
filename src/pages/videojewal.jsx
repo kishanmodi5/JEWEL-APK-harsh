@@ -157,7 +157,7 @@ const Videojewal = () => {
                         refreshingSpinner="circles"
                     ></IonRefresherContent>
                 </IonRefresher>
-                <div className="pb-3">
+                <div className="pb-3" style={{marginTop:'70px'}}>
                     <IonGrid>
                         <IonRow className="ion-align-items-center mb-4">
                             <IonCol size-sm="3" size="3" >
@@ -213,12 +213,12 @@ const Videojewal = () => {
                             <IonCol>
                                 <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1.6px solid #00000047', display: 'flex', alignItems: "center", justifyContent: 'space-between' }}>
                                     <h4>Exclusive Jewellery</h4>
-                                    <IonSelect value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex', width: 'auto' }} onIonChange={handleItemsPerPageChange}>
-                                        <IonSelectOption value={24}>24</IonSelectOption>
-                                        <IonSelectOption value={48}>48</IonSelectOption>
-                                        <IonSelectOption value={72}>72</IonSelectOption>
-                                        <IonSelectOption value={100}>100</IonSelectOption>
-                                    </IonSelect>
+                                    <select value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex', width: 'auto' }} onIonChange={handleItemsPerPageChange}>
+                                        <option value={24}>24</option>
+                                        <option value={48}>48</option>
+                                        <option value={72}>72</option>
+                                        <option value={100}>100</option>
+                                    </select>
                                 </div>
                             </IonCol>
                         </IonRow>

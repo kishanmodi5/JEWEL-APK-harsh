@@ -387,18 +387,9 @@ function Product() {
                                                 <SwiperSlide >
                                                     <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide> */}
-                                                {otherUploadImg ? (
-                                                    otherUploadImg?.split(",")?.map((img, index) => (
-                                                        <SwiperSlide>
-                                                            <img src={IMG_PATH + img} key={index} class="twominimg" />
-                                                        </SwiperSlide>
-                                                    ))
-                                                ) : (
-                                                    <SwiperSlide>
-                                                        <img src={IMG_PATH + thumbnailImage} class="twominimg" />
-                                                    </SwiperSlide>
-                                                )}
-                                                 {videopath?.length > 0 && (
+                                                {videopath?.length > 0 && (
+                                                <SwiperSlide>
+                                                    
                                                 <div className='thumblineimage'>
                                                         <a href={videopath} target="_black">
                                                             <div style={{ maxWidth: "30px", height: '30px', objectFit: 'contain', borderRadius: '5px', position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
@@ -413,7 +404,20 @@ function Product() {
                                                             />
                                                         </a>
                                                     </div>
+                                                 </SwiperSlide>
                                                  )}
+                                                {otherUploadImg ? (
+                                                    otherUploadImg?.split(",")?.map((img, index) => (
+                                                        <SwiperSlide>
+                                                            <img src={IMG_PATH + img} key={index} class="twominimg" />
+                                                        </SwiperSlide>
+                                                    ))
+                                                ) : (
+                                                    <SwiperSlide>
+                                                        <img src={IMG_PATH + thumbnailImage} class="twominimg" />
+                                                    </SwiperSlide>
+                                                )}
+                                                 
                                             </Swiper>
 
                                         </div>
@@ -704,12 +708,12 @@ function Product() {
                                                     </div>
                                                 )}
                                             </IonCol>
-                                            <IonTextarea
-                                                fill="outline"
+                                            <textarea
+                                            
                                                 onIonChange={(e) => handleTypeMessage(e)}
                                                 placeholder="Type Message (Special Instruction eg: Nickel Free, No Rhodium Tip, Inscriptions etc.)"
-                                                style={{ color: '#201d1d', height: '70px', fontSize: '14px',padding:'10px',border:'2px solid #9f9993', borderRadius:'9px' }}
-                                            ></IonTextarea>
+                                                style={{ marginTop:'10px' , marginLeft:'-15px' , width:'100%' ,color: '#201d1d', height: '70px', fontSize: '14px',border:'2px solid #9f9993', borderRadius:'9px' }}
+                                            ></textarea>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <div className='main-coune' style={{ display: 'flex', alignItems: 'center', margin: '10px 0', fontFamily: 'Poppins' }}>
                                                     <IonButton fill="clear" size='large' slot="icon-only" onClick={decrementCounter}>

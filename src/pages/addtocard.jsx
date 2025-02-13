@@ -362,14 +362,14 @@ const RadioPage = () => {
         <h1>home</h1>
       </IonHeader>
       <Header />
-      <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px' }}>
+      <IonContent color="primary" style={{ paddingBottom: '80x', marginTop: '100px' }}>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh} >
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
             refreshingSpinner="circles"
           ></IonRefresherContent>
         </IonRefresher>
-        <h4 className="text-center mb-5 element" style={{ marginTop: '20px' }}>add to Card</h4>
+        <h4 className="text-center mb-5 element" style={{ marginTop: '90px' }}>add to Card</h4>
         {cartDetails?.items?.length === 0 || cartDetails?.message ? (
           <div
             style={{
@@ -482,13 +482,12 @@ const RadioPage = () => {
                                   </div>
                                 </IonButton>
                               </div>
-                              <IonTextarea
-                                fill="outline"
+                              <textarea
                                 placeholder="Type Message"
-                                style={{ color: 'black' }}
+                                style={{ color: 'black' , width:'100%'}}
                                 value={item?.message || ''}
-                                onIonChange={(e) => handleTypeMessage(item?.item?._id, e, index)}
-                              ></IonTextarea>
+                                onChange={(e) => handleTypeMessage(item?.item?._id, e, index)}
+                              />
                             </div>
                           </div>
                         </IonList>
@@ -660,43 +659,43 @@ const RadioPage = () => {
                                 {sortedSizes?.length > 0 &&
                                   sortedSizes[0]?.sizes &&
                                   sortedSizes[0]?.sizes?.length > 0 && (
-                                    <IonSelect
+                                    <select
                                       value={selectSize}
                                       placeholder="Select Size"
                                       label-placement="floating"
-                                      onIonChange={(e) => handleSizeChange(e)}
-                                      interface="popover"
+                                      onChange={(e) => handleSizeChange(e)}
+                                      // interface="popover"
                                       style={{
                                         borderRadius: '10px',
-                                        // margin: '0px 0px 0px 10px',
+                                        marginTop:'10px',
                                         fontSize: '14px',
                                         border: '1px solid #7f7d7d',
                                         backgroundColor: '#fff6ec',
                                         color: 'rgb(76 50 38)',
                                         padding: '0px 15px'
+
                                       }}
-                                      size="small"
                                     >
                                       {sortedSizes[0].sizes.map(
                                         (size, i) => (
-                                          <IonSelectOption
+                                          <option
                                             key={size?._id}
                                             value={size?.size}
                                           >
                                             {size?.size}
-                                          </IonSelectOption>
+                                          </option>
                                         )
                                       )}
 
-                                    </IonSelect>
+                                    </select>
                                   )}
                                 {findings?.length > 0 && (
-                                  <IonSelect
+                                  <select
                                     value={selectedFindings || ""}
                                     placeholder="Select Size"
                                     label-placement="floating"
-                                    onIonChange={(e) => handleFindingsChange(e)}
-                                    interface="popover"
+                                    onChange={(e) => handleFindingsChange(e)}
+                                    // interface="popover"
                                     style={{
                                       borderRadius: '10px',
 
@@ -706,18 +705,18 @@ const RadioPage = () => {
                                       color: 'rgb(76 50 38)',
                                       padding: '0px 20px'
                                     }}
-                                    size="small"
+                                    // size="small"
                                   >
                                     {findings.map((finding, i) => (
-                                      <IonSelectOption
+                                      <option
                                         key={finding?._id}
                                         value={finding?.finding}
                                       >
                                         {finding?.finding}
-                                      </IonSelectOption>
+                                      </option>
                                     ))}
 
-                                  </IonSelect>
+                                  </select>
                                 )}
                               </IonCol>
                             </div>

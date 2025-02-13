@@ -291,7 +291,6 @@ function apps() {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IonButtons slot="start">
                   <IonMenuButton fill='clear'>
-                  <ion-icon name="menu-outline" size='large' style={{ color: 'black' }}></ion-icon>
                   </IonMenuButton>
                 </IonButtons>
 

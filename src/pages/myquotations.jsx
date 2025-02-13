@@ -138,7 +138,7 @@ function Product() {
                         refreshingSpinner="circles"
                     ></IonRefresherContent>
                 </IonRefresher>
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '90px' }}>
                     <h5 class="text-center mb-5 element">My quotations</h5>
                 </div>
                 <div className='myquotations'>

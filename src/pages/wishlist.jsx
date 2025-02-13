@@ -50,7 +50,7 @@ const WishlistPage = () => {
 
 
   const handleView = (data) => {
-    window.open(`/product/${data?._id}`);
+    window.location.href=`/product/${data?._id}`;
   };
 
 
