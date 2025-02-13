@@ -442,46 +442,54 @@ function apps() {
                           <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
                           <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                         </svg>
+<<<<<<< HEAD
                         <span>Plot No. B-05 & B-06/2,
                           3rd Floor, Greenlab Diamonds LLP,
                           Gujarat Hira Bourse, Hajira Road,
                           Ichhapore, Surat – 394510
-                        </span>
-                      </div>
-                      <div className='d-flex' style={{ gap: '10px', marginBottom: '10px' }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#4c3226" class="bi bi-envelope" viewBox="0 0 16 16">
-                          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                        </svg>
-                        <span>sales@greenlabjewels.com</span>
-                      </div>
+=======
+                          <span>Plot No. B-05 & B-06/2,
+      3rd Floor, Greenlab Diamonds LLP,
+      Gujarat Hira Bourse, Hajira Road,
+      Ichhapore, Surat – 394510
+>>>>>>> 9316daa11b37b8995c52d5c2c06eb456c611ca0f
+    </span>
+  </div>
+    <div className='d-flex' style={{ gap: '10px', marginBottom: '10px' }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#4c3226" class="bi bi-envelope" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+      </svg>
+      <span>sales@greenlabjewels.com</span>
+    </div>
 
                     </div >
 
                   </IonCol >
-                </IonRow>
-              </IonGrid>
+                </IonRow >
+              </IonGrid >
             </IonContent >
-          </IonMenu>
-          <IonToast
-            isOpen={showToast}
-            onDidDismiss={() => setShowToast(false)}
-            message={toastMessage}
-            duration={2000}
-          />
+          </IonMenu >
+    <IonToast
+      isOpen={showToast}
+      onDidDismiss={() => setShowToast(false)}
+      message={toastMessage}
+      duration={2000}
+    />
         </>
-      )}
+      )
+}
 
-      <>
-        {showModal && (
-          <div className="modal1">
-            <div className="modal2">
-              <form onSubmit={handleSubmit}>
-                <div className='user-img'>
-                  <IonImg
-                    className='freemlogin2'
-                    src="/img/userlogo.svg"
-                  ></IonImg>
-                  {/* <div class="cell smaldesignleft">
+<>
+  {showModal && (
+    <div className="modal1">
+      <div className="modal2">
+        <form onSubmit={handleSubmit}>
+          <div className='user-img'>
+            <IonImg
+              className='freemlogin2'
+              src="/img/userlogo.svg"
+            ></IonImg>
+            {/* <div class="cell smaldesignleft">
                     <div class="circle fade-in-left">
                       <img
                         src="/img/leftdesign.svg"
@@ -496,46 +504,46 @@ function apps() {
                     </div>
                   </div> */}
 
-                </div>
-                <IonItem>
-                  <IonInput type='text' label="Username : " placeholder=" Enter text " fill="clear"
-                    color="secondary" value={username}
-                    onBlur={handleChangeUsername}>
-                  </IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput type='tel' label="Mobile No : " placeholder=" Enter number " fill="clear"
-                    color="secondary" value={mobileNo}
-                    onBlur={handleChangePhone}>
-                  </IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput type='text' label="Email : " placeholder=" Enter Email " fill="clear"
-                    color="secondary" value={email}
-                    onBlur={handleChangeemail}>
-                  </IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput type='text' label="Refrence Name : " placeholder="Enter Refrence " fill="clear"
-                    color="secondary" value={refrence}
-                    onBlur={handleChangrefrence}>
-                  </IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput type='text' label="Company Name : " placeholder="Enter Company " fill="clear"
-                    color="secondary" value={company}
-                    onBlur={handleChangcompany}>
-                  </IonInput>
-                </IonItem>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <IonButton type='submit' style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Save</IonButton>
-                  <IonButton onClick={closeModal} style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Close</IonButton>
-                </div>
-              </form>
-            </div>
           </div>
-        )}
-      </>
+          <IonItem>
+            <IonInput type='text' label="Username : " placeholder=" Enter text " fill="clear"
+              color="secondary" value={username}
+              onBlur={handleChangeUsername}>
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput type='tel' label="Mobile No : " placeholder=" Enter number " fill="clear"
+              color="secondary" value={mobileNo}
+              onBlur={handleChangePhone}>
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput type='text' label="Email : " placeholder=" Enter Email " fill="clear"
+              color="secondary" value={email}
+              onBlur={handleChangeemail}>
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput type='text' label="Refrence Name : " placeholder="Enter Refrence " fill="clear"
+              color="secondary" value={refrence}
+              onBlur={handleChangrefrence}>
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput type='text' label="Company Name : " placeholder="Enter Company " fill="clear"
+              color="secondary" value={company}
+              onBlur={handleChangcompany}>
+            </IonInput>
+          </IonItem>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <IonButton type='submit' style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Save</IonButton>
+            <IonButton onClick={closeModal} style={{ width: '100%', margin: '15px 0 0 0', background: '#f3a41c' }} expand="full">Close</IonButton>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
+</>
     </>
   );
 }

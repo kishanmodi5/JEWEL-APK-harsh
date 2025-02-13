@@ -44,11 +44,11 @@ const HomePage = () => {
       <IonHeader>
         {/* <h1>home</h1> */}
       </IonHeader>
-      <IonContent color="primary">
-        <IonGrid>
+      <IonContent color="primary" >
+        <IonGrid style={{ marginTop: '55px' }}>
           <IonRow>
             <IonCol>
-              <Swiper style={{ marginBottom: '20px', marginTop: '70px' }}
+              <Swiper style={{ marginBottom: '20px', marginTop: '10px' }}
                 spaceBetween={50}
                 slidesPerView={1}
                 onSlideChange={() => console.log('slide change')}

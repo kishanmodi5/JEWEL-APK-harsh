@@ -697,12 +697,12 @@ const RadioPage = () => {
                                     </select>
                                   )}
                                 {findings?.length > 0 && (
-                                  <IonSelect
+                                  <select
                                     value={selectedFindings || ""}
                                     placeholder="Select Size"
-                                    label-placement="floating"
-                                    onIonChange={(e) => handleFindingsChange(e)}
-                                    interface="popover"
+                                    // label-placement="floating"
+                                    onChange={(e) => handleFindingsChange(e)}
+                                    // interface="popover"
                                     style={{
                                       borderRadius: '10px',
 
@@ -712,18 +712,18 @@ const RadioPage = () => {
                                       color: 'rgb(76 50 38)',
                                       padding: '0px 20px'
                                     }}
-                                    size="small"
+                                  // size="small"
                                   >
                                     {findings.map((finding, i) => (
-                                      <IonSelectOption
+                                      <option
                                         key={finding?._id}
                                         value={finding?.finding}
                                       >
                                         {finding?.finding}
-                                      </IonSelectOption>
+                                      </option>
                                     ))}
 
-                                  </IonSelect>
+                                  </select>
                                 )}
                               </IonCol>
                             </div>

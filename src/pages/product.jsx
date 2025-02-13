@@ -395,36 +395,37 @@ function Product() {
                                                         <img src={IMG_PATH + thumbnailImage} class="twominimg" />
                                                     </SwiperSlide>
                                                 )}
-                                                {videopath?.length > 0 && (
-                                                    <div className='thumblineimage'>
-                                                        <a href={videopath} target="_black">
-                                                            <div style={{ maxWidth: "30px", height: '30px', objectFit: 'contain', borderRadius: '5px', position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                                                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
-                                                                </svg>
-                                                            </div>
-                                                            <img
-                                                                style={{ marginBottom: "0" }}
-                                                                src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
-                                                            />
-                                                        </a>
-                                                    </div>
-                                                )}
+                                                {
+                                                    videopath?.length > 0 && (
+                                                        <div className='thumblineimage'>
+                                                            <a href={videopath} target="_black">
+                                                                <div style={{ maxWidth: "30px", height: '30px', objectFit: 'contain', borderRadius: '5px', position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
+                                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                                        <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
+                                                                    </svg>
+                                                                </div>
+                                                                <img
+                                                                    style={{ marginBottom: "0" }}
+                                                                    src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
+                                                                />
+                                                            </a>
+                                                        </div>
+                                                    )}
                                             </Swiper>
 
-                                        </div>
+                                        </div >
 
-                                    </IonCol>
-                                </IonRow>
-                            </IonCol>
+                                    </IonCol >
+                                </IonRow >
+                            </IonCol >
                             <IonCol size-lg='6' size='12'>
                                 <IonRow>
                                     <IonCol>
                                         <div className='productreduiom' >
                                             <IonChip color="secondary" style={{ fontWeight: '500px' }}>{sku}</IonChip>
                                             <h5 style={{ textTransform: 'uppercase', fontSize: '15px' }}>{description}</h5>
-                                        </div>
+                                        </div >
                                         <div className='productreduio'>
                                             <h6>Metal</h6>
                                             <div className='main-lan'>
@@ -882,58 +883,59 @@ function Product() {
                                                 <h6>- The size may differ from what is suggested, affecting the diamond quantity and gold weight.</h6>
                                             </div>
                                         </div>
-                                    </IonCol>
-                                </IonRow>
-                            </IonCol>
-                        </IonRow>
+                                    </IonCol >
+                                </IonRow >
+                            </IonCol >
+                        </IonRow >
 
 
-                    </IonGrid>
+                    </IonGrid >
 
                 </div >
             </IonContent >
             {/* Modal to open Swiper slider */}
-            {showModal && (
-                <div className="modalimage1">
-                    <div className="modalimage2">
-                        <div type='button' onClick={closeModal} style={{ justifyContent: 'end', padding: '0', display: 'flex', }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                            </svg>
-                        </div>
+            {
+                showModal && (
+                    <div className="modalimage1">
+                        <div className="modalimage2">
+                            <div type='button' onClick={closeModal} style={{ justifyContent: 'end', padding: '0', display: 'flex', }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                </svg>
+                            </div>
 
 
-                        <Swiper
-                            style={{ marginBottom: '0px', width: '100%' }}
-                            spaceBetween={0}
-                            slidesPerView={1}
-                            onSlideChange={() => console.log('slide change')}
-                            onSwiper={(swiper) => console.log(swiper)}
-                            autoplay={true}
-                            initialSlide={activeIndex}
-                        >
-                            {otherUploadImg ? (
-                                otherUploadImg.split(",").map((img, index) => (
-                                    <SwiperSlide key={index}> {/* Add key prop here */}
+                            <Swiper
+                                style={{ marginBottom: '0px', width: '100%' }}
+                                spaceBetween={0}
+                                slidesPerView={1}
+                                onSlideChange={() => console.log('slide change')}
+                                onSwiper={(swiper) => console.log(swiper)}
+                                autoplay={true}
+                                initialSlide={activeIndex}
+                            >
+                                {otherUploadImg ? (
+                                    otherUploadImg.split(",").map((img, index) => (
+                                        <SwiperSlide key={index}> {/* Add key prop here */}
+                                            <img
+                                                src={IMG_PATH + img}
+                                                onClick={() => openModal(index)} // Pass index correctly
+                                                alt={`Product Image ${index}`}
+                                            />
+                                        </SwiperSlide>
+                                    ))
+                                ) : (
+                                    <SwiperSlide key={0}> {/* Add key prop here */}
                                         <img
-                                            src={IMG_PATH + img}
-                                            onClick={() => openModal(index)} // Pass index correctly
-                                            alt={`Product Image ${index}`}
+                                            src={IMG_PATH + thumbnailImage}
+                                            onClick={() => openModal(0)} // Open modal for thumbnail image
+                                            alt="Thumbnail Image"
                                         />
                                     </SwiperSlide>
-                                ))
-                            ) : (
-                                <SwiperSlide key={0}> {/* Add key prop here */}
-                                    <img
-                                        src={IMG_PATH + thumbnailImage}
-                                        onClick={() => openModal(0)} // Open modal for thumbnail image
-                                        alt="Thumbnail Image"
-                                    />
-                                </SwiperSlide>
-                            )}
+                                )}
 
 
-                            {/* <SwiperSlide>
+                                {/* <SwiperSlide>
                             <IonImg
                                 src="src/img/produc-maoin.jpg"
                                 style={{
@@ -969,10 +971,11 @@ function Product() {
                                 }}
                             />
                         </SwiperSlide> */}
-                        </Swiper>
+                            </Swiper>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
             <IonToast
                 isOpen={showToast}
                 onDidDismiss={() => setShowToast(false)}

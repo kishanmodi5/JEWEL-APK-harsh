@@ -184,7 +184,6 @@ const Login = ({ handleClosep }) => {
                                     {isLogin ? (
                                         <div className='loginrow' >
                                             <div style={{ display: 'flex' }}>
-
                                                 <IonInput
                                                     name="name"
                                                     placeholder="Enter your Username or Phone No or Email"
