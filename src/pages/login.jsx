@@ -23,6 +23,9 @@ import { IonInputPasswordToggle } from '@ionic/react';
 import jwtAuthAxios, { setAuthToken } from "../service/jwtAuth";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IonIcon } from "@ionic/react";
+import { person } from "ionicons/icons";
+import { clear } from '@testing-library/user-event/dist/cjs/utility/clear.js';
 
 const Login = ({ handleClosep }) => {
 
@@ -63,16 +66,16 @@ const Login = ({ handleClosep }) => {
                     localStorage.setItem("user", JSON.stringify(response?.data?.data));
                     jwtAuthAxios.defaults.headers.common["Authorization"] =
                         "Bearer " + response?.data?.token;
-                    
-                        if (isRememberMe) {
-                            localStorage.setItem('rememberedUsername', input.name);
-                            localStorage.setItem('rememberedPassword', input.password);
-                            localStorage.setItem('rememberMeChecked', 'true');
-                        } else {
-                            localStorage.removeItem('rememberedUsername');
-                            localStorage.removeItem('rememberedPassword');
-                            localStorage.removeItem('rememberMeChecked');
-                        }
+
+                    if (isRememberMe) {
+                        localStorage.setItem('rememberedUsername', input.name);
+                        localStorage.setItem('rememberedPassword', input.password);
+                        localStorage.setItem('rememberMeChecked', 'true');
+                    } else {
+                        localStorage.removeItem('rememberedUsername');
+                        localStorage.removeItem('rememberedPassword');
+                        localStorage.removeItem('rememberMeChecked');
+                    }
 
                     setToastMessage(response?.data?.message);
                     setShowToast(true);
@@ -175,8 +178,26 @@ const Login = ({ handleClosep }) => {
                                                     required
                                                     fill="clear"
                                                 >
-                                                    <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person"></ion-icon>
+
+                                                    {/* <ion-icon style={{ marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" name="person"></ion-icon> */}
+                                                    <IonIcon fill={clear} icon={person} className="input-icon" style={{ padding: '0', marginLeft: '15px', marginRight: '27px' }} color='secondary' slot="start" />
                                                 </IonInput>
+                                                {/* <div className="input-container">
+                                                    <IonIcon icon={person} className="input-icon" />
+                                                    <IonInput
+                                                        name="name"
+                                                        placeholder="Enter your Username, Phone No, or Email"
+                                                        color="secondary"
+                                                        style={{ background: '#ffdeb300', color: '#000' }}
+                                                        value={input.name}
+                                                        onIonBlur={handleChange}
+                                                        required
+                                                        fill="clear"
+                                                    />
+                                                </div> */}
+                                                {/* <img
+                                                    src="/img/user-2.png"
+                                                /> */}
                                             </div>
                                             <div style={{ display: 'flex' }}>
                                                 <IonInput
@@ -189,30 +210,55 @@ const Login = ({ handleClosep }) => {
                                                     value={input.password}
                                                     onBlur={handleChange}
                                                     required
-                                                    // fill="clear"
+                                                // fill="clear"
                                                 >
                                                     <IonInputPasswordToggle style={{ padding: '0' }} slot="start" fill='clear' color='secondary'></IonInputPasswordToggle>
                                                 </IonInput>
                                             </div>
+                                            {/* 
                                             <IonCol size='12'>
-                                               <IonRow >
-                                                   <IonCol size='6' style={{display:'flex'}}>
+                                                <IonRow >
+                                                    <IonCol size='6' style={{ display: 'flex' }}>
                                                         <input
                                                             type="checkbox"
                                                             checked={isRememberMe}
                                                             onChange={() => setIsRememberMe(!isRememberMe)}
                                                         />
-                                                        <span style={{marginLeft:'5px',fontSize:'14px', color:'rgb(76 50 38)'}}>
+                                                        <span style={{ marginLeft: '5px', fontSize: '14px', color: 'rgb(76 50 38)' }}>
                                                             <label>Remember Me</label>
                                                         </span>
-                                                    </IonCol>   
-                                                    <IonCol size='6' className="col-6 " style={{textAlign:'end'}}>
+                                                    </IonCol>
+                                                    <IonCol size='6' className="col-6 " style={{ textAlign: 'end' }}>
                                                         <span onClick={() => handleItemClick()} style={{ cursor: "pointer", fontSize: '14px', color: '#bc7700' }}>
                                                             Forget Password ?
                                                         </span>
                                                     </IonCol>
-                                                </IonRow> 
-                                            </IonCol>
+                                                </IonRow>
+                                            </IonCol> */}
+                                            <div className="checkbox-container">
+                                                <IonCol size='12'>
+                                                    <IonRow >
+                                                        <IonCol size='6' style={{ display: 'flex' }}>
+                                                            <div className="checkbox-group">
+                                                                <label className="custom-checkbox">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={isRememberMe}
+                                                                        onChange={() => setIsRememberMe(!isRememberMe)}
+                                                                    />
+                                                                    <span className="checkmark"></span>
+                                                                    Remember Me
+                                                                </label>
+                                                            </div>
+                                                        </IonCol>
+                                                        <IonCol size='6' className="col-6 " style={{ textAlign: 'end' }}>
+                                                            <div className="forgot-password" onClick={handleItemClick}>
+                                                                Forget Password?
+                                                            </div>
+                                                        </IonCol>
+                                                    </IonRow>
+                                                </IonCol>
+                                            </div>
                                             <IonButton
                                                 color='secondary'
                                                 type='submit'

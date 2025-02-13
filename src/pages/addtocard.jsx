@@ -482,12 +482,20 @@ const RadioPage = () => {
                                   </div>
                                 </IonButton>
                               </div>
-                              <textarea
+                              {/* <IonTextarea
+                                fill="outline"
                                 placeholder="Type Message"
                                 style={{ color: 'black' , width:'100%'}}
                                 value={item?.message || ''}
+                                onIonChange={(e) => handleTypeMessage(item?.item?._id, e, index)}
+                              ></IonTextarea> */}
+                              <textarea
+                                placeholder="Type Message"
+                                style={{ color: 'black', width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ccc', outline: 'none', resize: 'none' }}
+                                value={item?.message || ''}
                                 onChange={(e) => handleTypeMessage(item?.item?._id, e, index)}
-                              />
+                              ></textarea>
+
                             </div>
                           </div>
                         </IonList>
@@ -655,28 +663,27 @@ const RadioPage = () => {
 
                             </div>
                             <div>
-                              <IonCol>
+                              <IonCol size='12' style={{}}>
                                 {sortedSizes?.length > 0 &&
                                   sortedSizes[0]?.sizes &&
                                   sortedSizes[0]?.sizes?.length > 0 && (
                                     <select
                                       value={selectSize}
                                       placeholder="Select Size"
-                                      label-placement="floating"
                                       onChange={(e) => handleSizeChange(e)}
-                                      // interface="popover"
                                       style={{
                                         borderRadius: '10px',
                                         marginTop:'10px',
                                         fontSize: '14px',
                                         border: '1px solid #7f7d7d',
+                                        width: "100%",
                                         backgroundColor: '#fff6ec',
                                         color: 'rgb(76 50 38)',
-                                        padding: '0px 15px'
-
+                                        padding: '12px 15px',
+                                        margin: "10px 0"
                                       }}
                                     >
-                                      {sortedSizes[0].sizes.map(
+                                      {sortedSizes[0]?.sizes?.map(
                                         (size, i) => (
                                           <option
                                             key={size?._id}
@@ -693,7 +700,7 @@ const RadioPage = () => {
                                   <select
                                     value={selectedFindings || ""}
                                     placeholder="Select Size"
-                                    label-placement="floating"
+                                    // label-placement="floating"
                                     onChange={(e) => handleFindingsChange(e)}
                                     // interface="popover"
                                     style={{
@@ -705,7 +712,7 @@ const RadioPage = () => {
                                       color: 'rgb(76 50 38)',
                                       padding: '0px 20px'
                                     }}
-                                    // size="small"
+                                  // size="small"
                                   >
                                     {findings.map((finding, i) => (
                                       <option

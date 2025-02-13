@@ -294,12 +294,12 @@ function Product() {
             </IonHeader>
             <Header />
             <IonContent color="primary" style={{ paddingBottom: '80x', marginBottom: '100px', marginTop: '10px' }}>
-            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-                        <IonRefresherContent
-                            pullingIcon={chevronDownCircleOutline}
-                            refreshingSpinner="circles"
-                        ></IonRefresherContent>
-                    </IonRefresher>
+                <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                    <IonRefresherContent
+                        pullingIcon={chevronDownCircleOutline}
+                        refreshingSpinner="circles"
+                    ></IonRefresherContent>
+                </IonRefresher>
                 <div style={{ marginTop: '20px' }}>
                     <h5 class="text-center mb-5 element">Products</h5>
                 </div>
@@ -309,7 +309,7 @@ function Product() {
                         <IonRow>
                             <IonCol size-lg='6' size='12' >
                                 <IonRow>
-                                    <IonCol size-sm='8' size='12' style={{backgroundColor:'#fff'}}>
+                                    <IonCol size-sm='8' size='12' style={{ backgroundColor: '#fff' }}>
                                         <div className="product-img">
                                             {/* <div className='imgbtn' >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
@@ -387,7 +387,19 @@ function Product() {
                                                 <SwiperSlide >
                                                     <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide> */}
-                                                {videopath?.length > 0 && (
+                                              
+                                                {otherUploadImg ? (
+                                                    otherUploadImg?.split(",")?.map((img, index) => (
+                                                        <SwiperSlide>
+                                                            <img src={IMG_PATH + img} key={index} class="twominimg" />
+                                                        </SwiperSlide>
+                                                    ))
+                                                ) : (
+                                                    <SwiperSlide>
+                                                        <img src={IMG_PATH + thumbnailImage} class="twominimg" />
+                                                    </SwiperSlide>
+                                                )}
+                                                  {videopath?.length > 0 && (
                                                 <SwiperSlide>
                                                     
                                                 <div className='thumblineimage'>
@@ -406,32 +418,21 @@ function Product() {
                                                     </div>
                                                  </SwiperSlide>
                                                  )}
-                                                {otherUploadImg ? (
-                                                    otherUploadImg?.split(",")?.map((img, index) => (
-                                                        <SwiperSlide>
-                                                            <img src={IMG_PATH + img} key={index} class="twominimg" />
-                                                        </SwiperSlide>
-                                                    ))
-                                                ) : (
-                                                    <SwiperSlide>
-                                                        <img src={IMG_PATH + thumbnailImage} class="twominimg" />
-                                                    </SwiperSlide>
-                                                )}
                                                  
                                             </Swiper>
 
-                                        </div>
+                                        </div >
 
-                                    </IonCol>
-                                </IonRow>
-                            </IonCol>
+                                    </IonCol >
+                                </IonRow >
+                            </IonCol >
                             <IonCol size-lg='6' size='12'>
                                 <IonRow>
                                     <IonCol>
                                         <div className='productreduiom' >
                                             <IonChip color="secondary" style={{ fontWeight: '500px' }}>{sku}</IonChip>
-                                            <h5 style={{ textTransform: 'uppercase', fontSize:'15px' }}>{description}</h5>
-                                        </div>
+                                            <h5 style={{ textTransform: 'uppercase', fontSize: '15px' }}>{description}</h5>
+                                        </div >
                                         <div className='productreduio'>
                                             <h6>Metal</h6>
                                             <div className='main-lan'>
@@ -581,139 +582,111 @@ function Product() {
                                                 </IonRadioGroup>
 
                                             </div>
-                                           
-                                            <IonCol size='12'>
-                                                {colorstone ? (
-                                                    <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
-                                                        <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', borderRadius:'20px' }}>Color Stone Details : <div slot='end'
-                                                            labelPlacement="end" style={{ color: 'rgb(76, 50, 38)', marginRight: '0', marginTop: '5px', fontSize: '14px' }}>{colorstone}</div></span>
-                                                    </div>
-                                                ) : (
-                                                    ""
-                                                )}
-                                            </IonCol>
-                                            <IonCol size='12'>
-                                                
-                                                    {/* {sortedSizes?.length > 0 && (
-                                                    <IonSelect
-                                                        label-placement="floating"
-                                                        value={selectSize}
-                                                        placeholder="Select Size"
-                                                        onIonChange={(e) => handleSizeChange(e)}
-                                                        interface="popover"
-                                                        style={{
-                                                            fontSize: '14px',
-                                                            border: '1px solid #7f7d7d',
-                                                            backgroundColor: '#fff6ec',
-                                                            color: 'rgb(76 50 38)',
-                                                            padding: '0px 10px',
-                                                            borderRadius: '7px'
-
-                                                        }}
-                                                        size="small"
-                                                    >
-                                                    
-                                                    {sortedSizes?.map((size) => (
-                                                        <div style={{backgroundColor:'white'}}>
-                                                            <IonSelectOption key={size?._id} value={size?.size} style={{color:'red'}}>
-                                                                {size?.size}
-                                                            </IonSelectOption>
+                                            <IonRow>
+                                                <IonCol size='12'>
+                                                    {colorstone ? (
+                                                        <div value="end" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
+                                                            <span style={{ color: 'rgb(73 69 69)', fontSize: '15px', borderRadius: '20  px', marginTop: '16px', padding: '5px 25px', border: '1px solid #9f9993', borderRadius: '20px' }}>Color Stone Details : <div slot='end'
+                                                                labelPlacement="end" style={{ color: 'rgb(76, 50, 38)', marginRight: '0', marginTop: '5px', fontSize: '14px' }}>{colorstone}</div></span>
                                                         </div>
-                                                    ))}
-                                                    
-                                                    </IonSelect>
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                </IonCol>
+                                                <IonCol size='12'>
+                                                    {/* {sortedSizes?.length > 0 && (
+                                                        <IonSelect
+                                                            label-placement="floating"
+                                                            value={selectSize}
+                                                            placeholder="Select Size"
+                                                            onIonChange={(e) => handleSizeChange(e)}
+                                                            interface="popover"
+                                                            style={{
+                                                                fontSize: '14px',
+                                                                border: '1px solid #7f7d7d',
+                                                                backgroundColor: '#fff6ec',
+                                                                color: 'rgb(76 50 38)',
+                                                                padding: '0px 10px',
+                                                                borderRadius: '7px'
+
+                                                            }}
+                                                            size="small"
+                                                        >
+                                                            {sortedSizes?.map((size) => (
+                                                                <IonSelectOption key={size?._id} value={size?.size}>
+                                                                    {size?.size}
+                                                                </IonSelectOption>
+                                                            ))}
+                                                        </IonSelect>
                                                     )} */}
-                                         <div style={{ width: '100%' }}>
-                                            {sortedSizes?.length > 0 && (
-                                                <div style={{padding:'7px 10px', border:"2px solid #9f9993", borderRadius:'9px' }}>
-                                                <select
-                                                    value={selectSize}
-                                                    onChange={handleSizeChange}
+                                                    {sortedSizes?.length > 0 && (
+                                                        <select
+                                                            value={selectSize}
+                                                            onChange={(e) => handleSizeChange(e)}
+                                                            style={{
+                                                                fontSize: '14px',
+                                                                border: '1px solid #7f7d7d',
+                                                                backgroundColor: '#fff6ec',
+                                                                color: 'rgb(76 50 38)',
+                                                                padding: '12px 10px',
+                                                                borderRadius: '7px',
+                                                                width: '100%',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            <option value="" disabled>Select Size</option>
+                                                            {sortedSizes?.map((size) => (
+                                                                <option key={size?._id} value={size?.size}>
+                                                                    {size?.size}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    )}
+                                                </IonCol>
+                                                <IonCol size='12'>
+                                                    {findings?.length > 0 && (
+                                                        <select
+                                                            value={selectedFindings || (findings.length > 0 ? findings[0].finding : "")}
+                                                            onChange={(e) => handleFindingsChange(e)}
+                                                            style={{
+                                                                fontSize: '14px',
+                                                                border: '1px solid #7f7d7d',
+                                                                backgroundColor: '#fff6ec',
+                                                                color: 'rgb(76 50 38)',
+                                                                padding: '5px 10px',
+                                                                borderRadius: '7px',
+                                                                width: '100%',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            <option value="" disabled>Select Finding</option>
+                                                            {findings?.map((finding) => (
+                                                                <option key={finding?._id} value={finding?.finding}>
+                                                                    {finding?.finding}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    )}
+
+                                                </IonCol>
+                                                <textarea
+                                                    onChange={(e) => handleTypeMessage(e)}
+                                                    placeholder="Type Message (Special Instruction eg: Nickel Free, No Rhodium Tip, Inscriptions etc.)"
                                                     style={{
-                                                    fontSize: '14px',
-                                                    border: '1px solid #7f7d7d',
-                                                    backgroundColor: '#fff6ec',
-                                                    color: 'rgb(76, 50, 38)',
-                                                    padding: '15px 12px',
-                                                    border: 'none',
-                                                    width: '100%',  // This ensures it takes full width of its container
-                                                    fontFamily: 'Arial, sans-serif',
-                                                    padding:'10px',
-                                                    }}
-                                                >
-                                                    <option value="" disabled>Select Size</option>
-                                                    {sortedSizes.map((size) => (
-                                                    <option
-                                                        key={size?._id}
-                                                        value={size?.size}
-                                                        style={{ color: 'red', padding:'10px' }}
-                                                    >
-                                                        {size?.size}
-                                                    </option>
-                                                    ))}
-                                                </select>
-                                                </div>
-                                            )}
-                                            </div>
-                                                                                        
-                                            </IonCol>
-                                            <IonCol>
-                                                {/* {findings?.length > 0 && (
-                                                    <IonSelect
-                                                        value={selectedFindings || (findings.length > 0 ? findings[0].finding : "")}
-                                                        placeholder="Select Finding"
-                                                          labelPlacement="floating"
-                                                        onIonChange={(e) => handleFindingsChange(e)}
-                                                        interface="popover"
-                                                        style={{
-                                                            fontSize: '14px',
-                                                            border: '1px solid #7f7d7d',
-                                                            backgroundColor: '#fff6ec',
-                                                            color: 'rgb(76 50 38)',
-                                                            padding: '0px 10px',
-                                                            borderRadius: '7px'
-                                                        }}
-                                                        size="small"
-                                                    >
-                                                        {findings?.map((finding, i) => (
-                                                            <IonSelectOption key={finding?._id} value={finding?.finding}>
-                                                                {finding?.finding}
-                                                            </IonSelectOption>
-                                                        ))}
-                                                    </IonSelect>
-                                                )} */}
-                                                {findings?.length > 0 && (
-                                                    <div>
-                                                    <select
-                                                        value={selectedFinding || (findings.length > 0 ? findings[0].finding : '')}
-                                                        onChange={handleFindingsChange}
-                                                        style={{
+                                                        color: 'rgb(41 41 41)',
+                                                        height: '70px',
                                                         fontSize: '14px',
-                                                        border: '1px solid #7f7d7d',
-                                                        backgroundColor: '#fff6ec',
-                                                        color: 'rgb(76, 50, 38)',
-                                                        padding: '0px 12px',
-                                                        borderRadius: '7px',
-                                                        width: '100%',  // This ensures it takes full width of its container
-                                                        fontFamily: 'Arial, sans-serif',
-                                                        }}
-                                                    >
-                                                        <option value="" disabled>Select Finding</option>
-                                                        {findings?.map((finding, i) => (
-                                                        <option key={finding?._id} value={finding?.finding}>
-                                                            {finding?.finding}
-                                                        </option>
-                                                        ))}
-                                                    </select>
-                                                    </div>
-                                                )}
-                                            </IonCol>
-                                            <textarea
-                                            
-                                                onIonChange={(e) => handleTypeMessage(e)}
-                                                placeholder="Type Message (Special Instruction eg: Nickel Free, No Rhodium Tip, Inscriptions etc.)"
-                                                style={{ marginTop:'10px' , marginLeft:'-15px' , width:'100%' ,color: '#201d1d', height: '70px', fontSize: '14px',border:'2px solid #9f9993', borderRadius:'9px' }}
-                                            ></textarea>
+                                                        width: '100%',
+                                                        padding: '8px',
+                                                        borderRadius: '5px',
+                                                        border: '2px solid #ccc',
+                                                        outline: 'none',
+                                                        resize: 'none',
+                                                        background: 'transparent'
+                                                    }}
+                                                ></textarea>
+
+                                            </IonRow>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <div className='main-coune' style={{ display: 'flex', alignItems: 'center', margin: '10px 0', fontFamily: 'Poppins' }}>
                                                     <IonButton fill="clear" size='large' slot="icon-only" onClick={decrementCounter}>
@@ -917,58 +890,59 @@ function Product() {
                                                 <h6>- The size may differ from what is suggested, affecting the diamond quantity and gold weight.</h6>
                                             </div>
                                         </div>
-                                    </IonCol>
-                                </IonRow>
-                            </IonCol>
-                        </IonRow>
+                                    </IonCol >
+                                </IonRow >
+                            </IonCol >
+                        </IonRow >
 
 
-                    </IonGrid>
+                    </IonGrid >
 
                 </div >
             </IonContent >
             {/* Modal to open Swiper slider */}
-            {showModal && (
-                <div className="modalimage1">
-                    <div className="modalimage2">
-                        <div type='button' onClick={closeModal} style={{ justifyContent: 'end', padding: '0', display: 'flex', }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                            </svg>
-                        </div>
+            {
+                showModal && (
+                    <div className="modalimage1">
+                        <div className="modalimage2">
+                            <div type='button' onClick={closeModal} style={{ justifyContent: 'end', padding: '0', display: 'flex', }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                </svg>
+                            </div>
 
 
-                        <Swiper
-                            style={{ marginBottom: '0px', width: '100%' }}
-                            spaceBetween={0}
-                            slidesPerView={1}
-                            onSlideChange={() => console.log('slide change')}
-                            onSwiper={(swiper) => console.log(swiper)}
-                            autoplay={true}
-                            initialSlide={activeIndex}
-                        >
-                            {otherUploadImg ? (
-                                otherUploadImg.split(",").map((img, index) => (
-                                    <SwiperSlide key={index}> {/* Add key prop here */}
+                            <Swiper
+                                style={{ marginBottom: '0px', width: '100%' }}
+                                spaceBetween={0}
+                                slidesPerView={1}
+                                onSlideChange={() => console.log('slide change')}
+                                onSwiper={(swiper) => console.log(swiper)}
+                                autoplay={true}
+                                initialSlide={activeIndex}
+                            >
+                                {otherUploadImg ? (
+                                    otherUploadImg.split(",").map((img, index) => (
+                                        <SwiperSlide key={index}> {/* Add key prop here */}
+                                            <img
+                                                src={IMG_PATH + img}
+                                                onClick={() => openModal(index)} // Pass index correctly
+                                                alt={`Product Image ${index}`}
+                                            />
+                                        </SwiperSlide>
+                                    ))
+                                ) : (
+                                    <SwiperSlide key={0}> {/* Add key prop here */}
                                         <img
-                                            src={IMG_PATH + img}
-                                            onClick={() => openModal(index)} // Pass index correctly
-                                            alt={`Product Image ${index}`}
+                                            src={IMG_PATH + thumbnailImage}
+                                            onClick={() => openModal(0)} // Open modal for thumbnail image
+                                            alt="Thumbnail Image"
                                         />
                                     </SwiperSlide>
-                                ))
-                            ) : (
-                                <SwiperSlide key={0}> {/* Add key prop here */}
-                                    <img
-                                        src={IMG_PATH + thumbnailImage}
-                                        onClick={() => openModal(0)} // Open modal for thumbnail image
-                                        alt="Thumbnail Image"
-                                    />
-                                </SwiperSlide>
-                            )}
+                                )}
 
 
-                            {/* <SwiperSlide>
+                                {/* <SwiperSlide>
                             <IonImg
                                 src="src/img/produc-maoin.jpg"
                                 style={{
@@ -1004,10 +978,11 @@ function Product() {
                                 }}
                             />
                         </SwiperSlide> */}
-                        </Swiper>
+                            </Swiper>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
             <IonToast
                 isOpen={showToast}
                 onDidDismiss={() => setShowToast(false)}
