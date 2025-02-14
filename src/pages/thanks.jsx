@@ -19,7 +19,7 @@ const Thanks = () => {
             </IonHeader>
             <IonRow>
                 <IonCol>
-                <div style={{textAlign:'center'}}>
+                <div style={{textAlign:'center', marginTop:'100px'}}>
                     {/* <img
                         src="/img/thnaks.jpg"
                         style={{

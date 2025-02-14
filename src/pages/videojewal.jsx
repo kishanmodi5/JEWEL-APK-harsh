@@ -213,7 +213,7 @@ const Videojewal = () => {
                             <IonCol>
                                 <div style={{ marginTop: '15px', paddingTop: '10px', borderTop: '1.6px solid #00000047', display: 'flex', alignItems: "center", justifyContent: 'space-between' }}>
                                     <h4>Exclusive Jewellery</h4>
-                                    <select value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex', width: 'auto' }} onIonChange={handleItemsPerPageChange}>
+                                    <select value={itemsPerPage} className="w-auto" style={{ marginLeft: 'auto', display: 'flex', width: 'auto' }} onChange={handleItemsPerPageChange}>
                                         <option value={24}>24</option>
                                         <option value={48}>48</option>
                                         <option value={72}>72</option>

@@ -186,7 +186,7 @@ function apps() {
     }
 
     setIsAuthenticated(false);
-    window.location.href = '/login';
+    window.location.href='/login';
   };
   // useAuthInterceptor();
 

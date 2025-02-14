@@ -300,7 +300,7 @@ function Product() {
                         refreshingSpinner="circles"
                     ></IonRefresherContent>
                 </IonRefresher>
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '90px' }}>
                     <h5 class="text-center mb-5 element">Products</h5>
                 </div>
 
@@ -387,6 +387,7 @@ function Product() {
                                                 <SwiperSlide >
                                                     <img class="twominimg"  src={IMG_PATH + otherUploadImg} alt="Img" />
                                                 </SwiperSlide> */}
+                                             
                                               
                                                 {otherUploadImg ? (
                                                     otherUploadImg?.split(",")?.map((img, index) => (
@@ -399,25 +400,56 @@ function Product() {
                                                         <img src={IMG_PATH + thumbnailImage} class="twominimg" />
                                                     </SwiperSlide>
                                                 )}
-                                                  {videopath?.length > 0 && (
-                                                <SwiperSlide>
-                                                    
-                                                <div className='thumblineimage'>
-                                                        <a href={videopath} target="_black">
-                                                            <div style={{ maxWidth: "30px", height: '30px', objectFit: 'contain', borderRadius: '5px', position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                                                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
-                                                                </svg>
-                                                            </div>
-                                                            <img
-                                                                style={{  marginBottom:"0" }}
-                                                                src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
-                                                            />
-                                                        </a>
-                                                    </div>
-                                                 </SwiperSlide>
-                                                 )}
+
+{videopath?.length > 0 && (
+  <SwiperSlide>
+    <div className='thumblineimage'>
+      <a href={videopath} target="_blank" rel="noopener noreferrer">
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          {/* Play Icon SVG */}
+          <div
+            key={videopath} // Force re-render on change
+            style={{
+              width: "30px",
+              height: "30px",
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1, // Ensure it's above the image
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="white"
+              className="bi bi-play-circle"
+              viewBox="0 0 16 16"
+              style={{ display: "block" }} // Ensure SVG is displayed as a block
+            >
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445" />
+            </svg>
+          </div>
+          {/* Thumbnail Image */}
+          <img
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "9px",
+              marginBottom: "0",
+            }}
+            src={`https://pub-dde01f21c9dd4895a14c71b5ea622cb4.r2.dev/imaged/${videopath?.split('d=')[1]}/still.jpg`}
+            alt="Video Thumbnail"
+          />
+        </div>
+      </a>
+    </div>
+  </SwiperSlide>
+)}
+                                                 
                                                  
                                             </Swiper>
 
