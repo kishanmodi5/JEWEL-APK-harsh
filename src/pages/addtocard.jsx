@@ -333,10 +333,10 @@ const RadioPage = () => {
   useEffect(() => {
     setForm({
       fullName: userDetail?.username,
-      mobileNumber: "",
-      email: '',
-      companyName: '',
-      referenceName: userDetail?.referenceName,
+      mobileNumber: userDetail?.mobileNo,
+      email: userDetail?.email,
+      companyName: userDetail?.company,
+      referenceName: userDetail?.refrence,
     });
   }, [userDetail]);
 
@@ -595,7 +595,7 @@ const RadioPage = () => {
                             </div>
                             <div className='main-color'>
                               <h6>Metal Color</h6>
-                              <IonRadioGroup value={selectedMetal} onIonChange={e => setSelectedMetal(e.detail.value)} expand="block" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
+                              <IonRadioGroup value={selectedMetal} onIonChange={e => setSelectedMetal(e.detail.value)} expand="block" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0',justifyContent:'space-between' }}>
                                 {["ROSE", "WHITE", "YELLOW"].map((metal) => (
                                   <IonRadio
                                     key={metal}
@@ -680,7 +680,7 @@ const RadioPage = () => {
                                         backgroundColor: '#fff6ec',
                                         color: 'rgb(76 50 38)',
                                         padding: '12px 15px',
-                                        margin: "10px 0"
+                                        margin: "15px -5px"
                                       }}
                                     >
                                       {sortedSizes[0]?.sizes?.map(
@@ -705,12 +705,13 @@ const RadioPage = () => {
                                     // interface="popover"
                                     style={{
                                       borderRadius: '10px',
-
+                                      maxWidth:'100%',
                                       fontSize: '14px',
                                       border: '1px solid #7f7d7d',
                                       backgroundColor: '#fff6ec',
                                       color: 'rgb(76 50 38)',
-                                      padding: '0px 20px'
+                                      padding: '10px 5px',
+                                      margin:'15px -5px'
                                     }}
                                   // size="small"
                                   >

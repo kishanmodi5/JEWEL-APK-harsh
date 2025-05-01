@@ -496,7 +496,7 @@ function Product() {
                                                 </div>
                                                 <div className='main-color'>
                                                     <h6>Metal Color</h6>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0', justifyContent:'space-between' }}>
                                                         {["ROSE", "WHITE", "YELLOW"].map((metal) => (
                                                             <label
                                                                 key={metal}
@@ -646,10 +646,11 @@ function Product() {
                                                                 border: '1px solid #7f7d7d',
                                                                 backgroundColor: '#fff6ec',
                                                                 color: 'rgb(76 50 38)',
-                                                                padding: '5px 10px',
+                                                                padding: '15px 10px',
                                                                 borderRadius: '7px',
                                                                 width: '100%',
-                                                                cursor: 'pointer'
+                                                                cursor: 'pointer',
+                                                                marginBottom:'12px'
                                                             }}
                                                         >
                                                             <option value="" disabled>Select Finding</option>
@@ -772,7 +773,7 @@ function Product() {
                                                                 {sidectwt?.toFixed(2)} Total Cts
                                                             </a>
                                                         </div>
-                                                        <div>*Approx. Weight</div>
+                                                        <div style={{fontSize:'15px'}}>*Approx. Weight</div>
                                                         <div style={{ textAlign: 'center' }}>
                                                             <div
                                                                 style={{

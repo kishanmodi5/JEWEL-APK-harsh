@@ -16,10 +16,10 @@ import {
     IonGrid,
     IonRow,
     IonCol,
-    IonToast
+    IonToast,
+    IonInputPasswordToggle
 } from '@ionic/react';
 import { IonInput } from '@ionic/react';
-import { IonInputPasswordToggle } from '@ionic/react';
 import jwtAuthAxios, { setAuthToken } from "../service/jwtAuth";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -252,30 +252,27 @@ const Login = ({ handleClosep }) => {
                                                     </IonCol>
                                                 </IonRow>
                                             </IonCol> */}
-                                            <div className="checkbox-container">
-                                                <IonCol size='12'>
-                                                    <IonRow >
-                                                        <IonCol size='6' style={{ display: 'flex' }}>
-                                                            <div className="checkbox-group">
-                                                                <label className="custom-checkbox">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={isRememberMe}
-                                                                        onChange={() => setIsRememberMe(!isRememberMe)}
-                                                                    />
-                                                                    <span className="checkmark"></span>
-                                                                    Remember Me
-                                                                </label>
-                                                            </div>
-                                                        </IonCol>
-                                                        <IonCol size='6' className="col-6 " style={{ textAlign: 'end' }}>
-                                                            <div className="forgot-password" onClick={handleItemClick}>
-                                                                Forget Password?
-                                                            </div>
-                                                        </IonCol>
-                                                    </IonRow>
-                                                </IonCol>
-                                            </div>
+
+                                            <IonCol size='12'>
+                                                <IonRow >
+                                                    <IonCol size='6' style={{ display: 'flex' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isRememberMe}
+                                                            onChange={() => setIsRememberMe(!isRememberMe)}
+                                                        />
+                                                        <span style={{ marginLeft: '5px', fontSize: '14px', color: 'rgb(76 50 38)' }}>
+                                                            <label>Remember Me</label>
+                                                        </span>
+                                                    </IonCol>
+                                                    <IonCol size='6' className="col-6 " style={{ textAlign: 'end' }}>
+                                                        <div className="forgot-password" onClick={handleItemClick} style={{ cursor: "pointer", fontSize: '14px', color: '#bc7700' }}>
+                                                            Forget Password?
+                                                        </div>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonCol>
+
                                             <IonButton
                                                 color='secondary'
                                                 type='submit'

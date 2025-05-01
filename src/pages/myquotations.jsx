@@ -122,7 +122,7 @@ function Product() {
         }, 1500); // Signal that the refresh is complete
     };
 
-    const sortedQuotations = [...quotations]?.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const sortedQuotations = [...(quotations || [])]?.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
         <>
@@ -145,7 +145,8 @@ function Product() {
                     <IonGrid>
                         <IonRow style={{marginBottom:'60px'}}>
                             <IonCol>
-                                {sortedQuotations.map((quotation) => (
+                            {sortedQuotations?.length > 0 ? (
+                                sortedQuotations.map((quotation) => (
                                     <IonAccordionGroup className='main-qustion' key={quotation.id} value={quotation.id} >
                                         <IonAccordion value="first" eventKey="1" style={{ marginTop: '10px' }}>
                                             <IonItem slot="header" color="secondary">
@@ -256,7 +257,13 @@ function Product() {
                                             </div>
                                         </IonAccordion>
                                     </IonAccordionGroup>
-                                ))}
+                                ))
+                            ) : (
+                                <div style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
+                                  <h3>No quotations available.</h3>
+                    
+                                </div>
+                              )}
                             </IonCol>
                         </IonRow>
                     </IonGrid>

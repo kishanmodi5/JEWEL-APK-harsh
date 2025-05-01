@@ -71,7 +71,8 @@ function Category() {
     const [maxctswts, setMaxctswts] = useState(null);
     const [maxGramWt, setMaxGramWt] = useState(null);
     const [shape, setShape] = useState([])
-    
+    const [sortctswts, setSortctswts] = useState("");
+
 
     const fetchCategoryData = async (filterflag) => {
         if (isFetching.current) return;
@@ -81,7 +82,7 @@ function Category() {
 
 
         try {
-            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}`, {
+            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}&sortctswts=${sortctswts}`, {
                 CategoryFilter,
                 CollectionFilter: selectedCollection,
                 filter: filterDetails,
@@ -107,19 +108,19 @@ function Category() {
                 setFilterDetails(response?.data?.filter);
                 if (maxctswts === null && response?.data?.maxctswts !== undefined) {
                     // console.log("Max CTWTS from API:", response.data.maxctswts);
-                    setMaxctswts(response.data.maxctswts); 
+                    setMaxctswts(response.data.maxctswts);
                     setFilterDetails(prev => ({
                         ...prev,
-                        maxctswts: response.data.maxctswts 
+                        maxctswts: response.data.maxctswts
                     }));
 
                 }
 
                 if (maxGramWt === null && response?.data?.maxGramWt !== undefined) {
-                    setMaxGramWt(response.data.maxGramWt); 
+                    setMaxGramWt(response.data.maxGramWt);
                     setFilterDetails(prev => ({
                         ...prev,
-                        maxGramWt: response.data.maxGramWt 
+                        maxGramWt: response.data.maxGramWt
                     }));
                 }
 
@@ -173,6 +174,13 @@ function Category() {
         dispatch(setFilter(updatedCollection));
     };
 
+    const handleSelectChange = (value) => {
+        const [order, ctWts] = value.split('-');
+        setSortOrder(order || "");
+        setSortctswts(ctWts || "");
+        setPage(1);
+    };
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
 
@@ -220,7 +228,7 @@ function Category() {
             fetchCategoryData();
 
         }
-    }, [id, page, CategoryFilter, selectedCollection, pageSize, sortOrder]);
+    }, [id, page, CategoryFilter, selectedCollection, pageSize, sortOrder, sortctswts]);
 
     const handleSortChange = (order) => {
         setSortOrder(order);
@@ -306,21 +314,21 @@ function Category() {
 
     const handleShapeCheckboxChange = (event, item) => {
         const { checked } = event.target;
-    
+
         // console.log("Before update:", filterDetails.shape);
-    
+
         setFilterDetails((prev) => {
-            const newShapes = checked 
+            const newShapes = checked
                 ? [...new Set([...prev.shape, item])]
                 : prev.shape.filter((shapeName) => shapeName !== item);
-    
+
             // console.log("After update:", newShapes);
             return { ...prev, shape: newShapes };
         });
-    
+
         setPendingFetch(true);
     };
-    
+
 
     return (
         <>
@@ -330,7 +338,7 @@ function Category() {
                 <div style={{ margin: '30px' }}></div>
 
                 <IonContent color="primary">
-                <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                    <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
                         <IonRefresherContent
                             pullingIcon={chevronDownCircleOutline}
                             refreshingSpinner="circles"
@@ -408,35 +416,28 @@ function Category() {
                         </div>
 
                         <IonCol size='12' style={{ display: 'flex', justifyContent: 'center' }}>
-                            <button
-                                className="sortfilter"
-                                onClick={() => handleSortChange(sortOrder === "asc" ? "desc" : "asc")}
+                            <select
+                                className="form-select form-select-main"
+                                style={{ width: 'auto', margin: '0 10px 0 0' }}
+                                value={`${sortOrder}-${sortctswts}`}
+                                onChange={(e) => handleSelectChange(e.target.value)}
                             >
-                                {sortOrder === "asc" ? (
-                                    <>
-                                        Sort By ASC <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5" />
-                                        </svg></span>
-                                    </>
-                                ) : (
-                                    <>
-                                        Sort By DESC <span style={{ display: 'block' }}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4" />
-                                        </svg></span>
-                                    </>
-                                )}
-                            </button>
-                            <IonSelect
-                                className="w-auto"
+                                <option value="asc-">Sort by Style NO ASC</option>
+                                <option value="desc-">Sort by Style NO DESC</option>
+                                <option value="-min">Sort by Min CtWts</option>
+                                <option value="-max">Sort by Max CtWts</option>
+                            </select>
+                            <select
+                                className="form-select form-select-main"
                                 style={{ marginLeft: 'auto', display: 'flex', color: '#4c3226', border: '2px solid #9d7664', marginLeft: 'auto', width: 'auto', padding: '0 10px', borderRadius: '9px' }}
                                 value={pageSize}
-                                onIonChange={handlePageSizeChange}
+                                onChange={handlePageSizeChange}
                             >
-                                <IonSelectOption value={24}>24</IonSelectOption>
-                                <IonSelectOption value={48}>48</IonSelectOption>
-                                <IonSelectOption value={72}>72</IonSelectOption>
-                                <IonSelectOption value={100}>100</IonSelectOption>
-                            </IonSelect>
+                                <option value={24}>24</option>
+                                <option value={48}>48</option>
+                                <option value={72}>72</option>
+                                <option value={100}>100</option>
+                            </select>
                         </IonCol>     <div className='main-catagory'>
                             <IonRow>
                                 <IonCol>
@@ -449,7 +450,7 @@ function Category() {
                                     <p style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>Loading...</p>
                                 ) : error ? (
                                     <p className="error-message" style={{ color: '#000', display: 'flex', justifyContent: 'center' }}>{error}</p>
-                                ) :  categoryDetails && categoryDetails.length > 0 ? (
+                                ) : categoryDetails && categoryDetails.length > 0 ? (
                                     categoryDetails?.map(item => {
                                         const hasSubItems = item.subItems && item.subItems.length > 0;
                                         const redirectTo = hasSubItems ? `/c-category/${item._id}` : `/product/${item._id}`;
@@ -561,15 +562,15 @@ function Category() {
                                 <div className="content">
                                     <div color='secondary'>
                                         <div className='topbtn'>
-                                            <div style={{display:"flex", alignItems:"center",justifyContent:"space-between",    borderBottom: "1px solid rgb(255 216 174 / 22%)"}}>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgb(255 216 174 / 22%)" }}>
                                                 <div>
                                                     <span>Filter by:</span>
                                                 </div>
                                                 <div>
-                                                    <ion-button onClick={toggleOffcanvas}  fill="clear" style={{ width: '100%', color:"#ffd8ae"}} size="large"><ion-icon name="close-outline"></ion-icon></ion-button>
+                                                    <ion-button onClick={toggleOffcanvas} fill="clear" style={{ width: '100%', color: "#ffd8ae" }} size="large"><ion-icon name="close-outline"></ion-icon></ion-button>
                                                 </div>
                                             </div>
-                                            
+
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <IonButton onclick={handleReset} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Reset</IonButton>
                                                 <IonButton onClick={toggleOffcanvas} style={{ width: '100%', margin: '15px 0', background: '#f3a41c' }} expand="full">Apply</IonButton>
@@ -607,7 +608,7 @@ function Category() {
                                                 </IonItem>
                                                 <div className="ion-padding" slot="content">
                                                     <IonRange
-                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px',padding:'21px 12px 0 12px' }}
+                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px', padding: '21px 12px 0 12px' }}
                                                         dualKnobs={true}
                                                         min={0}
                                                         step={0.05}
@@ -639,7 +640,7 @@ function Category() {
                                                 </IonItem>
                                                 <div className="ion-padding" slot="content">
                                                     <IonRange
-                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px', padding:'21px 12px 0 12px' }}
+                                                        style={{ border: 'none', boxShadow: 'none', fontWeight: '500', fontSize: '18px', padding: '21px 12px 0 12px' }}
                                                         dualKnobs={true}
                                                         min={0}
                                                         step={0.05}
@@ -678,7 +679,7 @@ function Category() {
                                                                     size='large'
                                                                     labelPlacement="end"
                                                                     style={{ marginBottom: '10px' }}
-                                                                                                    
+
                                                                     onIonChange={(event) => handleShapeCheckboxChange(event, item)}
                                                                     checked={filterDetails?.shape?.includes(item)}
                                                                 />
@@ -712,7 +713,7 @@ function Category() {
                                                     <IonItem slot="header" color='secondary'>
                                                         <p>Pointer</p>
                                                     </IonItem>
-                                                    <div slot="content" style={{ margin: '10px 0px 0px 20px', width: '90%',padding:'21px 12px 0 12px' }}>
+                                                    <div slot="content" style={{ margin: '10px 0px 0px 20px', width: '90%', padding: '21px 12px 0 12px' }}>
                                                         <div>
                                                             <>
                                                                 {attr?.map((attribute, index) => {

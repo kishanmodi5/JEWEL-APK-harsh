@@ -46,7 +46,7 @@ const RadioPage = () => {
                 <IonGrid>
                     <IonRow>
                         <IonCol size='12'>
-                            <div className=' privacypolicy'>
+                            <div className=' privacypolicy' >
                                 <h5 className="mb-2">
                                     Privacy Policy for Greenlab Jewels Private Limited
                                 </h5>

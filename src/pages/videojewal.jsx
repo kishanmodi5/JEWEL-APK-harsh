@@ -97,10 +97,10 @@ const Videojewal = () => {
         try {
             const idsToDownload = selectedItems.length > 0 ? selectedItems : data.map(item => item._id);
 
-            const response = await jwtAuthAxios.get('/master/downloadpdf', {
-                responseType: 'blob',
-                params: { ids: idsToDownload }
-            });
+            const response = await jwtAuthAxios.post('/master/downloadpdf', {
+                ids: idsToDownload,
+                category: selectedOption
+            }, { responseType: 'blob' }); // Notice the change
 
             if (response.status === 200) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
