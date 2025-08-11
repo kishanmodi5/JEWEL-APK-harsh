@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import {
     IonCard,
     IonCardContent,
@@ -37,7 +37,7 @@ const RadioPage = () => {
     const closeModal = () => setIsModalOpen(false);
 
     return (
-        <>
+        <IonPage>
             <Header />
 
 
@@ -240,7 +240,7 @@ const RadioPage = () => {
                     </IonRow>
                 </IonGrid>
             </IonContent >
-        </>
+            </IonPage>
     );
 };
 

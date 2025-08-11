@@ -400,6 +400,13 @@ ion-tab-bar.md.hydrated::before {
     z-index: 1;
 }
 
+.left_bottom_fix{
+    position: fixed;
+    left: 16px;
+    bottom: 64px;
+    z-index: 1;
+}
+
 button.btn {
     background: transparent;
 }
@@ -1756,3 +1763,9 @@ p {
     justify-content: center;
 }
 
+.form-select.form-select-main {
+    background-color: rgb(76, 50, 38);
+    color: #fff;
+    padding: 10px;
+
+}

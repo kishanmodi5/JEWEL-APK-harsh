@@ -1,11 +1,11 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Greenlab',
+  appId: 'io.ionic.starter.smitv1',
+  appName: 'Greenlab Store',
   webDir: 'dist',
   // server:{
-  //   url: 'http://localhost:8100'
+  //   url: 'http://localhost:5173'
   // }
 };
 

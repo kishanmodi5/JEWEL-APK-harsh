@@ -22,6 +22,8 @@ import {
     IonCheckbox,
     IonRange,
     IonRefresher, IonRefresherContent,
+    IonBreadcrumbs,
+    IonBreadcrumb,
 } from '@ionic/react';
 import { useParams } from "react-router-dom";
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
@@ -38,8 +40,10 @@ import { Navigation, Autoplay } from 'swiper/modules';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '../store/actions';
 import { chevronDownCircleOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 
 function Category() {
+    const history = useHistory();
     const { id } = useParams();
     const [categoryDetails, setCategoryDetails] = useState([]);
     const [error, setError] = useState(null);
@@ -71,7 +75,7 @@ function Category() {
     const [maxctswts, setMaxctswts] = useState(null);
     const [maxGramWt, setMaxGramWt] = useState(null);
     const [shape, setShape] = useState([])
-    
+    const [sortctswts, setSortctswts] = useState("");
 
     const fetchCategoryData = async (filterflag) => {
         if (isFetching.current) return;
@@ -81,7 +85,7 @@ function Category() {
 
 
         try {
-            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}`, {
+            const response = await jwtAuthAxios.post(`client/category?id=${id}&page=${page}&limit=${pageSize}&sort=${sortOrder}&sortctswts=${sortctswts}`, {
                 CategoryFilter,
                 CollectionFilter: selectedCollection,
                 filter: filterDetails,
@@ -171,6 +175,13 @@ function Category() {
 
         setSelectedCollection(updatedCollection);
         dispatch(setFilter(updatedCollection));
+    };
+
+    const handleSelectChange = (value) => {
+        const [order, ctWts] = value.split('-');
+        setSortOrder(order || "");
+        setSortctswts(ctWts || "");
+        setPage(1);
     };
 
     const handleFilterChange = (e) => {
@@ -326,14 +337,20 @@ function Category() {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
-    return (
-        <>
-            <Header />
+  const contentRef = useRef(null);
 
-            <IonPage>
+  const handleupper = () => {
+    console.log("upper");
+    contentRef.current?.scrollToTop(1000); // 500ms smooth
+  }
+    return (
+        <IonPage>
+     
+            <Header />
+           
                 <div style={{ margin: '50px' }}></div>
 
-                <IonContent color="primary">
+                <IonContent color="primary" ref={contentRef}>
                 <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
                         <IonRefresherContent
                             pullingIcon={chevronDownCircleOutline}
@@ -407,30 +424,29 @@ function Category() {
                                 </Swiper>
                             </IonCol>
                         </IonRow>
+                       
                         <div>
                             <h5 class="text-center mb-5 element" style={{ marginBottom: '20px' }}>{itemname}  Category </h5>
                         </div>
+                        <IonBreadcrumbs>
+                                                              <IonBreadcrumb href="/home">Home</IonBreadcrumb>
+                                                             
+                                                               <IonBreadcrumb >{itemname}</IonBreadcrumb>
+                                                            </IonBreadcrumbs>
 
                         <IonCol size='12'>
                             <div style={{ display: 'flex', justifyContent:'space-between' }}>
-                            <button
-                                className="sortfilter"
-                                onClick={() => handleSortChange(sortOrder === "asc" ? "desc" : "asc")}
+                            <select
+                                className="form-select form-select-main"
+                                style={{ width: 'auto', margin: '0 10px 0 0' }}
+                                value={`${sortOrder}-${sortctswts}`}
+                                onChange={(e) => handleSelectChange(e.target.value)}
                             >
-                                {sortOrder === "asc" ? (
-                                    <>
-                                        Sort By ASC <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5" />
-                                        </svg></span>
-                                    </>
-                                ) : (
-                                    <>
-                                        Sort By DESC <span style={{ display: 'block' }}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4" />
-                                        </svg></span>
-                                    </>
-                                )}
-                            </button>
+                                <option value="asc-">Sort by Style NO ASC</option>
+                                <option value="desc-">Sort by Style NO DESC</option>
+                                <option value="-min">Sort by Min CtWts</option>
+                                <option value="-max">Sort by Max CtWts</option>
+                            </select>
                             
                             <div>
                             <select
@@ -473,13 +489,13 @@ function Category() {
 
                                         return (
                                             <IonCol size-md='4' size-sm='6' size='12' key={item._id}>
-                                                <div className='main-card-ctgy' style={{ marginBottom: '30px' }}>
-                                                    <ion-router-link href={redirectTo}>
+                                                <div className='main-card-ctgy' style={{ marginBottom: '30px' }} onClick={() => history.push(redirectTo)}>
+                                                    
                                                         <div className='main-card-top'>
                                                             <img src={hoveredItemId === item._id ? hoveredImage : IMG_PATH + item?.thumbnailImage} alt="ig145" />
                                                             <span className='igsticky'>{hoveredItemId === item._id ? selectedSku : item.sku}</span>
                                                         </div>
-                                                    </ion-router-link>
+                                               
                                                     <div className='main-card-bottom'>
                                                         <div>
                                                             <h5 style={{ textTransform: 'uppercase' }}>{hoveredItemId === item._id ? selectedDescription : item.description}</h5>
@@ -574,6 +590,9 @@ function Category() {
                                     <ion-icon name="filter-outline" slot="icon-only"></ion-icon>
                                 )}
                             </IonButton>
+                                <IonButton className='left_bottom_fix' shape='round' size='large' color='secondary' onClick={handleupper}>
+                                        <ion-icon name="arrow-up-outline" slot="icon-only"></ion-icon>
+                                </IonButton>
                             <div className={`offcanvas ${isOpen ? "show" : ""}`} style={{marginTop:'100px'}}>
                                 <div className="content">
                                     <div color='secondary'>
@@ -910,8 +929,9 @@ function Category() {
                         </div>
                     </IonGrid>
                 </IonContent>
-            </IonPage>
-        </>
+          
+        
+        </IonPage>
     );
 }
 export default Category; 

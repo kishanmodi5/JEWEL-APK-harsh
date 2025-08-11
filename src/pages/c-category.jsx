@@ -22,6 +22,8 @@ import {
     IonRadioGroup,
     IonToast,
     IonRefresher, IonRefresherContent,
+    IonBreadcrumbs,
+    IonBreadcrumb,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -40,8 +42,10 @@ import { IonIcon } from "@ionic/react";
 import { heartOutline, heart } from "ionicons/icons";
 import { addToCart, showCarts } from "../store/actions";
 import { chevronDownCircleOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 
 function CategoryPage() {
+    const history = useHistory();
     const { id } = useParams();
     const dispatch = useDispatch();
     const [categoryDetails, setCategoryDetails] = useState([]);
@@ -258,6 +262,13 @@ function CategoryPage() {
                     <div>
                         <h5 class="text-center mb-5 element">Sub Category</h5>
                     </div>
+                    <IonBreadcrumbs>
+                                                          <IonBreadcrumb href="/home">Home</IonBreadcrumb>
+                                                          <IonBreadcrumb onClick={()=>{
+                                                            window.history.back();
+                                                          }} style={{cursor:'pointer'}}>Category</IonBreadcrumb>
+                                                           <IonBreadcrumb style={{cursor:'pointer'}}>Sub Category</IonBreadcrumb>
+                                                        </IonBreadcrumbs>
                     <div className='main-catagory'>
                         <IonRow>
                             {/* <IonCol>
@@ -274,12 +285,14 @@ function CategoryPage() {
                                 categoryDetails?.map(item =>
                                     <IonCol size-lg="3" size-md="4" size-sm="6" size="12">
                                         <div key={item._id} className='main-card-ctgy' style={{ marginBottom: '30px' }}>
-                                            <ion-router-link href={`/product/${item?._id}`}>
-                                                <div className='main-card-top'>
+                                            {/* <ion-router-link href={`/product/${item?._id}`}> */}
+                                                <div className='main-card-top' onClick={() => {
+                                                    history.push(`/product/${item?._id}`);
+                                                }}>
                                                     <img src={IMG_PATH + item?.thumbnailImage} alt="ig145" />
                                                     <span className='igsticky'>{item.sku}</span>
                                                 </div>
-                                            </ion-router-link>
+                                            {/* </ion-router-link> */}
                                             <div className='main-card-bottom'>
                                                 <div>
                                                     <h5 style={{ textTransform: 'uppercase' }}>{item.description}</h5>

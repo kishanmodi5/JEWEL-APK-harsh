@@ -96,7 +96,7 @@ const LibraryPage = () => {
                     <div className="search">
                       <input
 
-                        style={{ border: '0', width: '100%' , backgroundColor:'transparent'}}
+                        style={{ border: '0', width: '100%' , backgroundColor:'transparent',textTransform: 'uppercase' }}
                         type="text"
                         placeholder="Type your search Name..."
                         value={searchName}

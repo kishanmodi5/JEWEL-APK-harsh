@@ -72,13 +72,18 @@ function Product() {
         setOpenAccordion(openAccordion === value ? '' : value);
     };
 
-
+    useEffect(()=>{
+        console.log('quotation',quotations, quotations.length)
+    },[quotations])
 
         const fetchQuotations = async () => {
             try {
                 setLoading(true);
                 const response = await jwtAuthAxios.get('/client/clientquote');
                 console.log('clientquote', response.data)
+                if(response?.data?.status === "error"){
+                    setQuotations([]);
+                }else{
                 setQuotations(response?.data?.quoteRequests?.map(quoteRequests => ({
                     id: quoteRequests._id,
                     date: quoteRequests.createdAt,
@@ -95,6 +100,7 @@ function Product() {
                             0
                         ) || 0,
                 })));
+            }
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -141,7 +147,9 @@ function Product() {
                 <div style={{ marginTop: '90px' }}>
                     <h5 class="text-center mb-5 element">My quotations</h5>
                 </div>
-                <div className='myquotations'>
+                {
+                    quotations?.length === 0 ? <p style={{color:'black' ,display:'flex',justifyContent:'center'}}>No quotation found</p> : 
+                    <div className='myquotations'>
                     <IonGrid>
                         <IonRow style={{marginBottom:'60px'}}>
                             <IonCol>
@@ -261,6 +269,8 @@ function Product() {
                         </IonRow>
                     </IonGrid>
                 </div>
+                }
+                
 
             </IonContent >
 

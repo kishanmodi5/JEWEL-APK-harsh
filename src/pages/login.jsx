@@ -79,7 +79,7 @@ const Login = ({ handleClosep }) => {
 
                     setToastMessage(response?.data?.message);
                     setShowToast(true);
-                    history.push("/home");
+                    // history.push("/home");
                     window.location.href = '/home';
                     handleClosep();
                 }

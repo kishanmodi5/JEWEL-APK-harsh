@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import {
   IonCard,
   IonCardContent,
@@ -357,7 +357,8 @@ const RadioPage = () => {
 
 
   return (
-    <>
+
+          <IonPage>
       <IonHeader>
         <h1>home</h1>
       </IonHeader>
@@ -392,7 +393,7 @@ const RadioPage = () => {
             {cartDetails?.items?.map((item, index) => (
               <div style={{ padding: ' 0', border: '1px solid rgb(0 0 0 / 19%)', margin: '10px', borderRadius: '9px', background: '#fff' }}>
                 <IonGrid>
-                  <IonRow key={`${item.item?._id}-${index}`} >
+                  <IonRow key={`${item?.item?._id}-${index}`} >
                     <IonCol size='12'>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '5px', justifyContent: 'space-between' }}>
                         <IonCardTitle style={{ color: '#4c3226', textTransform: 'uppercase', justifyContent: 'center', display: 'flex', fontSize: '16px' }}>
@@ -401,7 +402,7 @@ const RadioPage = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
                           <div>
                             <IonButton shape='round' onClick={() => handleEditClick(item)} >
-                              <div key={`${item.item?._id}-${index}`}>
+                              <div key={`${item?.item?._id}-${index}`}>
                                 <Ion-Icon name="create-outline" slot="icon-only" size='small' style={{ color: 'red' }}></Ion-Icon>
                               </div>
                             </IonButton>
@@ -541,7 +542,7 @@ const RadioPage = () => {
                                         flexFlow: 'wrap',
                                       }}
                                     >
-                                      {item?.item.wgt14k?.toFixed(2)} Grams
+                                      {item?.item?.wgt14k?.toFixed(2)} Grams
                                       <sub
                                         style={{
                                           color: 'rgb(76 50 38)',
@@ -579,7 +580,7 @@ const RadioPage = () => {
                                         flexFlow: 'wrap',
                                       }}
                                     >
-                                      {item?.item.wgt18k?.toFixed(2)} Grams
+                                      {item?.item?.wgt18k?.toFixed(2)} Grams
                                       <sub
                                         style={{
                                           color: 'rgb(76 50 38)',
@@ -596,7 +597,7 @@ const RadioPage = () => {
                             <div className='main-color'>
                               <h6>Metal Color</h6>
                               <IonRadioGroup value={selectedMetal} onIonChange={e => setSelectedMetal(e.detail.value)} expand="block" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}>
-                                {["ROSE", "WHITE", "YELLOW"].map((metal) => (
+                                {["ROSE", "WHITE", "YELLOW"]?.map((metal) => (
                                   <IonRadio
                                     key={metal}
                                     className="btn btn-default"
@@ -609,7 +610,7 @@ const RadioPage = () => {
                                     <div style={{ width: '80%' }}>
                                       <span className="option-label">
                                         <IonImg className='slider-img '
-                                          src={`/img/color-${metal.toLowerCase()}.svg`}
+                                          src={`/img/color-${metal?.toLowerCase()}.svg`}
                                           style={{ width: '26px', height: '26px', objectFit: 'cover', borderRadius: '9px' }}
                                         />
                                       </span>
@@ -628,9 +629,9 @@ const RadioPage = () => {
                                 onIonChange={(e) => setSelectedQuality(e.detail.value)}
                                 style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0' }}
                               >
-                                {diamondGroup && diamondGroup.length > 0 ? (
-                                  diamondGroup.map((item, i) => (
-                                    item.data.map((ele, j) => (
+                                {diamondGroup && diamondGroup?.length > 0 ? (
+                                  diamondGroup?.map((item, i) => (
+                                    item?.data?.map((ele, j) => (
                                       <div
                                         key={`${i}-${j}`}
                                         className='diamondcol'
@@ -714,7 +715,7 @@ const RadioPage = () => {
                                     }}
                                   // size="small"
                                   >
-                                    {findings.map((finding, i) => (
+                                    {findings?.map((finding, i) => (
                                       <option
                                         key={finding?._id}
                                         value={finding?.finding}
@@ -844,10 +845,8 @@ const RadioPage = () => {
           </div>
         )}
       </IonContent >
+      </IonPage>
 
-
-
-    </>
   );
 };
 

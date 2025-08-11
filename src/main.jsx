@@ -5,7 +5,7 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import store from "./store/store";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { setupIonicReact } from '@ionic/react';
+import { IonApp, setupIonicReact } from '@ionic/react';
 
 
 const container = document.getElementById('root');
@@ -18,10 +18,12 @@ setupIonicReact({
 });
 
 root.render(
+    <IonApp>
   <React.StrictMode>
       <Provider store={store}>
      <App />
      <ToastContainer autoClose={1000} theme="dark"  />
     </Provider>
   </React.StrictMode>
+    </IonApp>
 );

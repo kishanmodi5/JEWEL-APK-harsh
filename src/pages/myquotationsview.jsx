@@ -81,7 +81,7 @@ function Product() {
 
 
     return (
-        <>
+        <IonPage>
             <Header />
             <IonHeader>
                 <h1>home</h1>
@@ -254,7 +254,7 @@ function Product() {
 
             </IonContent >
 
-        </ >
+            </IonPage>
     );
 }
 export default Product; 

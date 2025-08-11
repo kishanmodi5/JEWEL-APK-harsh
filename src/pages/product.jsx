@@ -26,6 +26,9 @@ import {
     IonButtons,
     IonToast,
     IonRefresher, IonRefresherContent,
+    useIonRouter,
+    IonBreadcrumbs,
+    IonBreadcrumb,
 } from '@ionic/react';
 import { IonCol, IonGrid, IonRow, IonTabButton } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -82,6 +85,8 @@ function Product() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [categoryattr, setCategoryattr] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const ionRouter = useIonRouter();
 
     const openModal = (index) => {
         setActiveIndex(index); // Set active index based on clicked image
@@ -285,10 +290,11 @@ function Product() {
         setThumbsSwiper(swiper); // Set the Swiper instance
     };
 
+
     
 
     return (
-        <>
+        <IonPage>
             <IonHeader>
                 <h1>home</h1>
             </IonHeader>
@@ -308,6 +314,14 @@ function Product() {
                     <IonGrid>
                         <IonRow>
                             <IonCol size-lg='6' size='12' >
+                                 <IonBreadcrumbs>
+                                      <IonBreadcrumb href="/home">Home</IonBreadcrumb>
+                                      <IonBreadcrumb onClick={()=>{
+                                        window.history.back();
+                                      }} style={{cursor:'pointer'}}>Category</IonBreadcrumb>
+                                       <IonBreadcrumb style={{cursor:'pointer'}}>Product</IonBreadcrumb>
+                                    </IonBreadcrumbs>
+                                
                                 <IonRow>
                                     <IonCol size-sm='8' size='12' style={{ backgroundColor: '#fff' }}>
                                         <div className="product-img">
@@ -1021,7 +1035,7 @@ function Product() {
                 message={toastMessage}
                 duration={2000}
             />
-        </ >
+        </IonPage >
     );
 }
 export default Product; 
